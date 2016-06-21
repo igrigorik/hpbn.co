@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Browser APIs and Protocols: WebSocket - High Performance Browser
+Networking (O'Reilly)</title>
+<meta name="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
+</script>
+<script async src="https://www.google-analytics.com/analytics.js">
+</script>
+<link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
+<link href=
+"https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
+rel="stylesheet">
+<link rel="stylesheet" href="/assets/b708e9296b5e26f6bd725561648a1dda.css">
+<link rel="manifest" href="/7a58c37113db4464699ec4f4646b5566.json">
+<link rel="icon" sizes="192x192" href="/assets/icons/icon-192.png">
+<meta name="theme-color" content="#000">
+<meta itemprop="name" content=
+"Browser APIs and Protocols: WebSocket - High Performance Browser Networking (O'Reilly)">
+<meta itemprop="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content=
+"Browser APIs and Protocols: WebSocket - High Performance Browser Networking (O'Reilly)">
+<meta name="twitter:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:creator" content="@igrigorik">
+<meta name="twitter:image:src" content="https://hpbn.co/assets/twitter.jpg">
+<meta property="og:title" content=
+"Browser APIs and Protocols: WebSocket - High Performance Browser Networking (O'Reilly)">
+<meta property="og:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta property="og:site_name" content="High Performance Browser Networking">
+<meta property="fb:admins" content="688996186">
+<script type="application/ld+json">
+{"@context":"http://schema.org/","@type":"Article","headline":"Browser APIs and Protocols: WebSocket - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2015-11-30T23:06:25Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+</script>
+
+<body data-type="book">
+  <header>
+    <div id="book-title">
+      <div class="center">
+        <input type="checkbox" class="check" id="check"> <label for="check"
+        class="icon"><svg viewbox="0 0 18 18">
+        <title>Menu</title>
+
+        <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
+        </path></svg></label> <a href="/">High Performance Browser
+        Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
+
+        <div class="drawer menu">
+          <div class="title">
+            WebSocket
+          </div>
+
+          <hr>
+
+          <ul class="content-container" id="nav">
+          </ul>
+
+          <hr>
+
+          <ul class="content-container" id="nav-other">
+            <li>
+              <a href="/#toc">Table of Contents</a>
+
+            <li>
+              <a href="/#author">About the Author</a>
+
+            <li>
+              <a id="feedback" target="_blank" href=
+              "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BWebSocket%5D:%20...">
+              Submit Feedback</a>
+            </ul>
+        </div>
+        <label for="check" class="closemenu">&nbsp;</label>
+      </div>
+    </div>
+
+    <h1>WebSocket</h1>
+
+    <p id="chapter">Browser APIs and Protocols, Chapter 17
+  </header>
+
+  <article data-type="chapter" id="WEBSOCKET">
+    <section id="introduction">
+      <h2>Introduction</h2>
+
+      <p>WebSocket enables bidirectional, message-oriented streaming of text
+      and binary data between client and server. It is the closest API to a raw
+      network socket in the browser. Except a WebSocket connection is also much
+      more than a network socket, as the browser abstracts all the complexity
+      behind a simple API and provides a number of additional services:
+
+      <ul>
+        <li>
+          <p>Connection negotiation and same-origin policy enforcement
+
+        <li>
+          <p>Interoperability with existing HTTP infrastructure
+
+        <li>
+          <p>Message-oriented communication and efficient message framing
+
+        <li>
+          <p>Subprotocol negotiation and extensibility
+        </ul>
+
+      <p>WebSocket is one of the most versatile and flexible transports
+      available in the browser. The simple and minimal API enables us to layer
+      and deliver arbitrary application protocols between client and
+      server—anything from simple JSON payloads to custom binary message
+      formats—in a streaming fashion, where either side can send data at any
+      time.
+
+      <p>However, the trade-off with custom protocols is that they are, well,
+      custom. The application must account for missing state management,
+      compression, caching, and other services otherwise provided by the
+      browser. There are always design constraints and performance trade-offs,
+      and leveraging WebSocket is no exception. In short, WebSocket is not a
+      replacement for HTTP, XHR, or SSE, and for best performance it is
+      critical that we leverage the strengths of each transport.
+
+      <div data-type="note" id="id-Y6Czs7">
+        <p>WebSocket is a set of multiple standards: the WebSocket API is
+        defined by the W3C, and the WebSocket protocol (RFC 6455) and its
+        extensions are defined by the HyBi Working Group (IETF).
+      </div>
+    </section>
+
+    <section>
+      <h2 id="websocket-api"><a href="#websocket-api" class=
+      "anchor">§</a>WebSocket API</h2>
+
+      <p>The WebSocket API provided by the browser is remarkably small and
+      simple. Once again, all the low-level details of connection management
+      and message processing are taken care of by the browser. To initiate a
+      new connection, we need the URL of a WebSocket resource and a few
+      application callbacks:
+
+      <div data-type="example" id="-JlCBIptq">
+        <pre data-type="programlisting">
+var ws = new WebSocket('wss://example.com/socket'); <a class="counter" id=
+"ws-co" href="#ws"></a>
+
+ws.onerror = function (error) { ... } <a class="counter" id="wserror-co" href=
+"#wserror"></a>
+ws.onclose = function () { ... } <a class="counter" id="wsclose-co" href=
+"#wsclose"></a>
+
+ws.onopen = function () { <a class="counter" id="wsopen-co" href="#wsopen"></a>
+  ws.send("Connection established. Hello server!"); <a class="counter" id=
+"wssend-co" href="#wssend"></a>
+}
+
+ws.onmessage = function(msg) { <a class="counter" id="wsmsg-co" href=
+"#wsmsg"></a>
+  if(msg.data instanceof Blob) { <a class="counter" id="wstype-co" href=
+"#wstype"></a>
+    processBlob(msg.data);
+  } else {
+    processText(msg.data);
+  }
+}
+</pre>
+
+        <ol class="notation">
+          <li>
+            <a class="co" id="ws" href="#ws-co"></a>
+
+            <p>Open a new secure WebSocket connection (wss)
+
+          <li>
+            <a class="co" id="wserror" href="#wserror-co"></a>
+
+            <p>Optional callback, invoked if a connection error has occurred
+
+          <li>
+            <a class="co" id="wsclose" href="#wsclose-co"></a>
+
+            <p>Optional callback, invoked when the connection is terminated
+
+          <li>
+            <a class="co" id="wsopen" href="#wsopen-co"></a>
+
+            <p>Optional callback, invoked when a WebSocket connection is
+            established
+
+          <li>
+            <a class="co" id="wssend" href="#wssend-co"></a>
+
+            <p>Client-initiated message to the server
+
+          <li>
+            <a class="co" id="wsmsg" href="#wsmsg-co"></a>
+
+            <p>A callback function invoked for each new message from the server
+
+          <li>
+            <a class="co" id="wstype" href="#wstype-co"></a>
+
+            <p>Invoke binary or text processing logic for the received message
+          </ol>
+      </div>
+
+      <p>The API speaks for itself. In fact, it should look very similar to the
+      EventSource API we saw in the preceding chapter. This is intentional, as
+      WebSocket offers similar and extended functionality. Having said that,
+      there are a number of important differences as well. Let’s take a look at
+      them one by one.
+
+      <aside>
+        <h4 id="emulating-websocket"><a href="#emulating-websocket" class=
+        "anchor">§</a>Emulating WebSocket</h4>
+
+        <p>WebSocket protocol has undergone a number of revisions,
+        implementation rollbacks, and security investigations. However, the
+        good news is that the latest version (v13) defined by RFC6455 is now
+        supported by all modern browsers. The only notable omission is the
+        Android browser. For the latest status, see <em><a class="orm:hideurl"
+        href=
+        "http://caniuse.com/websockets">http://caniuse.com/websockets</a></em>.
+
+        <p>Similar to the SSE polyfill strategy (<a data-type="xref" href=
+        "/server-sent-events-sse/#emulating-eventsource-with-custom-javascript">Emulating
+        EventSource with Custom JavaScript</a>), the WebSocket browser API can
+        be emulated via an optional JavaScript library. However, the hard part
+        with emulating WebSockets is not the API, but the transport! As a
+        result, the choice of the polyfill library and its fallback transport
+        (XHR polling, EventSource, iframe polling, etc.) will have significant
+        impact on the performance of an emulated WebSocket session.
+
+        <p>To simplify cross-browser deployment, popular libraries such as
+        SockJS provide an implementation of WebSocket-like object in the
+        browser but also go one step further by providing a custom server that
+        implements support for WebSocket and a variety of alternative
+        transports. The combination of a custom server and client is what
+        enables "seamless fallback": the performance suffers, but the
+        application API remains the same.
+
+        <p>Other libraries, such as Socket.IO, go even further by implementing
+        additional features, such as heartbeats, timeouts, support for
+        automatic reconnects, and more, in addition to a multitransport
+        fallback functionality.
+
+        <p>When considering a polyfill library or a "real-time framework," such
+        as Socket.IO, pay close attention to the underlying implementation and
+        configuration of the client and server: always leverage the native
+        WebSocket interface for best performance, and ensure that fallback
+        transports meet your performance goals.
+      </aside>
+
+      <section>
+        <h3 id="ws-and-wss-url-schemes"><a href="#ws-and-wss-url-schemes"
+        class="anchor">§</a>WS and WSS URL Schemes</h3>
+
+        <p>The WebSocket resource URL uses its own custom scheme: <em>ws</em>
+        for plain-text communication (e.g., <em>ws://example.com/socket</em>),
+        and <em>wss</em> when an encrypted channel (TCP+TLS) is required. Why
+        the custom scheme, instead of the familiar <em>http</em>?
+
+        <p>The primary use case for the WebSocket protocol is to provide an
+        optimized, bi-directional communication channel between applications
+        running in the browser and the server. However, the WebSocket wire
+        protocol can be used outside the browser and could be negotiated via a
+        non-HTTP exchange. As a result, the HyBi Working Group chose to adopt a
+        custom URL scheme.
+
+        <div data-type="note" id="id-2GCQFms1tQ">
+          <p>Despite the non-HTTP negotiation option enabled by the custom
+          scheme, in practice there are no existing standards for alternative
+          handshake mechanisms for establishing a WebSocket session.
+        </div>
+      </section>
+
+      <section>
+        <h3 id="receiving-text-and-binary-data"><a href=
+        "#receiving-text-and-binary-data" class="anchor">§</a>Receiving Text
+        and Binary Data</h3>
+
+        <p>WebSocket communication consists of messages and application code
+        and does not need to worry about buffering, parsing, and reconstructing
+        received data. For example, if the server sends a 1 MB payload, the
+        application’s <code>onmessage</code> callback will be called only when
+        the entire message is available on the client.
+
+        <p>Further, the WebSocket protocol makes no assumptions and places no
+        constraints on the application payload: both text and binary data are
+        fair game. Internally, the protocol tracks only two pieces of
+        information about the message: the length of payload as a
+        variable-length field and the type of payload to distinguish UTF-8 from
+        binary transfers.
+
+        <p>When a new message is received by the browser, it is automatically
+        converted to a DOMString object for text-based data, or a Blob object
+        for binary data, and then passed directly to the application. The only
+        other option, which acts as performance hint and optimization for the
+        client, is to tell the browser to convert the received binary data to
+        an ArrayBuffer instead of Blob:
+
+        <div data-type="example" id="-xzC2H0tAt4">
+          <pre data-type="programlisting">
+var ws = new WebSocket('wss://example.com/socket');
+ws.binaryType = "arraybuffer"; <a class="counter" id="wsab-co" href=
+"#wsab"></a>
+
+ws.onmessage = function(msg) {
+  if(msg.data instanceof ArrayBuffer) {
+    processArrayBuffer(msg.data);
+  } else {
+    processText(msg.data);
+  }
+}
+</pre>
+
+          <ol class="notation">
+            <li>
+              <a class="co" id="wsab" href="#wsab-co"></a>
+
+              <p>Force an ArrayBuffer conversion when a binary message is
+              received
+            </ol>
+        </div>
+
+        <blockquote>
+          <p>User agents can use this as a hint for how to handle incoming
+          binary data: if the attribute is set to "blob", it is safe to spool
+          it to disk, and if it is set to "arraybuffer", it is likely more
+          efficient to keep the data in memory. Naturally, user agents are
+          encouraged to use more subtle heuristics to decide whether to keep
+          incoming data in memory or not…
+
+          <p data-type="attribution">The WebSocket API, <cite>W3C Candidate
+          Recommendation</cite>
+        </blockquote>
+
+        <p>A Blob object represents a file-like object of immutable, raw data.
+        If you do not need to modify the data and do not need to slice it into
+        smaller chunks, then it is the optimal format—e.g., you can pass the
+        entire Blob object to an image tag (see the example in <a data-type=
+        "xref" href="/xmlhttprequest/#downloading-data-with-xhr">Downloading
+        Data with XHR</a>). On the other hand, if you need to perform
+        additional processing on the binary data, then ArrayBuffer is likely
+        the better fit.
+
+        <aside>
+          <h4 id="decoding-binary-data-with-javascript"><a href=
+          "#decoding-binary-data-with-javascript" class="anchor">§</a>Decoding
+          Binary Data with JavaScript</h4>
+
+          <p>An ArrayBuffer is a generic, fixed-length binary data buffer.
+          However, an ArrayBuffer can be used to create one or more
+          ArrayBufferView objects, each of which can present the contents of
+          the buffer in a specific format. For example, let’s assume we have
+          the following C-like binary data structure:
+
+          <pre data-type="programlisting" data-code-language="c"
+          data-highlighted="true"><code class="k">struct</code> <code class=
+          "n">someStruct</code> <code class="p">{</code>
+  <code class="kt">char</code> <code class="n">username</code><code class=
+"p">[</code><code class="mi">16</code><code class="p">];</code>
+  <code class="kt">unsigned</code> <code class="kt">short</code> <code class=
+"n">id</code><code class="p">;</code>
+  <code class="kt">float</code> <code class="n">scores</code><code class=
+"p">[</code><code class="mi">32</code><code class="p">];</code>
+<code class="p">};</code></pre>
+
+          <p>Given an ArrayBuffer object of this type, we can create multiple
+          views into the same buffer, each with its own offset and data type:
+
+          <pre data-type="programlisting" data-code-language="javascript"
+          data-highlighted="true"><code class="kd">var</code> <code class=
+          "nx">buffer</code> <code class="o">=</code> <code class=
+          "nx">msg</code><code class="p">.</code><code class=
+          "nx">data</code><code class="p">;</code>
+
+<code class="kd">var</code> <code class="nx">usernameView</code> <code class=
+"o">=</code> <code class="k">new</code> <code class=
+"nx">Uint8Array</code><code class="p">(</code><code class=
+"nx">buffer</code><code class="p">,</code> <code class=
+"mi">0</code><code class="p">,</code> <code class="mi">16</code><code class=
+"p">);</code>
+<code class="kd">var</code> <code class="nx">idView</code> <code class=
+"o">=</code> <code class="k">new</code> <code class=
+"nx">Uint16Array</code><code class="p">(</code><code class=
+"nx">buffer</code><code class="p">,</code> <code class=
+"mi">16</code><code class="p">,</code> <code class="mi">1</code><code class=
+"p">);</code>
+<code class="kd">var</code> <code class="nx">scoresView</code> <code class=
+"o">=</code> <code class="k">new</code> <code class=
+"nx">Float32Array</code><code class="p">(</code><code class=
+"nx">buffer</code><code class="p">,</code> <code class=
+"mi">18</code><code class="p">,</code> <code class="mi">32</code><code class=
+"p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class=
+"nx">log</code><code class="p">(</code><code class=
+"s2">"ID: "</code> <code class="o">+</code> <code class=
+"nx">idView</code><code class="p">[</code><code class="mi">0</code><code class=
+"p">]</code> <code class="o">+</code> <code class=
+"s2">" username: "</code> <code class="o">+</code> <code class=
+"nx">usernameView</code><code class="p">[</code><code class=
+"mi">0</code><code class="p">]);</code>
+<code class="k">for</code> <code class="p">(</code><code class=
+"kd">var</code> <code class="nx">j</code> <code class="o">=</code> <code class=
+"mi">0</code><code class="p">;</code> <code class="nx">j</code> <code class=
+"o">&lt;</code> <code class="mi">32</code><code class="p">;</code> <code class=
+"nx">j</code><code class="o">++</code><code class="p">)</code> <code class=
+"p">{</code> <code class="nx">console</code><code class=
+"p">.</code><code class="nx">log</code><code class="p">(</code><code class=
+"nx">scoresView</code><code class="p">[</code><code class=
+"nx">j</code><code class="p">])</code> <code class="p">}</code></pre>
+
+          <p>Each view takes the parent buffer, starting byte offset, and
+          number of elements to process—the offset is calculated based on the
+          size of the preceding fields. As a result, ArrayBuffer and WebSocket
+          give our applications all the necessary tools to stream and process
+          binary data within the browser.
+        </aside>
+      </section>
+
+      <section>
+        <h3 id="sending-text-and-binary-data"><a href=
+        "#sending-text-and-binary-data" class="anchor">§</a>Sending Text and
+        Binary Data</h3>
+
+        <p>Once a WebSocket connection is established, the client can send and
+        receive UTF-8 and binary messages at will. WebSocket offers a
+        bidirectional communication channel, which allows message delivery in
+        both directions over the same TCP connection:
+
+        <div data-type="example" id="-GECkIZSEtA">
+          <pre data-type="programlisting">
+var ws = new WebSocket('wss://example.com/socket');
+
+ws.onopen = function () {
+  socket.send("Hello server!"); <a class="counter" id="wstext-co" href=
+"#wstext"></a>
+  socket.send(JSON.stringify({'msg': 'payload'})); <a class="counter" id=
+"json-co" href="#json"></a>
+
+  var buffer = new ArrayBuffer(128);
+  socket.send(buffer); <a class="counter" id="arraybuffer-co" href=
+"#arraybuffer"></a>
+
+  var intview = new Uint32Array(buffer);
+  socket.send(intview); <a class="counter" id="aview-co" href="#aview"></a>
+
+  var blob = new Blob([buffer]);
+  socket.send(blob); <a class="counter" id="wsblob-co" href="#wsblob"></a>
+}
+</pre>
+
+          <ol class="notation">
+            <li>
+              <a class="co" id="wstext" href="#wstext-co"></a>
+
+              <p>Send a UTF-8 encoded text message
+
+            <li>
+              <a class="co" id="json" href="#json-co"></a>
+
+              <p>Send a UTF-8 encoded JSON payload
+
+            <li>
+              <a class="co" id="arraybuffer" href="#arraybuffer-co"></a>
+
+              <p>Send the ArrayBuffer contents as binary payload
+
+            <li>
+              <a class="co" id="aview" href="#aview-co"></a>
+
+              <p>Send the ArrayBufferView contents as binary payload
+
+            <li>
+              <a class="co" id="wsblob" href="#wsblob-co"></a>
+
+              <p>Send the Blob contents as binary payload
+            </ol>
+        </div>
+
+        <p>The WebSocket API accepts a DOMString object, which is encoded as
+        UTF-8 on the wire, or one of ArrayBuffer, ArrayBufferView, or Blob
+        objects for binary transfers. However, note that the latter binary
+        options are simply an API convenience: on the wire, a WebSocket frame
+        is either marked as binary or text via a single bit. Hence, if the
+        application, or the server, need other content-type information about
+        the payload, then they must use an additional mechanism to communicate
+        this data.
+
+        <p>The <em>send()</em> method is asynchronous: the provided data is
+        queued by the client, and the function returns immediately. As a
+        result, especially when transferring large payloads, do not mistake the
+        fast return for a signal that the data has been sent! To monitor the
+        amount of data queued by the browser, the application can query the
+        <code>bufferedAmount</code> attribute on the socket:
+
+        <div data-type="example" id="-55CbseSbt9">
+          <pre data-type="programlisting">
+var ws = new WebSocket('wss://example.com/socket');
+
+ws.onopen = function () {
+  subscribeToApplicationUpdates(function(evt) { <a class="counter" id=
+"appupdate-co" href="#appupdate"></a>
+    if (ws.bufferedAmount == 0) <a class="counter" id="buffer-co" href=
+"#buffer"></a>
+      ws.send(evt.data); <a class="counter" id="send-co" href="#send"></a>
+  });
+};
+</pre>
+
+          <ol class="notation">
+            <li>
+              <a class="co" id="appupdate" href="#appupdate-co"></a>
+
+              <p>Subscribe to application updates (e.g., game state changes)
+
+            <li>
+              <a class="co" id="buffer" href="#buffer-co"></a>
+
+              <p>Check the amount of buffered data on the client
+
+            <li>
+              <a class="co" id="send" href="#send-co"></a>
+
+              <p>Send the next update if the buffer is empty
+            </ol>
+        </div>
+
+        <p>The preceding example attempts to send application updates to the
+        server, but only if the previous messages have been drained from the
+        client’s buffer. Why bother with such checks? All WebSocket messages
+        are delivered in the exact order in which they are queued by the
+        client. As a result, a large backlog of queued messages, or even a
+        single large message, will delay delivery of messages queued behind
+        it—head-of-line blocking!
+
+        <p>To work around this problem, the application can split large
+        messages into smaller chunks, monitor the <code>bufferedAmount</code>
+        value carefully to avoid head-of-line blocking, and even implement its
+        own priority queue for pending messages instead of blindly queuing them
+        all on the socket.
+
+        <div data-type="note" id="id-daCpTOSJtY">
+          <p>Many applications generate multiple classes of messages:
+          high-priority updates, such as control traffic, and low-priority
+          updates, such as background transfers. To optimize delivery, the
+          application should pay close attention to how and when each type of
+          message is queued on the socket!
+        </div>
+      </section>
+
+      <section>
+        <h3 id="subprotocol-negotiation"><a href="#subprotocol-negotiation"
+        class="anchor">§</a>Subprotocol Negotiation</h3>
+
+        <p>WebSocket protocol makes no assumptions about the format of each
+        message: a single bit tracks whether the message contains text or
+        binary data, such that it can be efficiently decoded by the client and
+        server, but otherwise the message contents are opaque.
+
+        <p>Further, unlike HTTP or XHR requests, which communicate additional
+        metadata via HTTP headers of each request and response, there is no
+        such equivalent mechanism for a WebSocket message. As a result, if
+        additional metadata about the message is required, then the client and
+        server must agree to implement their own subprotocol to communicate
+        this data:
+
+        <ul>
+          <li>
+            <p>The client and server can agree on a fixed message format
+            upfront—e.g., all communication will be done via JSON-encoded
+            messages or a custom binary format, and necessary message metadata
+            will be part of the encoded structure.
+
+          <li>
+            <p>If the client and server need to transfer different data types,
+            then they can agree on a consistent message header, which can be
+            used to communicate the instructions to decode the remainder of the
+            payload.
+
+          <li>
+            <p>A mix of text and binary messages can be used to communicate the
+            payload and metadata information—e.g., a text message can
+            communicate an equivalent of HTTP headers, followed by a binary
+            message with the application payload.
+          </ul>
+
+        <p>This list is just a small sample of possible strategies. The
+        flexibility and low overhead of a WebSocket message come at the cost of
+        extra application logic. However, message serialization and management
+        of metadata are only part of the problem! Once we determine the
+        serialization format for our messages, how do we ensure that both
+        client and server understand each other, and how do we keep them in
+        sync?
+
+        <p>Thankfully, WebSocket provides a simple and convenient
+        <em>subprotocol negotiation</em> API to address the second problem. The
+        client can advertise which protocols it supports to the server as part
+        of its initial connection handshake:
+
+        <div data-type="example" id="-KOCPtNTbtl">
+          <pre data-type="programlisting">
+var ws = new WebSocket('wss://example.com/socket',
+                       ['appProtocol', 'appProtocol-v2']); <a class="counter"
+id="subproto-co" href="#subproto"></a>
+
+ws.onopen = function () {
+  if (ws.protocol == 'appProtocol-v2') { <a class="counter" id="proto-co" href=
+"#proto"></a>
+    ...
+  } else {
+    ...
+  }
+}
+</pre>
+
+          <ol class="notation">
+            <li>
+              <a class="co" id="subproto" href="#subproto-co"></a>
+
+              <p>Array of subprotocols to advertise during WebSocket handshake
+
+            <li>
+              <a class="co" id="proto" href="#proto-co"></a>
+
+              <p>Check the subprotocol chosen by the server
+            </ol>
+        </div>
+
+        <p>As the preceding example illustrates, the WebSocket constructor
+        accepts an optional array of subprotocol names, which allows the client
+        to advertise the list of protocols it understands or is willing to use
+        for this connection. The specified list is sent to the server, and the
+        server is allowed to pick one of the protocols advertised by the
+        client.
+
+        <p>If the subprotocol negotiation is successful, then the
+        <code>onopen</code> callback is fired on the client, and the
+        application can query the <code>protocol</code> attribute on the
+        WebSocket object to determine the chosen protocol. On the other hand,
+        if the server does not support any of the client protocols advertised
+        by the client, then the WebSocket handshake is incomplete: the
+        <code>onerror</code> callback is invoked, and the connection is
+        terminated.
+
+        <div data-type="note" id="id-BNCWCxTmtY">
+          <p>The subprotocol names are defined by the application and are sent
+          as specified to the server during the initial HTTP handshake. Other
+          then that, the specified subprotocol has no effect on the core
+          WebSocket API.
+        </div>
+      </section>
+    </section>
+
+    <section>
+      <h2 id="websocket-protocol"><a href="#websocket-protocol" class=
+      "anchor">§</a>WebSocket Protocol</h2>
+
+      <p>The WebSocket wire protocol (RFC 6455) developed by the HyBi Working
+      Group consists of two high-level components: the opening HTTP handshake
+      used to negotiate the parameters of the connection and a binary message
+      framing mechanism to allow for low overhead, message-based delivery of
+      both text and binary data.
+
+      <blockquote>
+        <p>The WebSocket Protocol attempts to address the goals of existing
+        bidirectional HTTP technologies in the context of the existing HTTP
+        infrastructure; as such, it is designed to work over HTTP ports 80 and
+        443… However, the design does not limit WebSocket to HTTP, and future
+        implementations could use a simpler handshake over a dedicated port
+        without reinventing the entire protocol.
+
+        <p data-type="attribution">WebSocket Protocol, <cite>RFC 6455</cite>
+      </blockquote>
+
+      <p>WebSocket protocol is a fully functional, standalone protocol that can
+      be used outside the browser. Having said that, its primary application is
+      as a bidirectional transport for browser-based applications.
+
+      <section>
+        <h3 id="binary-framing-layer"><a href="#binary-framing-layer" class=
+        "anchor">§</a>Binary Framing Layer</h3>
+
+        <p>Client and server WebSocket applications communicate via a
+        message-oriented API: the sender provides an arbitrary UTF-8 or binary
+        payload, and the receiver is notified of its delivery when the entire
+        message is available. To enable this, WebSocket uses a custom binary
+        framing format (<a data-type="xref" href=
+        "#websocket-frame">Figure&nbsp;17-1</a>), which splits each application
+        message into one or more <em>frames</em>, transports them to the
+        destination, reassembles them, and finally notifies the receiver once
+        the entire message has been received.
+
+        <figure id="websocket-frame">
+          <img src="/assets/diagrams/efb151be6600eb5555127c8652488f1f.svg" alt=
+          "Figure 17-1. WebSocket frame: 2–14 bytes + payload">
+
+          <figcaption>
+            <span class="label">Figure 17-1.</span> WebSocket frame: 2–14 bytes
+            + payload
+          </figcaption>
+        </figure>
+
+        <dl>
+          <dt>Frame
+
+          <dd>
+            <p>The smallest unit of communication, each containing a
+            variable-length frame header and a payload that may carry all or
+            part of the application message.
+
+          <dt>Message
+
+          <dd>
+            <p>A complete sequence of frames that map to a logical application
+            message.
+          </dl>
+
+        <p>The decision to fragment an application message into multiple frames
+        is made by the underlying implementation of the client and server
+        framing code. Hence, the applications remain blissfully unaware of the
+        individual WebSocket frames or how the framing is performed. Having
+        said that, it is still useful to understand the highlights of how each
+        WebSocket frame is represented on the wire:
+
+        <ul>
+          <li>
+            <p>The first bit of each frame (FIN) indicates whether the frame is
+            a final fragment of a message. A message may consist of just a
+            single frame.
+
+          <li>
+            <p>The opcode (4 bits) indicates type of transferred frame: text
+            (1) or binary (2) for transferring application data or a control
+            frame such as connection close (8), ping (9), and pong (10) for
+            connection liveness checks.
+
+          <li>
+            <p>The mask bit indicates whether the payload is masked (for
+            messages sent from the client to the server only).
+
+          <li>
+            <p>Payload length is represented as a variable-length field:
+
+            <ul>
+              <li>
+                <p>If 0–125, then that is the payload length.
+
+              <li>
+                <p>If 126, then the following 2 bytes represent a 16-bit
+                unsigned integer indicating the frame length.
+
+              <li>
+                <p>If 127, then the following 8 bytes represent a 64-bit
+                unsigned integer indicating the frame length.
+              </ul>
+
+          <li>
+            <p>Masking key contains a 32-bit value used to mask the payload.
+
+          <li>
+            <p>Payload contains the application data and custom extension data
+            if the client and server negotiated an extension when the
+            connection was established.
+          </ul>
+
+        <div data-type="note" id="id-6RCDtVH0SZ">
+          <p>The payload of all client-initiated frames is <em>masked</em>
+          using the value specified in the frame header: this prevents
+          malicious scripts executing on the client from performing a cache
+          poisoning attack against intermediaries that may not understand the
+          WebSocket protocol. For full details of this attack, refer to
+          <a href="http://w2spconf.com/2011/papers/websocket.pdf">"Talking to
+          Yourself for Fun and Proﬁt"</a>, presented at W2SP 2011.
+        </div>
+
+        <p>As a result, each server-sent WebSocket frame incurs 2–10 bytes of
+        framing overhead. The client must also send a masking key, which adds
+        an extra 4 bytes to the header, resulting in 6–14 bytes over overhead.
+        No other metadata, such as header fields or other information about the
+        payload, is available: all WebSocket communication is performed by
+        exchanging frames that treat the payload as an opaque blob of
+        application data.
+
+        <aside>
+          <h4 id="websocket-multiplexing-and-head-of-line-blocking"><a href=
+          "#websocket-multiplexing-and-head-of-line-blocking" class=
+          "anchor">§</a>WebSocket Multiplexing and Head-of-Line Blocking</h4>
+
+          <p>WebSocket is susceptible to head-of-line blocking: messages can be
+          split into one or more frames, but frames from different messages
+          can’t be interleaved, as there is no equivalent to a "stream ID"
+          found in the HTTP/2 framing mechanism; see <a data-type="xref" href=
+          "/http2/#streams-messages-and-frames">Streams, Messages, and
+          Frames</a>).
+
+          <p>As a result, a large message, even when split into multiple
+          WebSocket frames, will block the delivery of frames associated with
+          other messages. If your application is delivering latency-sensitive
+          data, be careful about the payload size of each message and consider
+          splitting large messages into multiple application messages!
+
+          <p>The lack of multiplexing in core WebSocket specification also
+          means that each WebSocket connection requires a dedicated TCP
+          connection, which may become a potential problem for HTTP/1.x
+          deployments due to a restricted number of connections per origin
+          maintained by the browser; see <a data-type="xref" href=
+          "/http1x/#exhausting-client-and-server-resources">Exhausting Client
+          and Server Resources</a>.
+
+          <p>On the bright side, the new "Multiplexing Extension for
+          WebSockets" developed by the HyBi Working Group addresses the latter
+          limitation:
+
+          <blockquote>
+            <p>With this extension, one TCP connection can provide multiple
+            virtual WebSocket connections by encapsulating frames tagged with a
+            channel ID… The multiplexing extension maintains separate logical
+            channels, each of which provides fully the logical equivalent of an
+            independent WebSocket connection, including separate handshake
+            headers.
+
+            <p data-type="attribution">WebSocket Multiplexing (Draft 10)
+          </blockquote>
+
+          <p>With this extension in place, multiple WebSocket connections
+          (channels) can be multiplexed over the same TCP connection. However,
+          each individual channel is still susceptible to head-of-line
+          blocking! Hence, one potential workaround is to use different
+          channels, or dedicated TCP connections, to multiplex multiple
+          messages in parallel.
+
+          <p>Finally, note that the preceding extension is necessary only for
+          HTTP/1.x connections. While no official specification is yet
+          available for transporting WebSocket frames with HTTP/2, doing so
+          would be much easier: HTTP/2 has built-in stream multiplexing, and
+          multiple WebSocket connections could be transported within a single
+          session by encapsulating WebSocket frames within the HTTP/2 framing
+          mechanism.
+        </aside>
+      </section>
+
+      <section>
+        <h3 id="protocol-extensions"><a href="#protocol-extensions" class=
+        "anchor">§</a>Protocol Extensions</h3>
+
+        <p>WebSocket specification allows for protocol extensions: the wire
+        format and the semantics of the WebSocket protocol can be extended with
+        new opcodes and data fields. While somewhat unusual, this is a very
+        powerful feature, as it allows the client and server to implement
+        additional functionality on top of the base WebSocket framing layer
+        without requiring any intervention or cooperation from the application
+        code.
+
+        <p>What are some examples of WebSocket protocol extensions? The HyBi
+        Working Group, which is responsible for the development of the
+        WebSocket specification, lists two official extensions in development:
+
+        <dl>
+          <dt>"A Multiplexing Extension for WebSockets"
+
+          <dd>
+            <p>This extension provides a way for separate logical WebSocket
+            connections to share an underlying transport connection.
+
+          <dt>"Compression Extensions for WebSocket"
+
+          <dd>
+            <p>A framework for creating WebSocket extensions that add
+            compression functionality to the WebSocket Protocol.
+          </dl>
+
+        <p>As we noted earlier, each WebSocket connection requires a dedicated
+        TCP connection, which is inefficient. Multiplexing extension addresses
+        this problem by extending each WebSocket frame with an additional
+        "channel ID" to allow multiple virtual WebSocket channels to share a
+        single TCP connection.
+
+        <p>Similarly, the base WebSocket specification provides no mechanism or
+        provisions for compression of transferred data: each frame carries
+        payload data as provided by the application. As a result, while this
+        may not be a problem for optimized binary data structures, this can
+        result in high byte transfer overhead unless the application implements
+        its own data compression and decompression logic. In effect,
+        compression extension enables an equivalent of transfer-encoding
+        negotiation provided by HTTP.
+
+        <p>To enable one or more extensions, the client must advertise them in
+        the initial Upgrade handshake, and the server must select and
+        acknowledge the extensions that will be used for the lifetime of the
+        negotiated connection. For a hands-on example, let’s now take a closer
+        look at the Upgrade sequence.
+
+        <aside>
+          <h4 id="websocket-multiplexing-and-compression-in-the-wild"><a href=
+          "#websocket-multiplexing-and-compression-in-the-wild" class=
+          "anchor">§</a>WebSocket Multiplexing and Compression in the Wild</h4>
+
+          <p>As of mid-2013, WebSocket multiplexing is not yet supported by any
+          popular browser. Similarly, there is limited support for compression:
+          Google Chrome and the latest WebKit browsers may advertise an
+          "x-webkit-deflate-frame" extension to the server. However,
+          deflate-frame is based on an outdated revision of the standard and
+          will be deprecated in the future.
+
+          <p>As the name implies, per-frame compresses the payload contents on
+          a frame-by-frame basis, which is suboptimal for large messages that
+          may be split between multiple frames. As a result, latest revisions
+          of the compression extension have switched to per-message
+          compression—that’s the good news. The bad news is per-message
+          compression is still experimental and is not yet available in any
+          popular browser.
+
+          <p>As a result, the application should pay close attention to the
+          content-type of transferred data and apply its own compression where
+          applicable. That is, at least until native WebSocket compression
+          support is available widely across all the popular browsers. This is
+          especially important for mobile applications, where each unnecessary
+          byte carries high costs to the user.
+        </aside>
+      </section>
+
+      <section>
+        <h3 id="http-upgrade-negotiation"><a href="#http-upgrade-negotiation"
+        class="anchor">§</a>HTTP Upgrade Negotiation</h3>
+
+        <p>The WebSocket protocol delivers a lot of powerful features:
+        message-oriented communication, its own binary framing layer,
+        subprotocol negotiation, optional protocol extensions, and more. As a
+        result, before any messages can be exchanged, the client and server
+        must negotiate the appropriate parameters to establish the connection.
+
+        <p>Leveraging HTTP to perform the handshake offers several advantages.
+        First, it makes WebSockets compatible with existing HTTP
+        infrastructure: WebSocket servers can run on port 80 and 443, which are
+        frequently the only open ports for the client. Second, it allows us to
+        reuse and extend the HTTP Upgrade flow with custom WebSocket headers to
+        perform the negotiation:
+
+        <dl>
+          <dt><code>Sec-WebSocket-Version</code>
+
+          <dd>
+            <p>Sent by the client to indicate version ("13" for RFC6455) of the
+            WebSocket protocol it wants to use. If the server does not support
+            the client version, then it must reply with a list of supported
+            versions.
+
+          <dt><code>Sec-WebSocket-Key</code>
+
+          <dd>
+            <p>An auto-generated key sent by the client, which acts as a
+            "challenge" to the server to prove that the server supports the
+            requested version of the protocol.
+
+          <dt><code>Sec-WebSocket-Accept</code>
+
+          <dd>
+            <p>Server response that contains signed value of Sec-WebSocket-Key,
+            proving that it understands the requested protocol version.
+
+          <dt><code>Sec-WebSocket-Protocol</code>
+
+          <dd>
+            <p>Used to negotiate the application subprotocol: client advertises
+            the list of supported protocols; server must reply with a single
+            protocol name.
+
+          <dt><code>Sec-WebSocket-Extensions</code>
+
+          <dd>
+            <p>Used to negotiate WebSocket extensions to be used for this
+            connection: client advertises supported extensions, and the server
+            confirms one or more extensions by returning the same header.
+          </dl>
+
+        <p>With that, we now have all the necessary pieces to perform an HTTP
+        Upgrade and negotiate a new WebSocket connection between the client and
+        server:
+
+        <div data-type="example" id="-55Cbs9tqS9">
+          <pre data-type="programlisting">
+GET /socket HTTP/1.1
+Host: thirdparty.com
+Origin: http://example.com
+Connection: Upgrade
+Upgrade: websocket <a class="counter" id="wsupgrade-co" href="#wsupgrade"></a>
+Sec-WebSocket-Version: 13 <a class="counter" id="wsversion-co" href=
+"#wsversion"></a>
+Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ== <a class="counter" id="wskey-co"
+href="#wskey"></a>
+Sec-WebSocket-Protocol: appProtocol, appProtocol-v2 <a class="counter" id=
+"subprotocol-co" href="#subprotocol"></a>
+Sec-WebSocket-Extensions: x-webkit-deflate-message, x-custom-extension <a class="counter"
+id="wsextensions-co" href="#wsextensions"></a>
+</pre>
+
+          <ol class="notation">
+            <li>
+              <a class="co" id="wsupgrade" href="#wsupgrade-co"></a>
+
+              <p>Request to perform an upgrade to the WebSocket protocol
+
+            <li>
+              <a class="co" id="wsversion" href="#wsversion-co"></a>
+
+              <p>WebSocket protocol version used by the client
+
+            <li>
+              <a class="co" id="wskey" href="#wskey-co"></a>
+
+              <p>Auto-generated key to verify server protocol support
+
+            <li>
+              <a class="co" id="subprotocol" href="#subprotocol-co"></a>
+
+              <p>Optional list of subprotocols specified by the application
+
+            <li>
+              <a class="co" id="wsextensions" href="#wsextensions-co"></a>
+
+              <p>Optional list of protocol extensions supported by the client
+            </ol>
+        </div>
+
+        <p>Just like any other client-initiated connection in the browser,
+        WebSocket requests are subject to the same-origin policy: the browser
+        automatically appends the Origin header to the upgrade handshake, and
+        the remote server can use CORS to accept or deny the cross origin
+        request; see <a data-type="xref" href=
+        "/xmlhttprequest/#cross-origin-resource-sharing-cors">Cross-Origin
+        Resource Sharing (CORS)</a>. To complete the handshake, the server must
+        return a successful "Switching Protocols" response and confirm the
+        selected options advertised by the client:
+
+        <div data-type="example" id="-KOC2SZt0Sl">
+          <pre data-type="programlisting">
+HTTP/1.1 101 Switching Protocols <a class="counter" id="upgraded-co" href=
+"#upgraded"></a>
+Upgrade: websocket
+Connection: Upgrade
+Access-Control-Allow-Origin: http://example.com <a class="counter" id=
+"wsorigin-co" href="#wsorigin"></a>
+Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo= <a class="counter" id=
+"wsaccept-co" href="#wsaccept"></a>
+Sec-WebSocket-Protocol: appProtocol-v2 <a class="counter" id="wssp-co" href=
+"#wssp"></a>
+Sec-WebSocket-Extensions: x-custom-extension <a class="counter" id=
+"wsextensionsc-co" href="#wsextensionsc"></a>
+</pre>
+
+          <ol class="notation">
+            <li>
+              <a class="co" id="upgraded" href="#upgraded-co"></a>
+
+              <p>101 response code confirming WebSocket upgrade
+
+            <li>
+              <a class="co" id="wsorigin" href="#wsorigin-co"></a>
+
+              <p>CORS header indicating opt-in for cross-origin connection
+
+            <li>
+              <a class="co" id="wsaccept" href="#wsaccept-co"></a>
+
+              <p>Signed Key value proving protocol support
+
+            <li>
+              <a class="co" id="wssp" href="#wssp-co"></a>
+
+              <p>Application subprotocol selected by the server
+
+            <li>
+              <a class="co" id="wsextensionsc" href="#wsextensionsc-co"></a>
+
+              <p>List of WebSocket extensions selected by the server
+            </ol>
+        </div>
+
+        <div data-type="note" id="id-daCpTGt1SY">
+          <p>All RFC6455-compatible WebSocket servers use the same algorithm to
+          compute the answer to the client challenge: the contents of the
+          <code>Sec-WebSocket-Key</code> are concatenated with a unique GUID
+          string defined in the standard, a SHA1 hash is computed, and the
+          resulting string is base-64 encoded and sent back to the client.
+        </div>
+
+        <p>At a minimum, a successful WebSocket handshake must contain the
+        protocol version and an auto-generated challenge value sent by the
+        client, followed by a 101 HTTP response code (Switching Protocols) from
+        the server with a hashed challenge-response to confirm the selected
+        protocol version:
+
+        <ul>
+          <li>
+            <p>Client must send <code>Sec-WebSocket-Version</code> and
+            <code>Sec-WebSocket-Key</code>.
+
+          <li>
+            <p>Server must confirm the protocol by returning
+            <code>Sec-WebSocket-Accept</code>.
+
+          <li>
+            <p>Client may send a list of application subprotocols via
+            <code>Sec-WebSocket-Protocol</code>.
+
+          <li>
+            <p>Server must select one of the advertised subprotocols and return
+            it via <code>Sec-WebSocket-Protocol</code>. If the server does not
+            support any, then the connection is aborted.
+
+          <li>
+            <p>Client may send a list of protocol extensions in
+            <code>Sec-WebSocket-Extensions</code>.
+
+          <li>
+            <p>Server may confirm one or more selected extensions via
+            <code>Sec-WebSocket-Extensions</code>. If no extensions are
+            provided, then the connection proceeds without them.
+          </ul>
+
+        <p>Finally, once the preceding handshake is complete, and if the
+        handshake is successful, the connection can now be used as a two-way
+        communication channel for exchanging WebSocket messages. From here on,
+        there is no other explicit HTTP communication between the client and
+        server, and the WebSocket protocol takes over.
+
+        <aside>
+          <h4 id="proxies-intermediaries-and-websockets"><a href=
+          "#proxies-intermediaries-and-websockets" class="anchor">§</a>Proxies,
+          Intermediaries, and WebSockets</h4>
+
+          <p>In practice, for security and policy reasons, many users have a
+          restricted set of open ports—specifically port 80 (HTTP), and port
+          443 (HTTPS). As a result, WebSocket negotiation is performed via the
+          HTTP Upgrade flow to ensure the best compatibility with existing
+          network policies and infrastructure.
+
+          <p>However, as we noted earlier in <a data-type="xref" href=
+          "/transport-layer-security-tls/#proxies-intermediaries-tls-and-new-protocols-on-the-web">
+          Proxies, Intermediaries, TLS, and New Protocols on the Web</a>, many
+          existing HTTP intermediaries may not understand the new WebSocket
+          protocol, which can lead to a variety of failure cases: blind
+          connection upgrades, unintended buffering of WebSocket frames,
+          content modification without understanding of the protocol,
+          misclassification of WebSocket traffic as compromised HTTP
+          connections, and so on.
+
+          <p>The WebSocket Key and Accept handshake addresses some of these
+          problems: it is a security policy against servers and intermediaries
+          that may blindly "upgrade" the connection without actually
+          understanding the WebSocket protocol. However, while this precaution
+          addresses some deployment issues with explicit proxies, it is
+          nonetheless insufficient for "transparent proxies," which may analyze
+          and modify the data on the wire without notice.
+
+          <p>The workaround? Establish a secure end-to-end tunnel—i.e., use
+          WSS! By negotiating a TLS session prior to performing the HTTP
+          Upgrade handshake, the client and server establish an encrypted
+          tunnel, which resolves all of the previously listed concerns. This is
+          especially true for mobile clients, whose traffic often passes
+          through a variety of proxy services that may not play well with
+          WebSocket.
+        </aside>
+      </section>
+    </section>
+
+    <section>
+      <h2 id="websocket-use-cases-and-performance"><a href=
+      "#websocket-use-cases-and-performance" class="anchor">§</a>WebSocket Use
+      Cases and Performance</h2>
+
+      <p>WebSocket API provides a simple interface for bidirectional,
+      message-oriented streaming of text and binary data between client and
+      server: pass in a WebSocket URL to the constructor, set up a few
+      JavaScript callback functions, and we are up and running—the rest is
+      handled by the browser. Add to that the WebSocket protocol, which offers
+      binary framing, extensibility, and subprotocol negotiation, and WebSocket
+      becomes a perfect fit for delivering custom application protocols in the
+      browser.
+
+      <p>However, just as with any discussion on performance, while the
+      implementation complexity of the WebSocket protocol is hidden from the
+      application, it nonetheless has important performance implications for
+      how and when WebSocket should be used. WebSocket is not a replacement for
+      XHR or SSE, and for best performance it is critical that we leverage the
+      strengths of each transport!
+
+      <div data-type="note" id="id-zqC5FXTD">
+        <p>Refer to <a data-type="xref" href=
+        "/xmlhttprequest/#xhr-use-cases-and-performance">XHR Use Cases and
+        Performance</a> and <a data-type="xref" href=
+        "/server-sent-events-sse/#sse-use-cases-and-performance">SSE Use Cases
+        and Performance</a> for a review of the performance characteristics of
+        each transport.
+      </div>
+
+      <section>
+        <h3 id="request-and-response-streaming"><a href=
+        "#request-and-response-streaming" class="anchor">§</a>Request and
+        Response Streaming</h3>
+
+        <p>WebSocket is the only transport that allows bidirectional
+        communication over the same TCP connection (<a data-type="xref" href=
+        "#transport-flow">Figure&nbsp;17-2</a>): the client and server can
+        exchange messages at will. As a result, WebSocket provides low latency
+        delivery of text and binary application data in both directions.
+
+        <figure id="transport-flow">
+          <img src="/assets/diagrams/1a8db2948eb2aad0dd47470c6c011a42.svg" alt=
+          "Figure 17-2. Communication flow of XHR, SSE, and WebSocket">
+
+          <figcaption>
+            <span class="label">Figure 17-2.</span> Communication flow of XHR,
+            SSE, and WebSocket
+          </figcaption>
+        </figure>
+
+        <ul>
+          <li>
+            <p>XHR is optimized for "transactional" request-response
+            communication: the client sends the full, well-formed HTTP request
+            to the server, and the server responds with a full response. There
+            is no support for request streaming, and until the Streams API is
+            available, no reliable cross-browser response streaming API.
+
+          <li>
+            <p>SSE enables efficient, low-latency server-to-client streaming of
+            text-based data: the client initiates the SSE connection, and the
+            server uses the event source protocol to stream updates to the
+            client. The client can’t send any data to the server after the
+            initial handshake.
+          </ul>
+
+        <aside>
+          <h4 id="propagation-and-queuing-latency"><a href=
+          "#propagation-and-queuing-latency" class="anchor">§</a>Propagation
+          and Queuing Latency</h4>
+
+          <p>Switching transports from XHR to SSE or WebSocket does not
+          decrease the roundtrip between client and server! Regardless of the
+          transport, the <em>propagation latency</em> of the data packets is
+          the same. However, aside from propagation latency, there is also the
+          <em>queuing latency</em>: the time the message has to wait on the
+          client or server before it can be routed to the other party.
+
+          <p>In the case of XHR polling, the queuing latency is a function of
+          the client polling interval: the message may be available on the
+          server, but it cannot be sent until the next client XHR request; see
+          <a data-type="xref" href=
+          "/xmlhttprequest/#modeling-performance-of-xhr-polling">Modeling
+          Performance of XHR Polling</a>. By contrast, both SSE and WebSocket
+          use a persistent connection, which allows the server to dispatch the
+          message (and client, in the case of WebSocket), the moment it becomes
+          available.
+
+          <p>As a result, "low-latency delivery" for SSE and WebSocket is
+          specifically referring to the elimination of message queuing latency.
+          We have not yet figured out how to make WebSocket data packets travel
+          faster than the speed of light!
+        </aside>
+      </section>
+
+      <section>
+        <h3 id="message-overhead"><a href="#message-overhead" class=
+        "anchor">§</a>Message Overhead</h3>
+
+        <p>Once a WebSocket connection is established, the client and server
+        exchange data via the WebSocket protocol: application messages are
+        split into one or more frames, each of which adds from 2 to 14 bytes of
+        overhead. Further, because the framing is done via a custom binary
+        format, both UTF-8 and binary application data can be efficiently
+        encoded via the same mechanism. How does that compare with XHR and SSE?
+
+        <ul>
+          <li>
+            <p>SSE adds as little as 5 bytes per message but is restricted to
+            UTF-8 content only; see <a data-type="xref" href=
+            "/server-sent-events-sse/#event-stream-protocol">Event Stream
+            Protocol</a>.
+
+          <li>
+            <p>HTTP/1.x requests (XHR or otherwise) will carry an additional
+            500–800 bytes of HTTP metadata, plus cookies; see <a data-type=
+            "xref" href=
+            "/http1x/#measuring-and-controlling-protocol-overhead">Measuring
+            and Controlling Protocol Overhead</a>.
+
+          <li>
+            <p>HTTP/2 compresses the HTTP metadata, which significantly reduces
+            the overhead; see <a data-type="xref" href=
+            "/http2/#header-compression">Header Compression</a>. In fact, if
+            the headers do not change between requests, the overhead can be as
+            low as 8 bytes!
+          </ul>
+
+        <div data-type="note" id="id-xzCRFXsZT4">
+          <p>Keep in mind that these overhead numbers do not include the
+          overhead of IP, TCP, and TLS framing, which add 60–100 bytes of
+          combined overhead per message, regardless of the application
+          protocol; see <a data-type="xref" href=
+          "/transport-layer-security-tls/#optimize-tls-record-size">Optimize
+          TLS Record Size</a>.
+        </div>
+      </section>
+
+      <section>
+        <h3 id="data-efficiency-and-compression"><a href=
+        "#data-efficiency-and-compression" class="anchor">§</a>Data Efficiency
+        and Compression</h3>
+
+        <p>Every XHR request can negotiate the optimal transfer encoding format
+        (e.g., gzip for text-based data), via regular HTTP negotiation.
+        Similarly, because SSE is restricted to UTF-8–only transfers, the event
+        stream data can be efficiently compressed by applying gzip across the
+        entire session.
+
+        <p>With WebSocket, the situation is more complex: WebSocket can
+        transfer both text and binary data, and as a result it doesn’t make
+        sense to compress the entire session. The binary payloads may be
+        compressed already! As a result, WebSocket must implement its own
+        compression mechanism and selectively apply it to each message.
+
+        <p>The good news is the HyBi working group is developing the
+        per-message compression extension for the WebSocket protocol. However,
+        it is not yet available in any of the browsers. As a result, unless the
+        application implements its own compression logic by carefully
+        optimizing its binary payloads (see <a data-type="xref" href=
+        "#decoding-binary-data-with-javascript">Decoding Binary Data with
+        JavaScript</a>) and implementing its own compression logic for
+        text-based messages, it may incur high byte overhead on the transferred
+        data!
+
+        <div data-type="note" id="id-55CmH9tMT9">
+          <p>Chrome and some WebKit-based browsers support an older revision
+          (per-frame compression) of the compression extension to the WebSocket
+          protocol; see <a data-type="xref" href=
+          "#websocket-multiplexing-and-compression-in-the-wild">WebSocket
+          Multiplexing and Compression in the Wild</a>.
+        </div>
+      </section>
+
+      <section>
+        <h3 id="custom-application-protocols"><a href=
+        "#custom-application-protocols" class="anchor">§</a>Custom Application
+        Protocols</h3>
+
+        <p>The browser is optimized for HTTP data transfers: it understands the
+        protocol, and it provides a wide array of services, such as
+        authentication, caching, compression, and much more. As a result, XHR
+        requests inherit all of this functionality for free.
+
+        <p>By contrast, streaming allows us to deliver custom protocols between
+        client and server, but at the cost of bypassing many of the services
+        provided by the browser: the initial HTTP handshake may be able to
+        perform some negotiation of the parameters of the connection, but once
+        the session is established, all further data streamed between the
+        client and server is opaque to the browser. As a result, the
+        flexibility of delivering a custom protocol also has its downsides, and
+        the application may have to implement its own logic to fill in the
+        missing gaps: caching, state management, delivery of message metadata,
+        and so on!
+
+        <div data-type="note" id="id-55CQFeSMT9">
+          <p>The initial HTTP Upgrade handshake does allow the server to
+          leverage the existing HTTP cookie mechanism to validate the user. If
+          the validation fails, the server can decline the WebSocket upgrade.
+        </div>
+
+        <aside>
+          <h4 id="leveraging-browser-and-intermediary-caches"><a href=
+          "#leveraging-browser-and-intermediary-caches" class=
+          "anchor">§</a>Leveraging Browser and Intermediary Caches</h4>
+
+          <p>Using regular HTTP has significant advantages. Ask yourself a
+          simple question: would the client benefit from caching the received
+          data? Or could an intermediary optimize the delivery of the asset if
+          it could cache it?
+
+          <p>For example, WebSocket supports binary transfers, which allows the
+          application to stream arbitrary image formats with no overhead—nice
+          win! However, the fact that the image is delivered within a custom
+          protocol means that it won’t be cached by the browser cache, or any
+          intermediary (e.g., a CDN). As a result, you may incur unnecessary
+          transfers to the client and much higher traffic to the origin
+          servers. The same logic applies to all other data formats: video,
+          text, and so on.
+
+          <p>As a result, make sure you choose the right transport for the job!
+          A simple but effective strategy to address these concerns could be to
+          use the WebSocket session to deliver non-cacheable data, such as
+          real-time updates and application "control" messages, which can
+          trigger XHR requests to fetch other assets via the HTTP protocol.
+        </aside>
+      </section>
+
+      <section>
+        <h3 id="deploying-websocket-infrastructure"><a href=
+        "#deploying-websocket-infrastructure" class="anchor">§</a>Deploying
+        WebSocket Infrastructure</h3>
+
+        <p>HTTP is optimized for short and bursty transfers. As a result, many
+        of the servers, proxies, and other intermediaries are often configured
+        to aggressively timeout idle HTTP connections, which, of course, is
+        exactly what we don’t want to see for long-lived WebSocket sessions. To
+        address this, there are three pieces to consider:
+
+        <ul>
+          <li>
+            <p>Routers, load-balancers, and proxies within own network
+
+          <li>
+            <p>Transparent and explicit proxies in external network (e.g., ISP
+            and carrier proxies)
+
+          <li>
+            <p>Routers, firewalls, and proxies within the client’s network
+          </ul>
+
+        <p>We have no control over the policy of the client’s network. In fact,
+        some networks may block WebSocket traffic entirely, which is why you
+        may need a fallback strategy. Similarly, we don’t have control over the
+        proxies on the external network. However, this is where TLS may help!
+        By tunneling over a secure end-to-end connection, WebSocket traffic can
+        bypass all the intermediate proxies.
+
+        <div data-type="note" id="id-KOCLHNTvTl">
+          <p>Using TLS does not prevent the intermediary from timing out an
+          idle TCP connection. However, in practice, it significantly increases
+          the success rate of negotiating the WebSocket session and often also
+          helps to extend the connection timeout intervals.
+        </div>
+
+        <p>Finally, there is the infrastructure that we deploy and manage
+        ourselves, which also often requires attention and tuning. As easy as
+        it is to blame the client or external networks, all too often the
+        problem is close to home. Each load-balancer, router, proxy, and web
+        server in the serving path must be tuned to allow long-lived
+        connections.
+
+        <p>For example, Nginx 1.3.13+ can proxy WebSocket traffic, but defaults
+        to aggressive 60-second timeouts! To increase the limit, we must
+        explicitly define the longer timeouts:
+
+        <div data-type="example" id="-BNCqSxTGTY">
+          <pre data-type="programlisting">
+location /websocket {
+    proxy_pass http://backend;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_read_timeout 3600; <a class="counter" id="rtimeout-co" href=
+"#rtimeout"></a>
+    proxy_send_timeout 3600; <a class="counter" id="stimeout-co" href=
+"#stimeout"></a>
+}
+</pre>
+
+          <ol class="notation">
+            <li>
+              <a class="co" id="rtimeout" href="#rtimeout-co"></a>
+
+              <p>Set 60-minute timeout between reads
+
+            <li>
+              <a class="co" id="stimeout" href="#stimeout-co"></a>
+
+              <p>Set 60-minute timeout between writes
+            </ol>
+        </div>
+
+        <p>Similarly, it is not uncommon to have a load balancer, such as
+        HAProxy, in front of one or more Nginx servers. Not surprisingly, we
+        need to apply similar explicit configuration here as well—e.g., for
+        HAProxy:
+
+        <div data-type="example" id="-kPC9CQTETD">
+          <pre data-type="programlisting">
+defaults http
+  timeout connect 30s
+  timeout client  30s
+  timeout server  30s
+  timeout tunnel  1h  <a class="counter" id="tunnel-co" href="#tunnel"></a>
+</pre>
+
+          <ol class="notation">
+            <li>
+              <a class="co" id="tunnel" href="#tunnel-co"></a>
+
+              <p>60-minute inactivity timeout for tunnels
+            </ol>
+        </div>
+
+        <p>The gotcha with the preceding example is the extra "tunnel" timeout.
+        In HAProxy the <code>connect</code>, <code>client</code>, and
+        <code>server</code> timeouts are applied only to the initial HTTP
+        Upgrade handshake, but once the upgrade is complete, the timeout is
+        controlled by the <code>tunnel</code> value.
+
+        <p>Nginx and HAProxy are just two of hundreds of different servers,
+        proxies, and load balancers running in our data centers. We can’t
+        enumerate all the configuration possibilities in these pages. The
+        previous examples are just an illustration that most infrastructure
+        requires custom configuration to handle long-lived sessions. Hence,
+        before implementing application keepalives, double-check your
+        infrastructure first.
+
+        <div data-type="note" id="id-akC0fMTdTD">
+          <p>Long-lived and idle sessions occupy memory and socket resources on
+          all the intermediate servers. Hence, short timeouts are often
+          justified as a security, resource, and operational precaution.
+          Deploying WebSocket, SSE, and HTTP/2, each of which relies on
+          long-lived sessions, brings its own class of new operational
+          challenges.
+        </div>
+      </section>
+    </section>
+
+    <section>
+      <h2 id="performance-checklist"><a href="#performance-checklist" class=
+      "anchor">§</a>Performance Checklist</h2>
+
+      <p>Deploying a high-performance WebSocket service requires careful tuning
+      and consideration, both on the client and on the server. A short list of
+      criteria to put on the agenda:
+
+      <ul>
+        <li>
+          <p>Use secure WebSocket (WSS over TLS) for reliable deployments.
+
+        <li>
+          <p>Pay close attention to polyfill performance (if necessary).
+
+        <li>
+          <p>Leverage subprotocol negotiation to determine the application
+          protocol.
+
+        <li>
+          <p>Optimize binary payloads to minimize transfer size.
+
+        <li>
+          <p>Consider compressing UTF-8 content to minimize transfer size.
+
+        <li>
+          <p>Set the right binary type for received binary payloads.
+
+        <li>
+          <p>Monitor the amount of buffered data on the client.
+
+        <li>
+          <p>Split large application messages to avoid head-of-line blocking.
+
+        <li>
+          <p>Leverage other transports where applicable.
+        </ul>
+
+      <p>Last, but definitely not least, optimize for mobile! Real-time push
+      can be a costly performance anti-pattern on mobile handsets, where
+      battery life is always at a premium. That’s not to say that WebSocket
+      should not be used on mobile. To the contrary, it can be a highly
+      efficient transport, but make sure to account for its requirements:
+
+      <ul>
+        <li>
+          <p><a data-type="xref" href=
+          "/optimizing-for-mobile-networks/#preserve-battery-power">Preserve
+          Battery Power</a>
+
+        <li>
+          <p><a data-type="xref" href=
+          "/optimizing-for-mobile-networks/#eliminate-periodic-and-inefficient-data-transfers">
+          Eliminate Periodic and Inefficient Data Transfers</a>
+
+        <li>
+          <p><a data-type="xref" href=
+          "/optimizing-for-mobile-networks/#nagle-and-efficient-server-push">Nagle
+          and Efficient Server Push</a>
+
+        <li>
+          <p><a data-type="xref" href=
+          "/optimizing-for-mobile-networks/#eliminate-unnecessary-application-keepalives">
+          Eliminate Unnecessary Application Keepalives</a>
+        </ul>
+    </section>
+  </article>
+
+  <footer>
+    <div id="toast">
+      &nbsp;
+    </div>
+
+    <p><a href="/#toc"><em>« Back to the Table of Contents</em></a>
+
+    <p class="legal">Copyright © 2013 <a href="https://www.igvita.com/" rel=
+    "me">Ilya Grigorik</a>. Published by O'Reilly Media, Inc. Licensed under
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND
+    4.0</a>.
+  </footer>
+

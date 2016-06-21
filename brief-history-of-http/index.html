@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>HTTP: Brief History of HTTP - High Performance Browser Networking
+(O'Reilly)</title>
+<meta name="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
+</script>
+<script async src="https://www.google-analytics.com/analytics.js">
+</script>
+<link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
+<link href=
+"https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
+rel="stylesheet">
+<link rel="stylesheet" href="/assets/b708e9296b5e26f6bd725561648a1dda.css">
+<link rel="manifest" href="/7a58c37113db4464699ec4f4646b5566.json">
+<link rel="icon" sizes="192x192" href="/assets/icons/icon-192.png">
+<meta name="theme-color" content="#000">
+<meta itemprop="name" content=
+"HTTP: Brief History of HTTP - High Performance Browser Networking (O'Reilly)">
+<meta itemprop="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content=
+"HTTP: Brief History of HTTP - High Performance Browser Networking (O'Reilly)">
+<meta name="twitter:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:creator" content="@igrigorik">
+<meta name="twitter:image:src" content="https://hpbn.co/assets/twitter.jpg">
+<meta property="og:title" content=
+"HTTP: Brief History of HTTP - High Performance Browser Networking (O'Reilly)">
+<meta property="og:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta property="og:site_name" content="High Performance Browser Networking">
+<meta property="fb:admins" content="688996186">
+<script type="application/ld+json">
+{"@context":"http://schema.org/","@type":"Article","headline":"HTTP: Brief History of HTTP - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2015-11-30T23:11:06Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+</script>
+
+<body data-type="book">
+  <header>
+    <div id="book-title">
+      <div class="center">
+        <input type="checkbox" class="check" id="check"> <label for="check"
+        class="icon"><svg viewbox="0 0 18 18">
+        <title>Menu</title>
+
+        <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
+        </path></svg></label> <a href="/">High Performance Browser
+        Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
+
+        <div class="drawer menu">
+          <div class="title">
+            Brief History of HTTP
+          </div>
+
+          <hr>
+
+          <ul class="content-container" id="nav">
+          </ul>
+
+          <hr>
+
+          <ul class="content-container" id="nav-other">
+            <li>
+              <a href="/#toc">Table of Contents</a>
+
+            <li>
+              <a href="/#author">About the Author</a>
+
+            <li>
+              <a id="feedback" target="_blank" href=
+              "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BBrief%20History%20of%20HTTP%5D:%20...">
+              Submit Feedback</a>
+            </ul>
+        </div>
+        <label for="check" class="closemenu">&nbsp;</label>
+      </div>
+    </div>
+
+    <h1>Brief History of HTTP</h1>
+
+    <p id="chapter">HTTP, Chapter 9
+  </header>
+
+  <article data-type="chapter" id="HTTP_HISTORY">
+    <section id="introduction">
+      <h2>Introduction</h2>
+
+      <p>The Hypertext Transfer Protocol (HTTP) is one of the most ubiquitous
+      and widely adopted application protocols on the Internet: it is the
+      common language between clients and servers, enabling the modern web.
+      From its simple beginnings as a single keyword and document path, it has
+      become the protocol of choice not just for browsers, but for virtually
+      every Internet-connected software and hardware application.
+
+      <p>In this chapter, we will take a brief historical tour of the evolution
+      of the HTTP protocol. A full discussion of the varying HTTP semantics is
+      outside the scope of this book, but an understanding of the key design
+      changes of HTTP, and the motivations behind each, will give us the
+      necessary background for our discussions on HTTP performance, especially
+      in the context of the many upcoming improvements in HTTP/2.
+    </section>
+
+    <section>
+      <h2 id="http-09-the-one-line-protocol"><a href=
+      "#http-09-the-one-line-protocol" class="anchor">§</a>HTTP 0.9: The
+      One-Line Protocol</h2>
+
+      <p>The original HTTP proposal by Tim Berners-Lee was designed with
+      <em>simplicity in mind</em> as to help with the adoption of his other
+      nascent idea: the World Wide Web. The strategy appears to have worked:
+      aspiring protocol designers, take note.
+
+      <p>In 1991, Berners-Lee outlined the motivation for the new protocol and
+      listed several high-level design goals: file transfer functionality,
+      ability to request an index search of a hypertext archive, format
+      negotiation, and an ability to refer the client to another server. To
+      prove the theory in action, a simple prototype was built, which
+      implemented a small subset of the proposed functionality:
+
+      <ul>
+        <li>
+          <p>Client request is a single ASCII character string.
+
+        <li>
+          <p>Client request is terminated by a carriage return (CRLF).
+
+        <li>
+          <p>Server response is an ASCII character stream.
+        </ul>
+
+      <ul>
+        <li>
+          <p>Server response is a hypertext markup language (HTML).
+
+        <li>
+          <p>Connection is terminated after the document transfer is complete.
+        </ul>
+
+      <p>However, even that sounds a lot more complicated than it really is.
+      What these rules enable is an extremely simple, Telnet-friendly protocol,
+      which some web servers support to this very day:
+
+      <pre data-type="programlisting">
+<strong>$&gt; telnet google.com 80</strong>
+
+Connected to 74.125.xxx.xxx
+
+GET /about/
+
+(hypertext response)
+(connection closed)
+</pre>
+
+      <p>The request consists of a single line: <code>GET</code> method and the
+      path of the requested document. The response is a single hypertext
+      document—no headers or any other metadata, just the HTML. It really
+      couldn’t get any simpler. Further, since the previous interaction is a
+      subset of the intended protocol, it unofficially acquired the HTTP 0.9
+      label. The rest, as they say, is history.
+
+      <p>From these humble beginnings in 1991, HTTP took on a life of its own
+      and evolved rapidly over the coming years. Let us quickly recap the
+      features of HTTP 0.9:
+
+      <ul>
+        <li>
+          <p>Client-server, request-response protocol.
+
+        <li>
+          <p>ASCII protocol, running over a TCP/IP link.
+
+        <li>
+          <p>Designed to transfer hypertext documents (HTML).
+
+        <li>
+          <p>The connection between server and client is closed after every
+          request.
+        </ul>
+
+      <div data-type="note" id="id-W5uqHKt8">
+        <p>Popular web servers, such as Apache and Nginx, still support the
+        HTTP 0.9 protocol—in part, because there is not much to it! If you are
+        curious, open up a Telnet session and try accessing google.com, or your
+        own favorite site, via HTTP 0.9 and inspect the behavior and the
+        limitations of this early protocol.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="http10-rapid-growth-and-informational-rfc"><a href=
+      "#http10-rapid-growth-and-informational-rfc" class=
+      "anchor">§</a>HTTP/1.0: Rapid Growth and Informational RFC</h2>
+
+      <p>The period from 1991 to 1995 is one of rapid coevolution of the HTML
+      specification, a new breed of software known as a "web browser," and the
+      emergence and quick growth of the consumer-oriented public Internet
+      infrastructure.
+
+      <aside>
+        <h4 id="the-perfect-storm-internet-boom-of-the-early-1990s"><a href=
+        "#the-perfect-storm-internet-boom-of-the-early-1990s" class=
+        "anchor">§</a>The Perfect Storm: Internet Boom of the Early 1990s</h4>
+
+        <p>Building on Tim Berner-Lee’s initial browser prototype, a team at
+        the National Center of Supercomputing Applications (NCSA) decided to
+        implement their own version. With that, the first popular browser was
+        born: NCSA Mosaic. One of the programmers on the NCSA team, Marc
+        Andreessen, partnered with Jim Clark to found Mosaic Communications in
+        October 1994. The company was later renamed Netscape, and it shipped
+        Netscape Navigator 1.0 in December 1994. By this point, it was already
+        clear that the World Wide Web was bound to be <em>much more</em> than
+        just an academic curiosity.
+
+        <p>In fact, that same year the first World Wide Web conference was
+        organized in Geneva, Switzerland, which led to the creation of the
+        World Wide Web Consortium (W3C) to help guide the evolution of HTML.
+        Similarly, a parallel HTTP Working Group (HTTP-WG) was established
+        within the IETF to focus on improving the HTTP protocol. Both of these
+        groups continue to be instrumental to the evolution of the Web.
+
+        <p>Finally, to create the perfect storm, CompuServe, AOL, and Prodigy
+        began providing dial-up Internet access to the public within the same
+        1994–1995 time frame. Riding on this wave of rapid adoption, Netscape
+        made history with a wildly successful IPO on August 9, 1995—the
+        Internet boom had arrived, and everyone wanted a piece of it!
+      </aside>
+
+      <p>The growing list of desired capabilities of the nascent Web and their
+      use cases on the public Web quickly exposed many of the fundamental
+      limitations of HTTP 0.9: we needed a protocol that could serve more than
+      just hypertext documents, provide richer metadata about the request and
+      the response, enable content negotiation, and more. In turn, the nascent
+      community of web developers responded by producing a large number of
+      experimental HTTP server and client implementations through an ad hoc
+      process: implement, deploy, and see if other people adopt it.
+
+      <p>From this period of rapid experimentation, a set of best practices and
+      common patterns began to emerge, and in May 1996 the HTTP Working Group
+      (HTTP-WG) published RFC 1945, which documented the "common usage" of the
+      many HTTP/1.0 implementations found in the wild. Note that this was only
+      an informational RFC: HTTP/1.0 as we know it is not a formal
+      specification or an Internet standard!
+
+      <p>Having said that, an example HTTP/1.0 request should look very
+      familiar:
+
+      <div data-type="example" id="-n1unfVCM">
+        <pre data-type="programlisting">
+<strong>$&gt; telnet website.org 80</strong>
+
+Connected to xxx.xxx.xxx.xxx
+
+GET /rfc/rfc1945.txt HTTP/1.0 <a class="counter" id="request-co" href=
+"#request"></a>
+User-Agent: CERN-LineMode/2.15 libwww/2.17b3
+Accept: */*
+
+HTTP/1.0 200 OK <a class="counter" id="response-co" href="#response"></a>
+Content-Type: text/plain
+Content-Length: 137582
+Expires: Thu, 01 Dec 1997 16:00:00 GMT
+Last-Modified: Wed, 1 May 1996 12:45:26 GMT
+Server: Apache 0.84
+
+(plain-text response)
+(connection closed)
+</pre>
+
+        <ol class="notation">
+          <li>
+            <a class="co" id="request" href="#request-co"></a>
+
+            <p>Request line with HTTP version number, followed by request
+            headers
+
+          <li>
+            <a class="co" id="response" href="#response-co"></a>
+
+            <p>Response status, followed by response headers
+          </ol>
+      </div>
+
+      <p>The preceding exchange is not an exhaustive list of HTTP/1.0
+      capabilities, but it does illustrate some of the key protocol changes:
+
+      <ul>
+        <li>
+          <p>Request may consist of multiple newline separated header fields.
+
+        <li>
+          <p>Response object is prefixed with a response status line.
+
+        <li>
+          <p>Response object has its own set of newline separated header
+          fields.
+
+        <li>
+          <p>Response object is not limited to hypertext.
+
+        <li>
+          <p>The connection between server and client is closed after every
+          request.
+        </ul>
+
+      <p>Both the request and response headers were kept as ASCII encoded, but
+      the response object itself could be of any type: an HTML file, a plain
+      text file, an image, or any other content type. Hence, the "hypertext
+      transfer" part of HTTP became a misnomer not long after its introduction.
+      In reality, HTTP has quickly evolved to become a <em>hypermedia
+      transport</em>, but the original name stuck.
+
+      <p>In addition to media type negotiation, the RFC also documented a
+      number of other commonly implemented capabilities: content encoding,
+      character set support, multi-part types, authorization, caching, proxy
+      behaviors, date formats, and more.
+
+      <div data-type="note" id="id-wVuwhMC9">
+        <p>Almost every server on the Web today can and will still speak
+        HTTP/1.0. Except that, by now, you should know better! Requiring a new
+        TCP connection per request imposes a significant performance penalty on
+        HTTP/1.0; see <a data-type="xref" href=
+        "/building-blocks-of-tcp/#three-way-handshake">Three-Way Handshake</a>,
+        followed by <a data-type="xref" href=
+        "/building-blocks-of-tcp/#slow-start">Slow-Start</a>.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="http11-internet-standard"><a href="#http11-internet-standard"
+      class="anchor">§</a>HTTP/1.1: Internet Standard</h2>
+
+      <p>The work on turning HTTP into an official IETF Internet standard
+      proceeded in parallel with the documentation effort around HTTP/1.0 and
+      happened over a period of roughly four years: between 1995 and 1999. In
+      fact, the first official HTTP/1.1 standard is defined in RFC 2068, which
+      was officially released in January 1997, roughly six months after the
+      publication of HTTP/1.0. Then, two and a half years later, in June of
+      1999, a number of improvements and updates were incorporated into the
+      standard and were released as RFC 2616.
+
+      <p>The HTTP/1.1 standard resolved a lot of the protocol ambiguities found
+      in earlier versions and introduced a number of critical performance
+      optimizations: keepalive connections, chunked encoding transfers,
+      byte-range requests, additional caching mechanisms, transfer encodings,
+      and request pipelining.
+
+      <p>With these capabilities in place, we can now inspect a typical
+      HTTP/1.1 session as performed by any modern HTTP browser and client:
+
+      <div data-type="example" id="-VWu8C1FY">
+        <pre data-type="programlisting">
+<strong>$&gt; telnet website.org 80</strong>
+Connected to xxx.xxx.xxx.xxx
+
+GET /index.html HTTP/1.1 <a class="counter" id="request-html-co" href=
+"#request-html"></a>
+Host: website.org
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_4)... (snip)
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding: gzip,deflate,sdch
+Accept-Language: en-US,en;q=0.8
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.3
+Cookie: __qca=P0-800083390... (snip)
+
+HTTP/1.1 200 OK <a class="counter" id="response-html-co" href=
+"#response-html"></a>
+Server: nginx/1.0.11
+Connection: keep-alive
+Content-Type: text/html; charset=utf-8
+Via: HTTP/1.1 GWA
+Date: Wed, 25 Jul 2012 20:23:35 GMT
+Expires: Wed, 25 Jul 2012 20:23:35 GMT
+Cache-Control: max-age=0, no-cache
+Transfer-Encoding: chunked
+
+100 <a class="counter" id="chunk-co" href="#chunk"></a>
+&lt;!doctype html&gt;
+(snip)
+
+100
+(snip)
+
+0 <a class="counter" id="chunk-end-co" href="#chunk-end"></a>
+
+GET /favicon.ico HTTP/1.1 <a class="counter" id="request-ico-co" href=
+"#request-ico"></a>
+Host: www.website.org
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_4)... (snip)
+Accept: */*
+Referer: http://website.org/
+Connection: close <a class="counter" id="close-co" href="#close"></a>
+Accept-Encoding: gzip,deflate,sdch
+Accept-Language: en-US,en;q=0.8
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.3
+Cookie: __qca=P0-800083390... (snip)
+
+HTTP/1.1 200 OK <a class="counter" id="response-ico-co" href=
+"#response-ico"></a>
+Server: nginx/1.0.11
+Content-Type: image/x-icon
+Content-Length: 3638
+Connection: close
+Last-Modified: Thu, 19 Jul 2012 17:51:44 GMT
+Cache-Control: max-age=315360000
+Accept-Ranges: bytes
+Via: HTTP/1.1 GWA
+Date: Sat, 21 Jul 2012 21:35:22 GMT
+Expires: Thu, 31 Dec 2037 23:55:55 GMT
+Etag: W/PSA-GAu26oXbDi
+
+(icon data)
+(connection closed)
+</pre>
+
+        <ol class="notation">
+          <li>
+            <a class="co" id="request-html" href="#request-html-co"></a>
+
+            <p>Request for HTML file, with encoding, charset, and cookie
+            metadata
+
+          <li>
+            <a class="co" id="response-html" href="#response-html-co"></a>
+
+            <p>Chunked response for original HTML request
+
+          <li>
+            <a class="co" id="chunk" href="#chunk-co"></a>
+
+            <p>Number of octets in the chunk expressed as an ASCII hexadecimal
+            number (256 bytes)
+
+          <li>
+            <a class="co" id="chunk-end" href="#chunk-end-co"></a>
+
+            <p>End of chunked stream response
+
+          <li>
+            <a class="co" id="request-ico" href="#request-ico-co"></a>
+
+            <p>Request for an icon file made on same TCP connection
+
+          <li>
+            <a class="co" id="close" href="#close-co"></a>
+
+            <p>Inform server that the connection will not be reused
+
+          <li>
+            <a class="co" id="response-ico" href="#response-ico-co"></a>
+
+            <p>Icon response, followed by connection close
+          </ol>
+      </div>
+
+      <p>Phew, there is a lot going on in there! The first and most obvious
+      difference is that we have two object requests, one for an HTML page and
+      one for an image, both delivered over a single connection. This is
+      connection keepalive in action, which allows us to reuse the existing TCP
+      connection for multiple requests to the same host and deliver a much
+      faster end-user experience; see <a data-type="xref" href=
+      "/building-blocks-of-tcp/#optimizing-for-tcp">Optimizing for TCP</a>.
+
+      <p>To terminate the persistent connection, notice that the second client
+      request sends an explicit <code>close</code> token to the server via the
+      <code>Connection</code> header. Similarly, the server can notify the
+      client of the intent to close the current TCP connection once the
+      response is transferred. Technically, either side can terminate the TCP
+      connection without such signal at any point, but clients and servers
+      should provide it whenever possible to enable better connection reuse
+      strategies on both sides.
+
+      <div data-type="note" id="id-25umUDFY">
+        <p>HTTP/1.1 changed the semantics of the HTTP protocol to use
+        connection keepalive by default. Meaning, unless told otherwise (via
+        <code>Connection: close</code> header), the server should keep the
+        connection open by default.
+
+        <p>However, this same functionality was also backported to HTTP/1.0 and
+        enabled via the <code>Connection: Keep-Alive</code> header. Hence, if
+        you are using HTTP/1.1, technically you don’t need the
+        <code>Connection: Keep-Alive</code> header, but many clients choose to
+        provide it nonetheless.
+      </div>
+
+      <p>Additionally, the HTTP/1.1 protocol added content, encoding, character
+      set, and even language negotiation, transfer encoding, caching
+      directives, client cookies, plus a dozen other capabilities that can be
+      negotiated on each request.
+
+      <p>We are not going to dwell on the semantics of every HTTP/1.1 feature.
+      This is a subject for a dedicated book, and many great ones have been
+      written already. Instead, the previous example serves as a good
+      illustration of both the quick progress and evolution of HTTP, as well as
+      the intricate and complicated dance of every client-server exchange.
+      There is a lot going on in there!
+
+      <div data-type="note" id="HTTP_DEFINITIVE_GUIDE">
+        <p>For a good reference on all the inner workings of the HTTP protocol,
+        check out O’Reilly’s <em>HTTP: The Definitive Guide</em> by David
+        Gourley and Brian Totty.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="http2-improving-transport-performance"><a href=
+      "#http2-improving-transport-performance" class="anchor">§</a>HTTP/2:
+      Improving Transport Performance</h2>
+
+      <p>Since its publication, RFC 2616 has served as a foundation for the
+      unprecedented growth of the Internet: billions of devices of all shapes
+      and sizes, from desktop computers to the tiny web devices in our pockets,
+      speak HTTP every day to deliver news, video, and millions of other web
+      applications we have all come to depend on in our lives.
+
+      <p>What began as a simple, one-line protocol for retrieving hypertext
+      quickly evolved into a generic hypermedia transport, and now a decade
+      later can be used to power just about any use case you can imagine. Both
+      the ubiquity of servers that can speak the protocol and the wide
+      availability of clients to consume it means that many applications are
+      now designed and deployed exclusively on top of HTTP.
+
+      <p>Need a protocol to control your coffee pot? RFC 2324 has you covered
+      with the Hyper Text Coffee Pot Control Protocol (HTCPCP/1.0)—originally
+      an April Fools’ Day joke by IETF, and increasingly anything but a joke in
+      our new hyper-connected world.
+
+      <blockquote>
+        <p>The Hypertext Transfer Protocol (HTTP) is an application-level
+        protocol for distributed, collaborative, hypermedia information
+        systems. It is a generic, stateless, protocol that can be used for many
+        tasks beyond its use for hypertext, such as name servers and
+        distributed object management systems, through extension of its request
+        methods, error codes and headers. A feature of HTTP is the typing and
+        negotiation of data representation, allowing systems to be built
+        independently of the data being transferred.
+
+        <p data-type="attribution">RFC 2616: HTTP/1.1, <cite>June 1999</cite>
+      </blockquote>
+
+      <p>The simplicity of the HTTP protocol is what enabled its original
+      adoption and rapid growth. In fact, it is now not unusual to find
+      embedded devices—sensors, actuators, and coffee pots alike—using HTTP as
+      their primary control and data protocols. But under the weight of its own
+      success and as we increasingly continue to migrate our everyday
+      interactions to the Web—social, email, news, and video, and increasingly
+      our entire personal and job workspaces—it has also begun to show signs of
+      stress. Users and web developers alike are now demanding near real-time
+      responsiveness and protocol performance from HTTP/1.1, which it simply
+      cannot meet without some modifications.
+
+      <p>To meet these new challenges, HTTP must continue to evolve, and hence
+      the HTTPbis working group announced a new initiative for HTTP/2 in early
+      2012:
+
+      <blockquote>
+        <p>There is emerging implementation experience and interest in a
+        protocol that retains the semantics of HTTP without the legacy of
+        HTTP/1.x message framing and syntax, which have been identified as
+        hampering performance and encouraging misuse of the underlying
+        transport.
+
+        <p>The working group will produce a specification of a new expression
+        of HTTP’s current semantics in ordered, bi-directional streams. As with
+        HTTP/1.x, the primary target transport is TCP, but it should be
+        possible to use other transports.
+
+        <p data-type="attribution">HTTP/2 charter, <cite>January 2012</cite>
+      </blockquote>
+
+      <p>The primary focus of HTTP/2 is on improving transport performance and
+      enabling both lower latency and higher throughput. The major version
+      increment sounds like a big step, which it is and will be as far as
+      performance is concerned, but it is important to note that none of the
+      high-level protocol semantics are affected: all HTTP headers, values, and
+      use cases are the same.
+
+      <p>Any existing website or application can and will be delivered over
+      HTTP/2 without modification: you do not need to modify your application
+      markup to take advantage of HTTP/2. The HTTP servers will have to speak
+      HTTP/2, but that should be a transparent upgrade for the majority of
+      users. The only difference if the working group meets its goal, should be
+      that our applications are delivered with lower latency and better
+      utilization of the network link!
+
+      <p>Having said that, let’s not get ahead of ourselves. Before we get to
+      the new HTTP/2 protocol features, it is worth taking a step back and
+      examining our existing deployment and performance best practices for
+      HTTP/1.1. The HTTP/2 working group is making fast progress on the new
+      specification, but even if the final standard was already done and ready,
+      we would still have to support older HTTP/1.1 clients for the foreseeable
+      future—realistically, a decade or more.
+    </section>
+  </article>
+
+  <footer>
+    <div id="toast">
+      &nbsp;
+    </div>
+
+    <p><a href="/#toc"><em>« Back to the Table of Contents</em></a>
+
+    <p class="legal">Copyright © 2013 <a href="https://www.igvita.com/" rel=
+    "me">Ilya Grigorik</a>. Published by O'Reilly Media, Inc. Licensed under
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND
+    4.0</a>.
+  </footer>
+

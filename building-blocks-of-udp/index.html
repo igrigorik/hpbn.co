@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Networking 101: Building Blocks of UDP - High Performance Browser
+Networking (O'Reilly)</title>
+<meta name="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
+</script>
+<script async src="https://www.google-analytics.com/analytics.js">
+</script>
+<link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
+<link href=
+"https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
+rel="stylesheet">
+<link rel="stylesheet" href="/assets/b708e9296b5e26f6bd725561648a1dda.css">
+<link rel="manifest" href="/7a58c37113db4464699ec4f4646b5566.json">
+<link rel="icon" sizes="192x192" href="/assets/icons/icon-192.png">
+<meta name="theme-color" content="#000">
+<meta itemprop="name" content=
+"Networking 101: Building Blocks of UDP - High Performance Browser Networking (O'Reilly)">
+<meta itemprop="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content=
+"Networking 101: Building Blocks of UDP - High Performance Browser Networking (O'Reilly)">
+<meta name="twitter:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:creator" content="@igrigorik">
+<meta name="twitter:image:src" content="https://hpbn.co/assets/twitter.jpg">
+<meta property="og:title" content=
+"Networking 101: Building Blocks of UDP - High Performance Browser Networking (O'Reilly)">
+<meta property="og:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta property="og:site_name" content="High Performance Browser Networking">
+<meta property="fb:admins" content="688996186">
+<script type="application/ld+json">
+{"@context":"http://schema.org/","@type":"Article","headline":"Networking 101: Building Blocks of UDP - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2016-05-05T19:31:31Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+</script>
+
+<body data-type="book">
+  <header>
+    <div id="book-title">
+      <div class="center">
+        <input type="checkbox" class="check" id="check"> <label for="check"
+        class="icon"><svg viewbox="0 0 18 18">
+        <title>Menu</title>
+
+        <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
+        </path></svg></label> <a href="/">High Performance Browser
+        Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
+
+        <div class="drawer menu">
+          <div class="title">
+            Building Blocks of UDP
+          </div>
+
+          <hr>
+
+          <ul class="content-container" id="nav">
+          </ul>
+
+          <hr>
+
+          <ul class="content-container" id="nav-other">
+            <li>
+              <a href="/#toc">Table of Contents</a>
+
+            <li>
+              <a href="/#author">About the Author</a>
+
+            <li>
+              <a id="feedback" target="_blank" href=
+              "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BBuilding%20Blocks%20of%20UDP%5D:%20...">
+              Submit Feedback</a>
+            </ul>
+        </div>
+        <label for="check" class="closemenu">&nbsp;</label>
+      </div>
+    </div>
+
+    <h1>Building Blocks of UDP</h1>
+
+    <p id="chapter">Networking 101, Chapter 3
+  </header>
+
+  <article data-type="chapter" id="UDP">
+    <section id="introduction">
+      <h2>Introduction</h2>
+
+      <p>User Datagram Protocol, or UDP, was added to the core network protocol
+      suite in August of 1980 by Jon Postel, well after the original
+      introduction of TCP/IP, but right at the time when the TCP and IP
+      specifications were being split to become two separate RFCs. This timing
+      is important because, as we will see, the primary feature and appeal of
+      UDP is not in what it introduces, but rather in all the features it
+      chooses to omit. UDP is colloquially referred to as a <em>null
+      protocol</em>, and RFC 768, which describes its operation, could indeed
+      fit on a napkin.
+
+      <dl>
+        <dt>Datagram
+
+        <dd>
+          <p>A self-contained, independent entity of data carrying sufficient
+          information to be routed from the source to the destination nodes
+          without reliance on earlier exchanges between the nodes and the
+          transporting network.
+        </dl>
+
+      <p>The words datagram and packet are often used interchangeably, but
+      there are some nuances. While the term "packet" applies to any formatted
+      block of data, the term "datagram" is often reserved for packets
+      delivered via an unreliable service—no delivery guarantees, no failure
+      notifications. Because of this, you will frequently find the more
+      descriptive term "Unreliable" substituted for the official term "User" in
+      the UDP acronym, to form "Unreliable Datagram Protocol." That is also why
+      UDP packets are generally, and more correctly, referred to as datagrams.
+
+      <p>Perhaps the most well-known use of UDP, and one that every browser and
+      Internet application depends on, is the Domain Name System (DNS): given a
+      human-friendly computer hostname, we need to discover its IP address
+      before any data exchange can occur. However, even though the browser
+      itself is dependent on UDP, historically the protocol has never been
+      exposed as a first-class transport for pages and applications running
+      within it. That is, until WebRTC entered into the picture.
+
+      <p>The new Web Real-Time Communication (WebRTC) standards, jointly
+      developed by the IETF and W3C working groups, are enabling real-time
+      communication, such as voice and video calling and other forms of
+      peer-to-peer (P2P) communication, natively within the browser via UDP.
+      With WebRTC, UDP is now a first-class browser transport with a
+      client-side API! We will investigate WebRTC in-depth in <a data-type=
+      "xref" href="/webrtc/">WebRTC</a>, but before we get there, let’s first
+      explore the inner workings of the UDP protocol to understand why and
+      where we may want to use it.
+    </section>
+
+    <section>
+      <h2 id="null-protocol-services"><a href="#null-protocol-services" class=
+      "anchor">§</a>Null Protocol Services</h2>
+
+      <p>To understand UDP and why it is commonly referred to as a "null
+      protocol," we first need to look at the Internet Protocol (IP), which is
+      located one layer below both TCP and UDP protocols.
+
+      <p>The IP layer has the primary task of delivering datagrams from the
+      source to the destination host based on their addresses. To do so, the
+      messages are encapsulated within an IP packet (<a data-type="xref" href=
+      "#ip-header">Figure&nbsp;3-1</a>) which identifies the source and the
+      destination addresses, as well as a number of other routing parameters .
+
+      <p>Once again, the word "datagram" is an important distinction: the IP
+      layer provides no guarantees about message delivery or notifications of
+      failure and hence directly exposes the unreliability of the underlying
+      network to the layers above it. If a routing node along the way drops the
+      IP packet due to congestion, high load, or for other reasons, then it is
+      the responsibility of a protocol above IP to detect it, recover, and
+      retransmit the data—that is, if that is the desired behavior!
+
+      <figure id="ip-header">
+        <img src="/assets/diagrams/2aaa8d11ee7fd2d8a332e6dc68dc50ae.svg" alt=
+        "Figure 3-1. IPv4 header (20 bytes)">
+
+        <figcaption>
+          <span class="label">Figure 3-1.</span> IPv4 header (20 bytes)
+        </figcaption>
+      </figure>
+
+      <p>The UDP protocol encapsulates user messages into its own packet
+      structure (<a data-type="xref" href="#udp-header">Figure&nbsp;3-2</a>),
+      which adds only four additional fields: source port, destination port,
+      length of packet, and checksum. Thus, when IP delivers the packet to the
+      destination host, the host is able to unwrap the UDP packet, identify the
+      target application by the destination port, and deliver the message.
+      Nothing more, nothing less.
+
+      <figure id="udp-header">
+        <img src="/assets/diagrams/e0661f06a9fae1f5346d0efb57178146.svg" alt=
+        "Figure 3-2. UDP header (8 bytes)">
+
+        <figcaption>
+          <span class="label">Figure 3-2.</span> UDP header (8 bytes)
+        </figcaption>
+      </figure>
+
+      <p>In fact, both the source port and the checksum fields are optional
+      fields in UDP datagrams. The IP packet contains its own header checksum,
+      and the application can choose to omit the UDP checksum, which means that
+      all the error detection and error correction can be delegated to the
+      applications above them. At its core, UDP simply provides "application
+      multiplexing" on top of IP by embedding the source and the target
+      application ports of the communicating hosts. With that in mind, we can
+      now summarize all the UDP non-services:
+
+      <dl>
+        <dt>No guarantee of message delivery
+
+        <dd>
+          <p>No acknowledgments, retransmissions, or timeouts
+
+        <dt>No guarantee of order of delivery
+
+        <dd>
+          <p>No packet sequence numbers, no reordering, no head-of-line
+          blocking
+
+        <dt>No connection state tracking
+
+        <dd>
+          <p>No connection establishment or teardown state machines
+
+        <dt>No congestion control
+
+        <dd>
+          <p>No built-in client or network feedback mechanisms
+        </dl>
+
+      <p>TCP is a byte-stream oriented protocol capable of transmitting
+      application messages spread across multiple packets without any explicit
+      message boundaries within the packets themselves. To achieve this,
+      connection state is allocated on both ends of the connection, and each
+      packet is sequenced, retransmitted when lost, and delivered in order. UDP
+      datagrams, on the other hand, have definitive boundaries: each datagram
+      is carried in a single IP packet, and each application read yields the
+      full message; datagrams cannot be fragmented.
+
+      <p>UDP is a simple, stateless protocol, suitable for bootstrapping other
+      application protocols on top: virtually all of the protocol design
+      decisions are left to the application above it. However, before you run
+      away to implement your own protocol to replace TCP, you should think
+      carefully about complications such as UDP interaction with the many
+      layers of deployed middleboxes (NAT traversal), as well as general
+      network protocol design best practices. Without careful engineering and
+      planning, it is not uncommon to start with a bright idea for a new
+      protocol but end up with a poorly implemented version of TCP. The
+      algorithms and the state machines in TCP have been honed and improved
+      over decades and have taken into account dozens of mechanisms that are
+      anything but easy to replicate well.
+    </section>
+
+    <section>
+      <h2 id="udp-and-network-address-translators"><a href=
+      "#udp-and-network-address-translators" class="anchor">§</a>UDP and
+      Network Address Translators</h2>
+
+      <p>Unfortunately, IPv4 addresses are only 32 bits long, which provides a
+      maximum of 4.29 billion unique IP addresses. The IP Network Address
+      Translator (NAT) specification was introduced in mid-1994 (RFC 1631) as
+      an interim solution to resolve the looming IPv4 address depletion
+      problem—as the number of hosts on the Internet began to grow
+      exponentially in the early '90s, we could not expect to allocate a unique
+      IP to every host.
+
+      <p>The proposed IP reuse solution was to introduce NAT devices at the
+      edge of the network, each of which would be responsible for maintaining a
+      table mapping of local IP and port tuples to one or more globally unique
+      (public) IP and port tuples (<a data-type="xref" href=
+      "#nat-table">Figure&nbsp;3-3</a>). The local IP address space behind the
+      translator could then be reused among many different networks, thus
+      solving the address depletion problem.
+
+      <figure id="nat-table">
+        <img src="/assets/diagrams/c1c3a3443e56dea19cd92efc8e554c6f.svg" alt=
+        "Figure 3-3. IP Network Address Translator">
+
+        <figcaption>
+          <span class="label">Figure 3-3.</span> IP Network Address Translator
+        </figcaption>
+      </figure>
+
+      <p>Unfortunately, as it often happens, there is nothing more permanent
+      than a temporary solution. Not only did the NAT devices resolve the
+      immediate problem, but they also quickly became a ubiquitous component of
+      many corporate and home proxies and routers, security appliances,
+      firewalls, and dozens of other hardware and software devices. NAT
+      middleboxes are no longer a temporary solution; rather, they have become
+      an ossified part of the Internet infrastructure.
+
+      <aside>
+        <h4 id="reserved-private-network-ranges"><a href=
+        "#reserved-private-network-ranges" class="anchor">§</a>Reserved Private
+        Network Ranges</h4>
+
+        <p>Internet Assigned Numbers Authority (IANA), which is an entity that
+        oversees global IP address allocation, reserved three well-known ranges
+        (<a data-type="xref" href=
+        "#reserved-ip-ranges-table">Table&nbsp;3-1</a>) for private networks,
+        most often residing behind a NAT device.
+
+        <figure id="reserved-ip-ranges-table">
+          <table>
+            <thead>
+              <tr>
+                <th>IP address range
+
+                <th>Number of addresses
+
+            <tbody>
+              <tr>
+                <td>10.0.0.0–10.255.255.255
+
+                <td>16,777,216
+
+              <tr>
+                <td>172.16.0.0–172.31.255.255
+
+                <td>1,048,576
+
+              <tr>
+                <td>192.168.0.0–192.168.255.255
+
+                <td>65,536
+              </table>
+
+          <figcaption>
+            <span class="label">Table 3-1.</span> Reserved IP ranges
+          </figcaption>
+        </figure>
+
+        <p>One or all of the preceding ranges should look familiar. Chances
+        are, your local router has assigned your computer an IP address from
+        one of those ranges. That’s your private IP address on the internal
+        network, which is then translated by the NAT device when communicating
+        with an outside network.
+
+        <p>To avoid routing errors and confusion, no public computer is allowed
+        to be assigned an IP address from any of these reserved private network
+        ranges.
+      </aside>
+
+      <section>
+        <h3 id="connection-state-timeouts"><a href="#connection-state-timeouts"
+        class="anchor">§</a>Connection-State Timeouts</h3>
+
+        <p>The issue with NAT translation, at least as far as UDP is concerned,
+        is precisely the routing table that it must maintain to deliver the
+        datagrams. NAT middleboxes rely on connection state, whereas UDP has
+        none. This is a fundamental mismatch and a source of many problems for
+        delivering UDP datagrams. Further, it is now not uncommon for a client
+        to be behind many layers of NATs, which only complicates matters
+        further.
+
+        <p>Each TCP connection has a well-defined protocol state machine, which
+        begins with a handshake, followed by application data transfer, and a
+        well-defined exchange to close the connection. Given this flow, each
+        middlebox can observe the state of the connection and create and remove
+        the routing entries as needed. With UDP, there is no handshake or
+        connection termination, and hence there is no connection state machine
+        to monitor.
+
+        <p>Delivering outbound UDP traffic does not require any extra work, but
+        routing a reply requires that we have an entry in the translation
+        table, which will tell us the IP and port of the local destination
+        host. Thus, translators have to keep state about each UDP flow, which
+        itself is stateless.
+
+        <p>Even worse, the translator is also tasked with figuring out when to
+        drop the translation record, but since UDP has no connection
+        termination sequence, either peer could just stop transmitting
+        datagrams at any point without notice. To address this, UDP routing
+        records are expired on a timer. How often? There is no definitive
+        answer; instead the timeout depends on the vendor, make, version, and
+        configuration of the translator. Consequently, one of the de facto best
+        practices for long-running sessions over UDP is to introduce
+        bidirectional keepalive packets to periodically reset the timers for
+        the translation records in all the NAT devices along the path.
+
+        <aside>
+          <h4 id="tcp-timeouts-and-nats"><a href="#tcp-timeouts-and-nats"
+          class="anchor">§</a>TCP Timeouts and NATs</h4>
+
+          <p>Technically, there is no need for additional TCP timeouts on NAT
+          devices. The TCP protocol follows a well-defined handshake and
+          termination sequence, which signals when the appropriate translation
+          records can be added and removed.
+
+          <p>Unfortunately, in practice, many NAT devices apply similar timeout
+          logic both to TCP and UDP sessions. As a result, in some cases
+          bidirectional keepalive packets are also required for TCP. If your
+          TCP connections are getting dropped, then there is a good chance that
+          an intermediate NAT timeout is to blame.
+        </aside>
+      </section>
+
+      <section>
+        <h3 id="nat-traversal"><a href="#nat-traversal" class="anchor">§</a>NAT
+        Traversal</h3>
+
+        <p>Unpredictable connection state handling is a serious issue created
+        by NATs, but an even larger problem for many applications is the
+        inability to establish a UDP connection at all. This is especially true
+        for P2P applications, such as VoIP, games, and file sharing, which
+        often need to act as both client and server to enable two-way direct
+        communication between the peers.
+
+        <p>The first issue is that in the presence of a NAT, the internal
+        client is unaware of its public IP: it knows its internal IP address,
+        and the NAT devices perform the rewriting of the source port and
+        address in every UDP packet, as well as the originating IP address
+        within the IP packet. However, if the client communicates its private
+        IP address as part of its application data with a peer outside of its
+        private network, then the connection will inevitably fail. Hence, the
+        promise of "transparent" translation is no longer true, and the
+        application must first discover its public IP address if it needs to
+        share it with a peer outside its private network.
+
+        <p>However, knowing the public IP is also not sufficient to
+        successfully transmit with UDP. Any packet that arrives at the public
+        IP of a NAT device must also have a destination port and an entry in
+        the NAT table that can translate it to an internal destination host IP
+        and port tuple. If this entry does not exist, which is the most likely
+        case if someone simply tries to transmit data from the public network,
+        then the packet is simply dropped (<a data-type="xref" href=
+        "#nat-firewall">Figure&nbsp;3-4</a>). The NAT device acts as a simple
+        packet filter since it has no way to automatically determine the
+        internal route, unless explicitly configured by the user through a
+        port-forwarding or similar mechanism.
+
+        <figure id="nat-firewall">
+          <img src="/assets/diagrams/44b1b32df5642e4f8f9c29e901020fbc.svg" alt=
+          "Figure 3-4. Dropped inbound packet due to missing mapping">
+
+          <figcaption>
+            <span class="label">Figure 3-4.</span> Dropped inbound packet due
+            to missing mapping
+          </figcaption>
+        </figure>
+
+        <p>It is important to note that the preceding behavior is not an issue
+        for client applications, which begin their interaction from the
+        internal network and in the process establish the necessary translation
+        records along the path. However, handling inbound connections (acting
+        as a server) from P2P applications such as VoIP, game consoles, file
+        sharing, and so on, in the presence of a NAT, is where we will
+        immediately run into this problem.
+
+        <p>To work around this mismatch in UDP and NATs, various traversal
+        techniques (TURN, STUN, ICE) have to be used to establish end-to-end
+        connectivity between the UDP peers on both sides.
+      </section>
+
+      <section>
+        <h3 id="stun-turn-and-ice"><a href="#stun-turn-and-ice" class=
+        "anchor">§</a>STUN, TURN, and ICE</h3>
+
+        <p>Session Traversal Utilities for NAT (STUN) is a protocol (RFC 5389)
+        that allows the host application to discover the presence of a network
+        address translator on the network, and when present to obtain the
+        allocated public IP and port tuple for the current connection
+        (<a data-type="xref" href="#stun">Figure&nbsp;3-5</a>). To do so, the
+        protocol requires assistance from a well-known, third-party STUN server
+        that must reside on the public network.
+
+        <figure id="stun">
+          <img src="/assets/diagrams/6c3d168f45e9a1b2965f790c5cd794f0.svg" alt=
+          "Figure 3-5. STUN query for public IP and port">
+
+          <figcaption>
+            <span class="label">Figure 3-5.</span> STUN query for public IP and
+            port
+          </figcaption>
+        </figure>
+
+        <p>Assuming the IP address of the STUN server is known (through DNS
+        discovery, or through a manually specified address), the application
+        first sends a binding request to the STUN server. In turn, the STUN
+        server replies with a response that contains the public IP address and
+        port of the client as seen from the public network. This simple
+        workflow addresses several problems we encountered in our earlier
+        discussion:
+
+        <ul>
+          <li>
+            <p>The application discovers its public IP and port tuple and is
+            then able to use this information as part of its application data
+            when communicating with its peers.
+
+          <li>
+            <p>The outbound binding request to the STUN server establishes NAT
+            routing entries along the path, such that the inbound packets
+            arriving at the public IP and port tuple can now find their way
+            back to the host application on the internal network.
+
+          <li>
+            <p>The STUN protocol defines a simple mechanism for keepalive pings
+            to keep the NAT routing entries from timing out.
+          </ul>
+
+        <p>With this mechanism in place, whenever two peers want to talk to
+        each other over UDP, they will first send binding requests to their
+        respective STUN servers, and following a successful response on both
+        sides, they can then use the established public IP and port tuples to
+        exchange data.
+
+        <p>However, in practice, STUN is not sufficient to deal with all NAT
+        topologies and network configurations. Further, unfortunately, in some
+        cases UDP may be blocked altogether by a firewall or some other network
+        appliance—not an uncommon scenario for many enterprise networks. To
+        address this issue, whenever STUN fails, we can use the Traversal Using
+        Relays around NAT (TURN) protocol (RFC 5766) as a fallback, which can
+        run over UDP and switch to TCP if all else fails.
+
+        <p>The key word in TURN is, of course, "relays." The protocol relies on
+        the presence and availability of a public relay (<a data-type="xref"
+        href="#turn">Figure&nbsp;3-6</a>) to shuttle the data between the
+        peers.
+
+        <figure id="turn">
+          <img src="/assets/diagrams/8c1bfcf5483aaa50b543906a6e96d284.svg" alt=
+          "Figure 3-6. TURN relay server">
+
+          <figcaption>
+            <span class="label">Figure 3-6.</span> TURN relay server
+          </figcaption>
+        </figure>
+
+        <ul>
+          <li>
+            <p>Both clients begin their connections by sending an allocate
+            request to the same TURN server, followed by permissions
+            negotiation.
+
+          <li>
+            <p>Once the negotiation is complete, both peers communicate by
+            sending their data to the TURN server, which then relays it to the
+            other peer.
+          </ul>
+
+        <p>Of course, the obvious downside in this exchange is that it is no
+        longer peer-to-peer! TURN is the most reliable way to provide
+        connectivity between any two peers on any networks, but it carries a
+        very high cost of operating the TURN server—at the very least, the
+        relay must have enough capacity to service all the data flows. As a
+        result, TURN is best used as a last resort fallback for cases where
+        direct connectivity fails.
+
+        <aside>
+          <h4 id="stun-and-turn-in-practice"><a href=
+          "#stun-and-turn-in-practice" class="anchor">§</a>STUN and TURN in
+          Practice</h4>
+
+          <p>Google’s libjingle is an open-source C++ library for building
+          peer-to-peer applications, which takes care of STUN, TURN, and ICE
+          negotiations under the hood. The library is used to power the Google
+          Talk chat application, and the documentation provides a valuable
+          reference point for performance of STUN vs. TURN in the real world:
+
+          <ul>
+            <li>
+              <p>92% of the time the connection can take place directly (STUN).
+
+            <li>
+              <p>8% of the time the connection requires a relay (TURN).
+            </ul>
+
+          <p>Unfortunately, even with STUN, a significant fraction of users are
+          unable to establish a direct P2P tunnel. To provide a reliable
+          service, we also need TURN relays, which can acts as a fallback for
+          cases where direct P2P communication is not an option.
+        </aside>
+
+        <p>Building an effective NAT traversal solution is not for the faint of
+        heart. Thankfully, we can lean on Interactive Connectivity
+        Establishment (ICE) protocol (RFC 5245) to help with this task. ICE is
+        a protocol, and a set of methods, that seek to establish the most
+        efficient tunnel between the participants (<a data-type="xref" href=
+        "#ice">Figure&nbsp;3-7</a>): direct connection where possible,
+        leveraging STUN negotiation where needed, and finally fallback to TURN
+        if all else fails.
+
+        <figure id="ice">
+          <img src="/assets/diagrams/5bd4955aeda62721100af43140382c44.svg" alt=
+          "Figure 3-7. ICE attempts direct, STUN, and TURN connectivity options">
+
+          <figcaption>
+            <span class="label">Figure 3-7.</span> ICE attempts direct, STUN,
+            and TURN connectivity options
+          </figcaption>
+        </figure>
+
+        <p>In practice, if you are building a P2P application over UDP, then
+        you most definitely want to leverage an existing platform API, or a
+        third-party library that implements ICE, STUN, and TURN for you. And
+        now that you are familiar with what each of these protocols does, you
+        can navigate your way through the required setup and configuration!
+      </section>
+    </section>
+
+    <section>
+      <h2 id="optimizing-for-udp"><a href="#optimizing-for-udp" class=
+      "anchor">§</a>Optimizing for UDP</h2>
+
+      <p>UDP is a simple and a commonly used protocol for bootstrapping new
+      transport protocols. In fact, the primary feature of UDP is all the
+      features it omits: no connection state, handshakes, retransmissions,
+      reassembly, reordering, congestion control, congestion avoidance, flow
+      control, or even optional error checking. However, the flexibility that
+      this minimal message-oriented transport layer affords is also a liability
+      for the implementer. Your application will likely have to reimplement
+      some, or many, of these features from scratch, and each must be designed
+      to play well with other peers and protocols on the network.
+
+      <p>Unlike TCP, which ships with built-in flow and congestion control and
+      congestion avoidance, UDP applications must implement these mechanisms on
+      their own. Congestion insensitive UDP applications can easily overwhelm
+      the network, which can lead to degraded network performance and, in
+      severe cases, to network congestion collapse.
+
+      <p>If you want to leverage UDP for your own application, make sure to
+      research and read the current best practices and recommendations. One
+      such document is the RFC 5405, which specifically focuses on design
+      guidelines for applications delivered via unicast UDP. Here is a short
+      sample of the recommendations:
+
+      <ul>
+        <li>
+          <p>Application <em>must</em> tolerate a wide range of Internet path
+          conditions.
+
+        <li>
+          <p>Application <em>should</em> control rate of transmission.
+
+        <li>
+          <p>Application <em>should</em> perform congestion control over all
+          traffic.
+
+        <li>
+          <p>Application <em>should</em> use bandwidth similar to TCP.
+
+        <li>
+          <p>Application <em>should</em> back off retransmission counters
+          following loss.
+
+        <li>
+          <p>Application <em>should not</em> send datagrams that exceed path
+          MTU.
+
+        <li>
+          <p>Application <em>should</em> handle datagram loss, duplication, and
+          reordering.
+
+        <li>
+          <p>Application <em>should</em> be robust to delivery delays up to 2
+          minutes.
+
+        <li>
+          <p>Application <em>should</em> enable IPv4 UDP checksum, and
+          <em>must</em> enable IPv6 checksum.
+
+        <li>
+          <p>Application <em>may</em> use keepalives when needed (minimum
+          interval 15 seconds).
+        </ul>
+
+      <p>Designing a new transport protocol requires a lot of careful thought,
+      planning, and research—do your due diligence. Where possible, leverage an
+      existing library or a framework that has already taken into account NAT
+      traversal, and is able to establish some degree of fairness with other
+      sources of concurrent network traffic.
+
+      <p>On that note, good news: WebRTC (<a data-type="xref" href=
+      "/webrtc/">WebRTC</a>) is just such a framework!
+    </section>
+  </article>
+
+  <footer>
+    <div id="toast">
+      &nbsp;
+    </div>
+
+    <p><a href="/#toc"><em>« Back to the Table of Contents</em></a>
+
+    <p class="legal">Copyright © 2013 <a href="https://www.igvita.com/" rel=
+    "me">Ilya Grigorik</a>. Published by O'Reilly Media, Inc. Licensed under
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND
+    4.0</a>.
+  </footer>
+

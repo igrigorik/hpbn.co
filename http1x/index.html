@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>HTTP: HTTP/1.X - High Performance Browser Networking (O'Reilly)</title>
+<meta name="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
+</script>
+<script async src="https://www.google-analytics.com/analytics.js">
+</script>
+<link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
+<link href=
+"https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
+rel="stylesheet">
+<link rel="stylesheet" href="/assets/b708e9296b5e26f6bd725561648a1dda.css">
+<link rel="manifest" href="/7a58c37113db4464699ec4f4646b5566.json">
+<link rel="icon" sizes="192x192" href="/assets/icons/icon-192.png">
+<meta name="theme-color" content="#000">
+<meta itemprop="name" content=
+"HTTP: HTTP/1.X - High Performance Browser Networking (O'Reilly)">
+<meta itemprop="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content=
+"HTTP: HTTP/1.X - High Performance Browser Networking (O'Reilly)">
+<meta name="twitter:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:creator" content="@igrigorik">
+<meta name="twitter:image:src" content="https://hpbn.co/assets/twitter.jpg">
+<meta property="og:title" content=
+"HTTP: HTTP/1.X - High Performance Browser Networking (O'Reilly)">
+<meta property="og:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta property="og:site_name" content="High Performance Browser Networking">
+<meta property="fb:admins" content="688996186">
+<script type="application/ld+json">
+{"@context":"http://schema.org/","@type":"Article","headline":"HTTP: HTTP/1.X - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2015-11-30T23:06:25Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+</script>
+
+<body data-type="book">
+  <header>
+    <div id="book-title">
+      <div class="center">
+        <input type="checkbox" class="check" id="check"> <label for="check"
+        class="icon"><svg viewbox="0 0 18 18">
+        <title>Menu</title>
+
+        <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
+        </path></svg></label> <a href="/">High Performance Browser
+        Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
+
+        <div class="drawer menu">
+          <div class="title">
+            HTTP/1.X
+          </div>
+
+          <hr>
+
+          <ul class="content-container" id="nav">
+          </ul>
+
+          <hr>
+
+          <ul class="content-container" id="nav-other">
+            <li>
+              <a href="/#toc">Table of Contents</a>
+
+            <li>
+              <a href="/#author">About the Author</a>
+
+            <li>
+              <a id="feedback" target="_blank" href=
+              "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BHTTP/1.X%5D:%20...">
+              Submit Feedback</a>
+            </ul>
+        </div>
+        <label for="check" class="closemenu">&nbsp;</label>
+      </div>
+    </div>
+
+    <h1>HTTP/1.X</h1>
+
+    <p id="chapter">HTTP, Chapter 11
+  </header>
+
+  <article data-type="chapter" id="HTTP1">
+    <section id="introduction">
+      <h2>Introduction</h2>
+
+      <p>A discussion on optimization strategies for HTTP/1.0 is a simple one:
+      all HTTP/1.0 deployments should be upgraded to HTTP/1.1; end of story.
+
+      <p>Improving performance of HTTP was one the key design goals for the
+      HTTP/1.1 working group, and the standard introduced a large number of
+      critical performance enhancements and features. A few of the best known
+      include the following:
+
+      <ul>
+        <li>
+          <p>Persistent connections to allow connection reuse
+
+        <li>
+          <p>Chunked transfer encoding to allow response streaming
+
+        <li>
+          <p>Request pipelining to allow parallel request processing
+
+        <li>
+          <p>Byte serving to allow range-based resource requests
+
+        <li>
+          <p>Improved and much better-specified caching mechanisms
+        </ul>
+
+      <p>This list is incomplete, and a full discussion of the technical
+      details of each and every HTTP/1.1 enhancement deserves a separate book.
+      Once again, check out <em>HTTP: The Definitive Guide</em> by David
+      Gourley and Brian Totty. Similarly, speaking of good reference books,
+      Steve Souders’ <em>High Performance Web Sites</em> offers great advice in
+      the form of 14 rules, half of which are networking optimizations:
+
+      <dl>
+        <dt>Reduce DNS lookups
+
+        <dd>
+          <p>Every hostname resolution requires a network roundtrip, imposing
+          latency on the request and blocking the request while the lookup is
+          in progress.
+
+        <dt>Make fewer HTTP requests
+
+        <dd>
+          <p>No request is faster than a request not made: eliminate
+          unnecessary resources on your pages.
+
+        <dt>Use a Content Delivery Network
+
+        <dd>
+          <p>Locating the data geographically closer to the client can
+          significantly reduce the network latency of every TCP connection and
+          improve throughput.
+
+        <dt>Add an Expires header and configure ETags
+
+        <dd>
+          <p>Relevant resources should be cached to avoid re-requesting the
+          same bytes on each and every page. An Expires header can be used to
+          specify the cache lifetime of the object, allowing it to be retrieved
+          directly from the user’s cache and eliminating the HTTP request
+          entirely. ETags and Last-Modified headers provide an efficient cache
+          revalidation mechanism—effectively a fingerprint or a timestamp of
+          the last update.
+
+        <dt>Gzip assets
+
+        <dd>
+          <p>All text-based assets should be compressed with Gzip when
+          transferred between the client and the server. On average, Gzip will
+          reduce the file size by 60–80%, which makes it one of the simpler
+          (configuration flag on the server) and high-benefit optimizations you
+          can do.
+
+        <dt>Avoid HTTP redirects
+
+        <dd>
+          <p>HTTP redirects can be extremely costly, especially when they
+          redirect the client to a different hostname, which results in
+          additional DNS lookup, TCP connection latency, and so on.
+        </dl>
+
+      <p>Each of the preceding recommendations has stood the test of time and
+      is as true today as when the book was first published in 2007. That is no
+      coincidence, because all of them highlight two fundamental
+      recommendations: eliminate and reduce unnecessary network latency, and
+      minimize the amount of transferred bytes. Both are <em>evergreen
+      optimizations</em>, which will always ring true for any application.
+
+      <p>However, the same can’t be said for all HTTP/1.1 features and best
+      practices. Unfortunately, some HTTP/1.1 features, like request
+      pipelining, have effectively failed due to lack of support, and other
+      protocol limitations, such as head-of-line response blocking, created
+      further cracks in the foundation. In turn, the web developer
+      community—always an inventive lot—has created and popularized a number of
+      homebrew optimizations: domain sharding, concatenation, spriting, and
+      inlining among dozens of others.
+
+      <p>For many web developers, all of these are matter-of-fact
+      optimizations: familiar, necessary, and universally accepted. However, in
+      reality, these techniques should be seen for what they really are:
+      stopgap workarounds for existing limitations in the HTTP/1.1 protocol. We
+      shouldn’t have to worry about concatenating files, spriting images,
+      sharding domains, or inlining assets. Unfortunately, "shouldn’t" is not a
+      pragmatic stance to take: these optimizations exist for good reasons, and
+      we have to rely on them until the underlying issues are fixed in the next
+      revision of the protocol.
+
+      <aside>
+        <h4 id="delivering-3-performance-improvement-for-itunes-users"><a href=
+        "#delivering-3-performance-improvement-for-itunes-users" class=
+        "anchor">§</a>Delivering 3× Performance Improvement for iTunes
+        Users</h4>
+
+        <p>At WWDC 2012, Joshua Graessley offered a great case study of the
+        benefits of HTTP optimization: Apple engineers saw a 300% performance
+        improvement for users on slower networks once they made better reuse of
+        existing TCP connections within iTunes, via HTTP keepalive and
+        pipelining!
+
+        <p>Clearly, understanding the basic working of HTTP can pay high
+        dividends. For a detailed analysis of the previous optimizations, check
+        out WWDC archives on iTunes and look for Graessley’s talk: Session 706:
+        Networking Best Practices.
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="benefits-of-keepalive-connections"><a href=
+      "#benefits-of-keepalive-connections" class="anchor">§</a>Benefits of
+      Keepalive Connections</h2>
+
+      <p>One of the primary performance improvements of HTTP/1.1 was the
+      introduction of persistent, or keepalive HTTP connections—both names
+      refer to the same feature. We saw keepalive in action in <a data-type=
+      "xref" href="/brief-history-of-http/#http11-internet-standard">HTTP/1.1:
+      Internet Standard</a>, but let’s illustrate why this feature is such a
+      critical component of our performance strategy.
+
+      <p>To keep things simple, let’s restrict ourselves to a maximum of one
+      TCP connection and examine the scenario (<a data-type="xref" href=
+      "#http-no-keepalive">Figure&nbsp;11-1</a>) where we need to fetch just
+      two small (&lt;4 KB each) resources: an HTML document and a supporting
+      CSS file, each taking some arbitrary amount of time on the server (40 and
+      20 ms, respectively).
+
+      <div data-type="note" id="id-qMu7tYH9">
+        <p><a data-type="xref" href="#http-no-keepalive">Figure&nbsp;11-1</a>
+        assumes the same 28 millisecond one-way "light in fiber" delay between
+        New York and London as used in previous TCP connection establishment
+        examples; see <a data-type="xref" href=
+        "/primer-on-latency-and-bandwidth/#geo-latency-table">Table&nbsp;1-1</a>.
+      </div>
+
+      <p>Each TCP connection begins with a TCP three-way handshake, which takes
+      a full roundtrip of latency between the client and the server. Following
+      that, we will incur a minimum of another roundtrip of latency due to the
+      two-way propagation delay of the HTTP request and response. Finally, we
+      have to add the server processing time to get the total time for every
+      request.
+
+      <figure id="http-no-keepalive">
+        <img src="/assets/diagrams/84cf0f29175e4b11a2343e73105637c5.svg" alt=
+        "Figure 11-1. Fetching HTML and CSS via separate TCP connections">
+
+        <figcaption>
+          <span class="label">Figure 11-1.</span> Fetching HTML and CSS via
+          separate TCP connections
+        </figcaption>
+      </figure>
+
+      <p>We cannot predict the server processing time, since that will vary by
+      resource and the back-end behind it, but it is worth highlighting that
+      the minimum total time for an HTTP request delivered via a new TCP
+      connection is two network roundtrips: one for the handshake, one for the
+      request-response cycle. This is a fixed cost imposed on all
+      non-persistent HTTP sessions.
+
+      <div data-type="note" id="id-76uVFOH1">
+        <p>The faster your server processing time, the higher the impact of the
+        fixed latency overhead of every network request! To prove this, try
+        changing the roundtrip and server times in the previous example.
+      </div>
+
+      <p>Hence, a simple optimization is to reuse the underlying connection!
+      Adding support for HTTP keepalive (<a data-type="xref" href=
+      "#http-keepalive">Figure&nbsp;11-2</a>) allows us to eliminate the second
+      TCP three-way handshake, avoid another round of TCP slow-start, and save
+      a full roundtrip of network latency.
+
+      <figure id="http-keepalive">
+        <img src="/assets/diagrams/cf6057a54f005a288d832d293965ee0d.svg" alt=
+        "Figure 11-2. Fetching HTML and CSS with connection keepalive">
+
+        <figcaption>
+          <span class="label">Figure 11-2.</span> Fetching HTML and CSS with
+          connection keepalive
+        </figcaption>
+      </figure>
+
+      <p>In our example with two requests, the total savings is just a single
+      roundtrip of latency, but let’s now consider the general case with a
+      single TCP connection and <em>N</em> HTTP requests:
+
+      <ul>
+        <li>
+          <p>Without keepalive, each request will incur two roundtrips of
+          latency.
+
+        <li>
+          <p>With keepalive, the first request incurs two roundtrips, and all
+          following requests incur just one roundtrip of latency.
+        </ul>
+
+      <p>The total latency savings for <em>N</em> requests is <em>(N–1)</em> ×
+      <em>RTT</em> when connection keepalive is enabled. Finally, recall that
+      the average value of <em>N</em> is 90 resources and growing
+      (<a data-type="xref" href=
+      "/primer-on-web-performance/#anatomy-of-a-modern-web-application">Anatomy
+      of a Modern Web Application</a>), and we quickly arrive at potential
+      latency savings measured in seconds! Needless to say, persistent HTTP is
+      a critical optimization for every web application.
+
+      <aside>
+        <h4 id="connection-reuse-on-the-client-and-server"><a href=
+        "#connection-reuse-on-the-client-and-server" class=
+        "anchor">§</a>Connection Reuse on the Client and Server</h4>
+
+        <p>The good news is all modern browsers will attempt to use persistent
+        HTTP connections automatically as long as the server is willing to
+        cooperate. Check your application and proxy server configurations to
+        ensure that they support keepalive. For best results, use HTTP/1.1,
+        where keepalive is enabled by default, and if you are stuck with
+        HTTP/1.0, then look into using the <code>Connection: Keep-Alive</code>
+        header.
+
+        <p>Also, pay close attention to the default behavior of HTTP libraries
+        and frameworks, as many will often default to non-keepalive behavior,
+        mostly because it provides a "simpler API." Whenever you are working
+        with raw HTTP connections, attempt to reuse them: the performance
+        benefits are significant!
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="http-pipelining"><a href="#http-pipelining" class=
+      "anchor">§</a>HTTP Pipelining</h2>
+
+      <p>Persistent HTTP allows us to reuse an existing connection between
+      multiple application requests, but it implies a strict first in, first
+      out (FIFO) queuing order on the client: dispatch request, wait for the
+      full response, dispatch next request from the client queue. HTTP
+      pipelining is a small but important optimization to this workflow, which
+      allows us to relocate the FIFO queue from the client (request queuing) to
+      the server (response queuing).
+
+      <p>To understand why this is beneficial, let’s revisit <a data-type=
+      "xref" href="#http-keepalive">Figure&nbsp;11-2</a>. First, observe that
+      once the first request is processed by the server, there is an entire
+      roundtrip of latency—response propagation latency, followed by request
+      propagation latency—during which the server is idle. Instead, what if the
+      server could begin processing the second request immediately after it
+      finished the first one? Or, even better, perhaps it could even process
+      both in parallel, on multiple threads, or with the help of multiple
+      workers.
+
+      <p>By dispatching our requests early, without blocking on each individual
+      response, we can eliminate another full roundtrip of network latency,
+      taking us from two roundtrips per request with no connection keepalive,
+      down to two network roundtrips (<a data-type="xref" href=
+      "#http-pipelining-diagram">Figure&nbsp;11-3</a>) of latency overhead for
+      the entire queue of requests!
+
+      <figure id="http-pipelining-diagram">
+        <img src="/assets/diagrams/aa67e02b5a082ef886f2db4c9a9c38cc.svg" alt=
+        "Figure 11-3. Pipelined HTTP requests with server-side FIFO queue">
+
+        <figcaption>
+          <span class="label">Figure 11-3.</span> Pipelined HTTP requests with
+          server-side FIFO queue
+        </figcaption>
+      </figure>
+
+      <div data-type="note" id="id-AouzTWhd">
+        <p>Eliminating the wait time imposed by response and request
+        propagation latencies is one of the primary benefits of HTTP/1.1
+        pipelining. However, the ability to process the requests in parallel
+        can have just as big, if not bigger, impact on the performance of your
+        application.
+      </div>
+
+      <p>At this point, let’s pause and revisit our performance gains so far.
+      We began with two distinct TCP connections for each request
+      (<a data-type="xref" href="#http-no-keepalive">Figure&nbsp;11-1</a>),
+      which resulted in 284 milliseconds of total latency. With keepalive
+      enabled (<a data-type="xref" href=
+      "#http-keepalive">Figure&nbsp;11-2</a>), we were able to eliminate an
+      extra handshake roundtrip, bringing the total down to 228 milliseconds.
+      Finally, with HTTP pipelining in place, we eliminated another network
+      roundtrip in between requests. Hence, we went from 284 milliseconds down
+      to 172 milliseconds, a 40% reduction in total latency, all through simple
+      protocol optimization.
+
+      <p>Further, note that the 40% improvement is not a fixed performance
+      gain. This number is specific to our chosen network latencies and the two
+      requests in our example. As an exercise for the reader, try a few
+      additional scenarios with higher latencies and more requests. You may be
+      surprised to discover that the savings can be much, much larger. In fact,
+      the larger the network latency, and the more requests, the higher the
+      savings. It is worth proving to yourself that this is indeed the case!
+      Ergo, the larger the application, the larger the impact of networking
+      optimization.
+
+      <p>However, we are not done yet. The eagle-eyed among you have likely
+      spotted another opportunity for optimization: parallel request processing
+      on the server. In theory, there is no reason why the server could not
+      have processed both pipelined requests (<a data-type="xref" href=
+      "#http-pipelining-diagram">Figure&nbsp;11-3</a>) in parallel, eliminating
+      another 20 milliseconds of latency.
+
+      <p>Unfortunately, this optimization introduces a lot of subtle
+      implications and illustrates an important limitation of the HTTP/1.x
+      protocol: strict serialization of returned responses. Specifically,
+      HTTP/1.x does not allow data from multiple responses to be interleaved
+      (multiplexed) on the same connection, forcing each response to be
+      returned in full before the bytes for the next response can be
+      transferred. To illustrate this in action, let’s consider the case
+      (<a data-type="xref" href=
+      "#http-pipelining-parallel">Figure&nbsp;11-4</a>) where the server
+      processes both of our requests in parallel.
+
+      <figure id="http-pipelining-parallel">
+        <img src="/assets/diagrams/9e0502a36ccd2bdd00eb09e1e6cb3b6d.svg" alt=
+        "Figure 11-4. Pipelined HTTP requests with parallel processing">
+
+        <figcaption>
+          <span class="label">Figure 11-4.</span> Pipelined HTTP requests with
+          parallel processing
+        </figcaption>
+      </figure>
+
+      <p><a data-type="xref" href=
+      "#http-pipelining-parallel">Figure&nbsp;11-4</a> demonstrates the
+      following:
+
+      <ul>
+        <li>
+          <p>Both HTML and CSS requests arrive in parallel, but HTML request is
+          first.
+
+        <li>
+          <p>Server begins processing both in parallel. HTML: 40 ms, CSS: 20
+          ms.
+
+        <li>
+          <p>CSS request completes first but must be buffered until HTML
+          response is sent.
+
+        <li>
+          <p>Once HTML response is sent, CSS response is flushed from the
+          server buffers.
+        </ul>
+
+      <p>Even though the client issued both requests in parallel, and the CSS
+      resource is available first, the server must wait to send the full HTML
+      response before it can proceed with delivery of the CSS asset. This
+      scenario is commonly known as <em>head-of-line blocking</em> and results
+      in suboptimal delivery: underutilized network links, server buffering
+      costs, and worst of all, unpredictable latency delays for the client.
+      What if the first request hangs indefinitely or simply takes a very long
+      time to generate on the server? With HTTP/1.1, all requests behind it are
+      blocked and have to wait.
+
+      <div data-type="note" id="id-d0uOs7hR">
+        <p>We have already encountered head-of-line blocking when discussing
+        TCP: due to the requirement for strict in-order delivery, a lost TCP
+        packet will block all packets with higher sequence numbers until it is
+        retransmitted, inducing extra application latency; see TCP
+        <a data-type="xref" href=
+        "/building-blocks-of-tcp/#head-of-line-blocking">Head-of-Line
+        Blocking</a>.
+      </div>
+
+      <p>In practice, due to lack of multiplexing, HTTP pipelining creates many
+      subtle and undocumented implications for HTTP servers, intermediaries,
+      and clients:
+
+      <ul>
+        <li>
+          <p>A single slow response blocks all requests behind it.
+
+        <li>
+          <p>When processing in parallel, servers must buffer pipelined
+          responses, which may exhaust server resources—e.g., what if one of
+          the responses is very large? This exposes an attack vector against
+          the server!
+
+        <li>
+          <p>A failed response may terminate the TCP connection, forcing the
+          client to re-request all the subsequent resources, which may cause
+          duplicate processing.
+
+        <li>
+          <p>Detecting pipelining compatibility reliably, where intermediaries
+          may be present, is a nontrivial problem.
+
+        <li>
+          <p>Some intermediaries do not support pipelining and may abort the
+          connection, while others may serialize all requests.
+        </ul>
+
+      <p>Due to these and similar complications, and lack of guidance in the
+      HTTP/1.1 standard for these cases, HTTP pipelining adoption has remained
+      very limited despite its many benefits. Today, some browsers support
+      pipelining, usually as an advanced configuration option, but most have it
+      disabled. In other words, if the web browser is the primary delivery
+      vehicle for your web application, then we can’t count on HTTP pipelining
+      to help with performance.
+
+      <aside>
+        <h4 id="using-http-pipelining-outside-the-browser"><a href=
+        "#using-http-pipelining-outside-the-browser" class="anchor">§</a>Using
+        HTTP Pipelining Outside the Browser</h4>
+
+        <p>Before we discount the benefits of HTTP pipelining entirely, it is
+        important to note that it can still be used, and with great results, in
+        situations where you control the capabilities of both the client and
+        the server. In fact, Apple’s iTunes case study is a case in point:
+        <a data-type="xref" href=
+        "#delivering-3-performance-improvement-for-itunes-users">Delivering 3×
+        Performance Improvement for iTunes Users</a>. This performance feat was
+        accomplished by switching to persistent HTTP and enabling HTTP
+        pipelining both on the server and within the custom iTunes client.
+
+        <p>A quick checklist for enabling pipelining in your own application:
+
+        <ul>
+          <li>
+            <p>Your HTTP client must support pipelining.
+
+          <li>
+            <p>Your HTTP server must support pipelining.
+
+          <li>
+            <p>Your application must handle aborted connections and retries.
+
+          <li>
+            <p>Your application must handle idempotency concerns of aborted
+            requests.
+
+          <li>
+            <p>Your application must protect itself from broken intermediaries.
+          </ul>
+
+        <p>In practice, the best way to deploy HTTP pipelining is to create a
+        secure (HTTPS) tunnel between the client and server. That’s the most
+        reliable way to avoid interference from intermediaries that may not
+        understand or support pipelined requests.
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="using-multiple-tcp-connections"><a href=
+      "#using-multiple-tcp-connections" class="anchor">§</a>Using Multiple TCP
+      Connections</h2>
+
+      <p>In absence of multiplexing in HTTP/1.x, the browser could naively
+      queue all HTTP requests on the client, sending one after another over a
+      single, persistent connection. However, in practice, this is too slow.
+      Hence, the browser vendors are left with no other choice than to open
+      multiple TCP sessions in parallel. How many? In practice, most modern
+      browsers, both desktop and mobile, open up to six connections per host.
+
+      <p>Before we go any further, it is worth contemplating the implications,
+      both positive and negative, of opening multiple TCP connections in
+      parallel. Let’s consider the maximum case with six independent
+      connections per host:
+
+      <ul>
+        <li>
+          <p>The client can dispatch up to six requests in parallel.
+
+        <li>
+          <p>The server can process up to six requests in parallel.
+
+        <li>
+          <p>The cumulative number of packets that can be sent in the first
+          roundtrip (TCP cwnd) is increased by a factor of six.
+        </ul>
+
+      <p>The maximum request parallelism, in absence of pipelining, is the same
+      as the number of open connections. Further, the TCP congestion window is
+      also effectively multiplied by the number of open connections, allowing
+      the client to circumvent the configured packet limit dictated by TCP
+      slow-start. So far, this seems like a convenient workaround! However,
+      let’s now consider some of the costs:
+
+      <ul>
+        <li>
+          <p>Additional sockets consuming resources on the client, server, and
+          all intermediaries: extra memory buffers and CPU overhead
+
+        <li>
+          <p>Competition for shared bandwidth between parallel TCP streams
+
+        <li>
+          <p>Much higher implementation complexity for handling collections of
+          sockets
+
+        <li>
+          <p>Limited application parallelism even in light of parallel TCP
+          streams
+        </ul>
+
+      <p>In practice, the CPU and memory costs are nontrivial, resulting in
+      much higher per-client overhead on both client and server—higher
+      operational costs. Similarly, we raise the implementation complexity on
+      the client—higher development costs. Finally, this approach still
+      delivers only limited benefits as far as application parallelism is
+      concerned. It’s not the right long-term solution. Having said that, there
+      are three valid reasons why we have to use it today:
+
+      <ol>
+        <li>
+          <p>As a workaround for limitations of the application protocol (HTTP)
+
+        <li>
+          <p>As a workaround for low starting congestion window size in TCP
+
+        <li>
+          <p>As a workaround for clients that cannot use TCP window scaling
+          (see <a data-type="xref" href=
+          "/building-blocks-of-tcp/#bandwidth-delay-product">Bandwidth-Delay
+          Product</a>)
+        </ol>
+
+      <p>Both TCP considerations (window scaling and cwnd) are best addressed
+      by a simple upgrade to the latest OS kernel release; see <a data-type=
+      "xref" href="/building-blocks-of-tcp/#optimizing-for-tcp">Optimizing for
+      TCP</a>. The cwnd value has been recently raised to 10 packets, and all
+      the latest platforms provide robust support for TCP window scaling.
+      That’s the good news. The bad news is there is no simple workaround for
+      fixing multiplexing in HTTP/1.x.
+
+      <p>As long as we need to support HTTP/1.x clients, we are stuck with
+      having to juggle multiple TCP streams. Which brings us to the next
+      obvious question: why and how did the browsers settle on six connections
+      per host? Unfortunately, as you may have guessed, the number is based on
+      a collection of trade-offs: the higher the limit, the higher the client
+      and server overhead, but at the additional benefit of higher request
+      parallelism. Six connections per host is simply a safe middle ground. For
+      some sites, this may provide great results; for many it is insufficient.
+
+      <aside>
+        <h4 id="exhausting-client-and-server-resources"><a href=
+        "#exhausting-client-and-server-resources" class=
+        "anchor">§</a>Exhausting Client and Server Resources</h4>
+
+        <p>Limiting the maximum number of connections per host allows the
+        browser to provide a safety check against an unintentional (or
+        intentional) denial of service (DoS) attack. In absence of such limit,
+        the client could saturate all available resources on the server.
+
+        <p>Ironically, this same safety check enables the reverse attack on
+        some browsers: if the maximum connection limit is exceeded on the
+        client, then all further client requests are blocked. As an experiment,
+        open six parallel downloads to a single host, and then issue a seventh
+        request: it will hang until one of the previous requests has completed.
+
+        <p>Saturating the client connection limit may seem like a benign
+        security flaw, but it is increasingly a real deployment problem for
+        applications that rely on real-time delivery mechanisms, such as
+        WebSocket, Server Sent Events and hanging XHRs: each of these sessions
+        occupies a full TCP stream, even while no data is transferred—remember,
+        no multiplexing! Hence, if you’re not careful, you can create a
+        self-imposed DoS attack against your own application.
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="domain-sharding"><a href="#domain-sharding" class=
+      "anchor">§</a>Domain Sharding</h2>
+
+      <p>A gap in the HTTP/1.X protocol has forced browser vendors to introduce
+      and maintain a connection pool of up to six TCP streams per host. The
+      good news is all of the connection management is handled by the browser
+      itself. As an application developer, you don’t have to modify your
+      application at all. The bad news is six parallel streams may still not be
+      enough for your application.
+
+      <p>According to HTTP Archive, an average page is now composed of 90+
+      individual resources, which if delivered all by the same host would still
+      result in significant queuing delays (<a data-type="xref" href=
+      "#waterfall-shards">Figure&nbsp;11-5</a>). Hence, why limit ourselves to
+      the same host? Instead of serving all resources from the same origin
+      (e.g., <em>www.example.com</em>), we can manually "shard" them across
+      multiple subdomains: <em>{shard1, shardn}.example.com</em>. Because the
+      hostnames are different, we are implicitly increasing the browser’s
+      connection limit to achieve a higher level of parallelism. The more
+      shards we use, the higher the parallelism!
+
+      <figure id="waterfall-shards">
+        <img src="/assets/diagrams/a2283460ffae3026632ff33c24bc5462.png" alt=
+        "Figure 11-5. Staggered resource downloads due to six-connection limit per origin">
+
+        <figcaption>
+          <span class="label">Figure 11-5.</span> Staggered resource downloads
+          due to six-connection limit per origin
+        </figcaption>
+      </figure>
+
+      <p>Of course, there is no free lunch, and domain sharding is not an
+      exception: every new hostname will require an additional DNS lookup,
+      consume additional resources on both sides for each additional socket,
+      and, worst of all, require the site author to manually manage where and
+      how the resources are split.
+
+      <div data-type="note" id="id-2OueT2iY">
+        <p>In practice, it is not uncommon to have multiple hostnames (e.g.,
+        <em>shard1.example.com, shard2.example.com</em>) resolve to the same IP
+        address. The shards are CNAME DNS records pointing to the same server,
+        and browser connection limits are enforced with respect to the
+        hostname, not the IP. Alternatively, the shards could point to a CDN or
+        any other reachable server.
+      </div>
+
+      <p>What is the formula for the optimal number of shards? Trick question,
+      as there is no such simple equation. The answer depends on the number of
+      resources on the page (which varies per page) and the available bandwidth
+      and latency of the client’s connection (which varies per client). Hence,
+      the best we can do is make an informed guess and use some fixed number of
+      shards. With luck, the added complexity will translate to a net win for
+      most clients.
+
+      <p>In practice, domain sharding is often overused, resulting in tens of
+      underutilized TCP streams, many of them never escaping TCP slow-start,
+      and in the worst case, actually slowing down the user experience.
+      Further, the costs are even higher when HTTPS must be used, due to the
+      extra network roundtrips incurred by the TLS handshake. A few
+      considerations to keep in mind:
+
+      <ul>
+        <li>
+          <p>Get the most out of TCP first; see <a data-type="xref" href=
+          "/building-blocks-of-tcp/#optimizing-for-tcp">Optimizing for TCP</a>.
+
+        <li>
+          <p>The browser will automatically open up to six connections on your
+          behalf.
+
+        <li>
+          <p>Number, size, and response time of each resource will affect the
+          optimal number of shards.
+
+        <li>
+          <p>Client latency and bandwidth will affect the optimal number of
+          shards.
+
+        <li>
+          <p>Domain sharding can hurt performance due to additional DNS lookups
+          and TCP slow-start.
+        </ul>
+
+      <p>Domain sharding is a legitimate but also an imperfect optimization.
+      Always begin with the minimum number of shards (none), and then carefully
+      increase the number and measure the impact on your application metrics.
+      In practice, very few sites actually benefit from more than a dozen
+      connections, and if you do find yourself at the top end of that range,
+      then you may see a much larger benefit by reducing the number of
+      resources or consolidating them into fewer requests.
+
+      <div data-type="note" id="id-w8ulH4iZ">
+        <p>The extra overhead of DNS lookups and TCP slow-start affects
+        high-latency clients the most, which means that mobile (3G and 4G)
+        clients are often affected the most by overzealous use of domain
+        sharding!
+      </div>
+    </section>
+
+    <section>
+      <h2 id="measuring-and-controlling-protocol-overhead"><a href=
+      "#measuring-and-controlling-protocol-overhead" class=
+      "anchor">§</a>Measuring and Controlling Protocol Overhead</h2>
+
+      <p>HTTP 0.9 started with a simple, one-line ASCII request to fetch a
+      hypertext document, which incurred minimal overhead. HTTP/1.0 extended
+      the protocol by adding the notion of request and response headers to
+      allow both sides to exchange additional request and response metadata.
+      Finally, HTTP/1.1 made this format a standard: headers are easily
+      extensible by any server or client and are always sent as plain text to
+      remain compatible with previous versions of HTTP.
+
+      <p>Today, each browser-initiated HTTP request will carry an additional
+      500–800 bytes of HTTP metadata: user-agent string, accept and transfer
+      headers that rarely change, caching directives, and so on. Even worse,
+      the 500–800 bytes is optimistic, since it omits the largest offender:
+      HTTP cookies, which are now commonly used for session management,
+      personalization, analytics, and more. Combined, all of this uncompressed
+      HTTP metadata can, and often does, add up to multiple kilobytes of
+      protocol overhead for each and every HTTP request.
+
+      <div data-type="note" id="id-76uktys1">
+        <p>RFC 2616 (HTTP/1.1) does not define any limit on the size of the
+        HTTP headers. However, in practice, many servers and proxies will try
+        to enforce either an 8 KB or a 16 KB limit.
+      </div>
+
+      <p>The growing list of HTTP headers is not bad in and of itself, as most
+      headers exist for a good reason. However, the fact that all HTTP headers
+      are transferred in plain text (without any compression), can lead to high
+      overhead costs for each and every request, which can be a serious
+      bottleneck for some applications. For example, the rise of API-driven web
+      applications, which frequently communicate with compact serialized
+      messages (e.g., JSON payloads) means that it is now not uncommon to see
+      the HTTP overhead exceed the payload data by an order of magnitude:
+
+      <div data-type="example" id="-62uVTes2">
+        <pre data-type="programlisting">
+<strong>$&gt; curl --trace-ascii - -d'{"msg":"hello"}' http://www.igvita.com/api</strong>
+
+== Info: Connected to www.igvita.com
+=&gt; Send header, 218 bytes <a class="counter" id="ch-co" href="#ch"></a>
+POST /api HTTP/1.1
+User-Agent: curl/7.24.0 (x86_64-apple-darwin12.0) libcurl/7.24.0 ...
+Host: www.igvita.com
+Accept: */*
+Content-Length: 15 <a class="counter" id="cl-co" href="#cl"></a>
+Content-Type: application/x-www-form-urlencoded
+=&gt; Send data, 15 bytes (0xf)
+{"msg":"hello"}
+
+&lt;= Recv header, 134 bytes <a class="counter" id="resp-co" href="#resp"></a>
+HTTP/1.1 204 No Content
+Server: nginx/1.0.11
+Via: HTTP/1.1 GWA
+Date: Thu, 20 Sep 2012 05:41:30 GMT
+Cache-Control: max-age=0, no-cache
+</pre>
+
+        <ol class="notation">
+          <li>
+            <a class="co" id="ch" href="#ch-co"></a>
+
+            <p>HTTP request headers: 218 bytes
+
+          <li>
+            <a class="co" id="cl" href="#cl-co"></a>
+
+            <p>15-byte application payload ({"msg":"hello"})
+
+          <li>
+            <a class="co" id="resp" href="#resp-co"></a>
+
+            <p>204 response from the server: 134 bytes
+          </ol>
+      </div>
+
+      <p>In the preceding example, our brief 15-character JSON message is
+      wrapped in 352 bytes of HTTP headers, all transferred as plain text on
+      the wire—96% protocol byte overhead, and that is the best case without
+      any cookies. Reducing the transferred header data, which is highly
+      repetitive and uncompressed, could save entire roundtrips of network
+      latency and significantly improve the performance of many web
+      applications.
+
+      <div data-type="note" id="id-xVuWFvsw">
+        <p>Cookies are a common performance bottleneck for many applications;
+        many developers forget that they add significant overhead to each
+        request. See <a data-type="xref" href=
+        "/optimizing-application-delivery/#eliminate-unnecessary-request-bytes">
+        Eliminate Unnecessary Request Bytes</a> for a full discussion.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="concatenation-and-spriting"><a href="#concatenation-and-spriting"
+      class="anchor">§</a>Concatenation and Spriting</h2>
+
+      <p>The fastest request is a request not made. Reducing the number of
+      total requests is the best performance optimization, regardless of
+      protocol used or application in question. However, if eliminating the
+      request is not an option, then an alternative strategy for HTTP/1.x is to
+      bundle multiple resources into a single network request:
+
+      <dl>
+        <dt>Concatenation
+
+        <dd>
+          <p>Multiple JavaScript or CSS files are combined into a single
+          resource.
+
+        <dt>Spriting
+
+        <dd>
+          <p>Multiple images are combined into a larger, composite image.
+        </dl>
+
+      <p>In the case of JavaScript and CSS, we can safely concatenate multiple
+      files without affecting the behavior and the execution of the code as
+      long as the execution order is maintained. Similarly, multiple images can
+      be combined into an "image sprite," and CSS can then be used to select
+      and position the appropriate parts of the sprite within the browser
+      viewport. The benefits of both of these techniques are twofold:
+
+      <dl>
+        <dt>Reduced protocol overhead
+
+        <dd>
+          <p>By combining files into a single resource, we eliminate the
+          protocol overhead associated with each file, which, as we saw
+          earlier, can easily add up to kilobytes of uncompressed data
+          transfers.
+
+        <dt>Application-layer pipelining
+
+        <dd>
+          <p>The net result of both techniques, as far as byte delivery is
+          concerned, is the same as if HTTP pipelining was available: data from
+          multiple responses is streamed back to back, eliminating extra
+          network latency. Hence, we have simply moved the pipelining logic one
+          layer higher and into our application.
+        </dl>
+
+      <p>Both concatenation and spriting techniques are examples of
+      content-aware application layer optimizations, which can yield
+      significant performance improvements by reducing the networking overhead
+      costs. However, these same techniques also introduce extra application
+      complexity by requiring additional preprocessing, deployment
+      considerations, and code (e.g., extra CSS markup for managing sprites).
+      Further, bundling multiple independent resources may also have a
+      significant <em>negative impact</em> on cache performance and execution
+      speed of the page.
+
+      <p>To understand why these techniques may hurt performance, consider the
+      not-unusual case of an application with a few dozen individual JavaScript
+      and CSS files, all combined into two requests in a production
+      environment, one for the CSS and one for the JavaScript assets:
+
+      <ul>
+        <li>
+          <p>All resources of the same type will live under the same URL (and
+          cache key).
+
+        <li>
+          <p>Combined bundle may contain resources that are not required for
+          the current page.
+
+        <li>
+          <p>A single update to any one individual file will require
+          invalidating and downloading the full asset bundle, resulting in high
+          byte overhead costs.
+
+        <li>
+          <p>Both JavaScript and CSS are parsed and executed only when the
+          transfer is finished, potentially delaying the execution speed of
+          your application.
+        </ul>
+
+      <p>In practice, most web applications are not single pages but
+      collections of different views, each with different resource requirements
+      but also with significant overlap: common CSS, JavaScript, and images.
+      Hence, combining all assets into a single bundle often results in loading
+      and processing of unnecessary bytes on the wire—although this can be seen
+      as a form of pre-fetching, but at the cost of slower initial startup.
+
+      <p>Updates are an even larger problem for many applications. A single
+      update to an image sprite or a combined JavaScript file may result in
+      hundreds of kilobytes of new data transfers. We sacrifice modularity and
+      cache granularity, which can quickly backfire if there is high churn on
+      the asset, and especially if the bundle is large. If such is the case for
+      your application, consider separating the "stable core," such as
+      frameworks and libraries, into separate bundles.
+
+      <p>Memory use can also become a problem. In the case of image sprites,
+      the browser must decode the entire image and keep it in memory,
+      regardless of the actual size of displayed area. The browser does not
+      magically clip the rest of the bitmap from memory!
+
+      <aside>
+        <h4 id="calculating-image-memory-requirements"><a href=
+        "#calculating-image-memory-requirements" class=
+        "anchor">§</a>Calculating Image Memory Requirements</h4>
+
+        <p>All decoded images are stored as memory-backed RGBA bitmaps within
+        the browser. In turn, each RGBA image pixel requires four bytes of
+        memory: one byte each for red, green, and blue channels, and one byte
+        for the alpha (transparency) channel. Hence, the total memory used is
+        simply <img src=
+        "/assets/equations/00488afca0d76fd6e09c993be946c0f8.svg" class=
+        "equation">.
+
+        <p>As an exercise, how much memory will a 800 × 600 pixel bitmap
+        require?
+
+        <p>800 × 600 × 4 bytes = 1,920,000 bytes ≈ 1.83 MB
+
+        <p>On resource-constrained devices, such as mobile handsets, the memory
+        overhead can quickly become your new bottleneck. This is especially
+        true for image-heavy applications, such as games, which often depend on
+        large numbers of image assets.
+      </aside>
+
+      <p>Finally, why would the execution speed be affected? Unfortunately,
+      unlike HTML processing, which is parsed incrementally as soon as the
+      bytes arrive on the client, both JavaScript and CSS parsing and execution
+      is held back until the entire file is downloaded—neither JavaScript nor
+      CSS processing models allow incremental execution.
+
+      <aside>
+        <h4 id="css-and-javascript-bundle-size-vs-execution-performance">
+        <a href="#css-and-javascript-bundle-size-vs-execution-performance"
+        class="anchor">§</a>CSS and JavaScript Bundle Size vs. Execution
+        Performance</h4>
+
+        <p>The larger the CSS bundle, the longer the browser will be blocked
+        before it can construct the CSSOM, possibly delaying the first paint
+        event of the page. Similarly, large JavaScript bundles may also
+        negatively impact the execution speed of the page; small files allow
+        "incremental" execution.
+
+        <p>Unfortunately, there is no "ideal" size for a CSS or a JavaScript
+        bundle. However, tests performed by the Google PageSpeed team indicate
+        that 30–50 KB (compressed) is a good range to target per JavaScript
+        bundle—large enough to mitigate some of the networking overhead
+        associated with small individual files, but still allowing for
+        incremental and tiered execution. Your results may vary based on type
+        and number of scripts in use.
+      </aside>
+
+      <p>In summary, concatenation and spriting are application-layer
+      optimizations for the limitations of the underlying HTTP/1.x protocol:
+      lack of reliable pipelining support and high request overhead. Both
+      techniques can deliver significant performance improvements when applied
+      correctly, but at the cost of added application complexity and with many
+      additional caveats for caching, update costs, and even speed of execution
+      and rendering of the page. Apply these optimizations carefully, measure
+      the results, and consider the following questions in the context of your
+      own application:
+
+      <ul>
+        <li>
+          <p>Is your application blocked on many small, individual resource
+          downloads?
+
+        <li>
+          <p>Can your application benefit from selectively combining some
+          requests?
+
+        <li>
+          <p>Will lost cache granularity negatively affect your users?
+
+        <li>
+          <p>Will combined image assets cause high memory overhead?
+
+        <li>
+          <p>Will the time to first render suffer from delayed execution?
+        </ul>
+
+      <p>Finding the right balance among all of these criteria is an imperfect
+      science.
+
+      <aside>
+        <h4 id="optimizing-gmail-performance"><a href=
+        "#optimizing-gmail-performance" class="anchor">§</a>Optimizing Gmail
+        Performance</h4>
+
+        <p>Gmail is a JavaScript-heavy application that has always pushed the
+        performance boundaries of all modern browsers. To speed up first-load
+        performance, the team has tried a variety of techniques, which now
+        include these:
+
+        <ul>
+          <li>
+            <p>Separating and delivering first-paint critical CSS from the rest
+            of the CSS
+
+          <li>
+            <p>Separating and delivering smaller JavaScript chunks for
+            incremental execution
+
+          <li>
+            <p>Custom out-of-band update mechanism, in which the client
+            downloads the new JavaScript in the background and the update is
+            applied on page refresh
+          </ul>
+
+        <p>The size of the Gmail userbase turns a simple JavaScript update into
+        a self-inflicted DoS attack, as all open browsers update their scripts.
+        Instead, Gmail preloads the updated files in the background while the
+        user is interacting with the older version of the page, which allows it
+        to spread the load, and also to deliver a faster experience on next
+        refresh. This process is repeated one or more times each day.
+
+        <p>Then, to further accelerate the first-load experience, the team
+        inlines the critical CSS and JavaScript into the HTML document itself
+        and then incrementally loads the remaining JavaScript files in chunks
+        to accelerate script execution—that’s the progress bar that is shown as
+        the site first loads!
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="resource-inlining"><a href="#resource-inlining" class=
+      "anchor">§</a>Resource Inlining</h2>
+
+      <p>Resource inlining is another popular optimization that helps reduce
+      the number of outbound requests by embedding the resource within the
+      document itself: JavaScript and CSS code can be included directly in the
+      page via the appropriate script and style HTML blocks, and other
+      resources, such as images and even audio or PDF files, can be inlined via
+      the data URI scheme (<em>data:[mediatype][;base64],data</em>):
+
+      <pre data-type="programlisting" data-code-language="html"
+      data-highlighted="true"><code class="nt">&lt;img</code> <code class=
+      "na">src=</code><code class=
+      "s">"data:image/gif;base64,R0lGODlhAQABAIAAAAA</code>
+<code class="s">          AAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw=="</code>
+     <code class="na">alt=</code><code class=
+"s">"1x1 transparent (GIF) pixel"</code> <code class="nt">/&gt;</code></pre>
+
+      <div data-type="note" id="id-62urtgC2">
+        <p>The previous example embeds a 1×1 transparent GIF pixel within the
+        document, but any other MIME type, as long as the browser understands
+        it, could be similarly inlined within the page: PDF, audio, video, etc.
+        However, some browsers enforce a limit on the size of data URIs: IE8
+        has a maximum limit of 32 KB.
+      </div>
+
+      <p>Data URIs are useful for small and ideally unique assets. When a
+      resource is inlined within a page, it is by definition part of the page
+      and cannot be cached individually by the browser, a CDN, or any caching
+      proxy as a standalone resource. Hence, if the same resource is inlined
+      across multiple pages, then the same resource will have to be transferred
+      as part of each and every page, increasing the overall size of each page.
+      Further, if the inlined resource is updated, then all pages on which it
+      previously appeared must be invalidated and refetched by the client.
+
+      <p>Finally, while text-based resources such as CSS and JavaScript are
+      easily inlined directly into the page with no extra overhead, base64
+      encoding must be used for non-text assets, which adds a significant
+      overhead: 33% byte expansion as compared with the original resource!
+
+      <div data-type="note" id="id-DZuJUxCo">
+        <p>Base64 encodes any byte stream into an ASCII string via 64 ASCII
+        symbols, plus whitespace. In the process, base64 expands encoded stream
+        by a factor of 4/3, incurring a 33% byte overhead.
+      </div>
+
+      <p>In practice, a common rule of thumb is to consider inlining for
+      resources under 1–2 KB, as resources below this threshold often incur
+      higher HTTP overhead than the resource itself. However, if the inlined
+      resource changes frequently, then this may lead to an unnecessarily high
+      cache invalidation rate of host document: inlining is an imperfect
+      science. A few criteria to consider if your application has many small,
+      individual files:
+
+      <ul>
+        <li>
+          <p>If the files are small, and limited to specific pages, then
+          consider inlining.
+
+        <li>
+          <p>If the small files are frequently reused across pages, then
+          consider bundling.
+
+        <li>
+          <p>If the small files have high update frequency, then keep them
+          separate.
+
+        <li>
+          <p>Minimize the protocol overhead by reducing the size of HTTP
+          cookies.
+        </ul>
+    </section>
+  </article>
+
+  <footer>
+    <div id="toast">
+      &nbsp;
+    </div>
+
+    <p><a href="/#toc"><em>« Back to the Table of Contents</em></a>
+
+    <p class="legal">Copyright © 2013 <a href="https://www.igvita.com/" rel=
+    "me">Ilya Grigorik</a>. Published by O'Reilly Media, Inc. Licensed under
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND
+    4.0</a>.
+  </footer>
+

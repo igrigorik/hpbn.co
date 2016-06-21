@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>HTTP: Optimizing Application Delivery - High Performance Browser
+Networking (O'Reilly)</title>
+<meta name="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
+</script>
+<script async src="https://www.google-analytics.com/analytics.js">
+</script>
+<link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
+<link href=
+"https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
+rel="stylesheet">
+<link rel="stylesheet" href="/assets/b708e9296b5e26f6bd725561648a1dda.css">
+<link rel="manifest" href="/7a58c37113db4464699ec4f4646b5566.json">
+<link rel="icon" sizes="192x192" href="/assets/icons/icon-192.png">
+<meta name="theme-color" content="#000">
+<meta itemprop="name" content=
+"HTTP: Optimizing Application Delivery - High Performance Browser Networking (O'Reilly)">
+<meta itemprop="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content=
+"HTTP: Optimizing Application Delivery - High Performance Browser Networking (O'Reilly)">
+<meta name="twitter:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:creator" content="@igrigorik">
+<meta name="twitter:image:src" content="https://hpbn.co/assets/twitter.jpg">
+<meta property="og:title" content=
+"HTTP: Optimizing Application Delivery - High Performance Browser Networking (O'Reilly)">
+<meta property="og:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta property="og:site_name" content="High Performance Browser Networking">
+<meta property="fb:admins" content="688996186">
+<script type="application/ld+json">
+{"@context":"http://schema.org/","@type":"Article","headline":"HTTP: Optimizing Application Delivery - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2016-05-05T19:31:31Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+</script>
+
+<body data-type="book">
+  <header>
+    <div id="book-title">
+      <div class="center">
+        <input type="checkbox" class="check" id="check"> <label for="check"
+        class="icon"><svg viewbox="0 0 18 18">
+        <title>Menu</title>
+
+        <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
+        </path></svg></label> <a href="/">High Performance Browser
+        Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
+
+        <div class="drawer menu">
+          <div class="title">
+            Optimizing Application Delivery
+          </div>
+
+          <hr>
+
+          <ul class="content-container" id="nav">
+          </ul>
+
+          <hr>
+
+          <ul class="content-container" id="nav-other">
+            <li>
+              <a href="/#toc">Table of Contents</a>
+
+            <li>
+              <a href="/#author">About the Author</a>
+
+            <li>
+              <a id="feedback" target="_blank" href=
+              "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BOptimizing%20Application%20Delivery%5D:%20...">
+              Submit Feedback</a>
+            </ul>
+        </div>
+        <label for="check" class="closemenu">&nbsp;</label>
+      </div>
+    </div>
+
+    <h1>Optimizing Application Delivery</h1>
+
+    <p id="chapter">HTTP, Chapter 13
+  </header>
+
+  <article data-type="chapter" id="OPTIMIZING_APPLICATION_DELIVERY">
+    <section id="introduction">
+      <h2>Introduction</h2>
+
+      <p>High-performance browser networking relies on a host of networking
+      technologies (<a data-type="xref" href=
+      "#optimization-layers">Figure&nbsp;13-1</a>), and the overall performance
+      of our applications is the sum total of each of their parts.
+
+      <p>We cannot control the network weather between the client and server,
+      nor the client hardware or the configuration of their device, but the
+      rest is in our hands: TCP and TLS optimizations on the server, and dozens
+      of application optimizations to account for the peculiarities of the
+      different physical layers, versions of HTTP protocol in use, as well as
+      general application best practices. Granted, getting it all right is not
+      an easy task, but it is a rewarding one! Let’s pull it all together.
+
+      <figure id="optimization-layers">
+        <img src="/assets/diagrams/dc5b8e3eb7c7219c13977a42a3fa1631.svg" alt=
+        "Figure 13-1. Optimization layers for web application delivery">
+
+        <figcaption>
+          <span class="label">Figure 13-1.</span> Optimization layers for web
+          application delivery
+        </figcaption>
+      </figure>
+    </section>
+
+    <section>
+      <h2 id="optimizing-physical-and-transport-layers"><a href=
+      "#optimizing-physical-and-transport-layers" class=
+      "anchor">§</a>Optimizing Physical and Transport Layers</h2>
+
+      <p>The physical properties of the communication channel set hard
+      performance limits on every application: speed of light and distance
+      between client and server dictate the propagation latency, and the choice
+      of medium (wired vs. wireless) determines the processing, transmission,
+      queuing, and other delays incurred by each data packet. In fact, the
+      performance of most web applications is limited by latency, not
+      bandwidth, and while bandwidth speeds will continue to increase,
+      unfortunately the same can’t be said for latency:
+
+      <ul>
+        <li>
+          <p><a data-type="xref" href=
+          "/primer-on-latency-and-bandwidth/#the-many-components-of-latency">The
+          Many Components of Latency</a>
+
+        <li>
+          <p><a data-type="xref" href=
+          "/primer-on-latency-and-bandwidth/#delivering-higher-bandwidth-and-lower-latencies">
+          Delivering Higher Bandwidth and Lower Latencies</a>
+
+        <li>
+          <p><a data-type="xref" href=
+          "/primer-on-web-performance/#latency-as-a-performance-bottleneck">Latency
+          as a Performance Bottleneck</a>
+        </ul>
+
+      <p>As a result, while we cannot make the bits travel any faster, it is
+      crucial that we apply all the possible optimizations at the transport and
+      application layers to eliminate unnecessary roundtrips, requests, and
+      minimize the distance traveled by each packet—i.e., position the servers
+      closer to the client.
+
+      <p>Every application can benefit from optimizing for the unique
+      properties of the physical layer in wireless networks, where latencies
+      are high, and bandwidth is always at a premium. At the API layer, the
+      differences between the wired and wireless networks are entirely
+      transparent, but ignoring them is a recipe for poor performance. Simple
+      optimizations in how and when we schedule resource downloads, beacons,
+      and the rest can translate to significant impact on the experienced
+      latency, battery life, and overall user experience of our applications:
+
+      <ul>
+        <li>
+          <p><a data-type="xref" href=
+          "/wifi/#optimizing-for-wifi-networks">Optimizing for WiFi
+          Networks</a>
+
+        <li>
+          <p><a data-type="xref" href=
+          "/optimizing-for-mobile-networks/">Optimizing for Mobile Networks</a>
+        </ul>
+
+      <p>Moving up the stack from the physical layer, we must ensure that each
+      and every server is configured to use the latest TCP and TLS best
+      practices. Optimizing the underlying protocols ensures that each client
+      can get the best performance—high throughput and low latency—when
+      communicating with the server:
+
+      <ul>
+        <li>
+          <p><a data-type="xref" href=
+          "/building-blocks-of-tcp/#optimizing-for-tcp">Optimizing for TCP</a>
+
+        <li>
+          <p><a data-type="xref" href=
+          "/transport-layer-security-tls/#optimizing-for-tls">Optimizing for
+          TLS</a>
+        </ul>
+
+      <p>Finally, we arrive at the application layer. By all accounts and
+      measures, HTTP is an incredibly successful protocol. After all, it is the
+      common language between billions of clients and servers, enabling the
+      modern Web. However, it is also an imperfect protocol, which means that
+      we must take special care in how we architect our applications:
+
+      <ul>
+        <li>
+          <p>We must work around the limitations of HTTP/1.x.
+
+        <li>
+          <p>We must leverage new performance capabilities of HTTP/2.
+
+        <li>
+          <p>We must be vigilant about applying the evergeen performance best
+          practices.
+        </ul>
+
+      <div data-type="note" id="id-5guOHeUd">
+        <p>The secret to a successful web performance strategy is simple:
+        invest into monitoring and measurement tools to identify problems and
+        regressions (see <a data-type="xref" href=
+        "/primer-on-web-performance/#synthetic-and-real-user-performance-measurement">
+        Synthetic and Real-User Performance Measurement</a>), link business
+        goals to performance metrics, and optimize from there—i.e., treat
+        performance as a feature.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="evergreen-performance-best-practices"><a href=
+      "#evergreen-performance-best-practices" class="anchor">§</a>Evergreen
+      Performance Best Practices</h2>
+
+      <p>Regardless of the type of network or the type or version of the
+      networking protocols in use, all applications should always seek to
+      eliminate or reduce unnecessary network latency and minimize the number
+      of transferred bytes. These two simple rules are the foundation for all
+      of the evergreen performance best practices:
+
+      <dl>
+        <dt>Reduce DNS lookups
+
+        <dd>
+          <p>Every hostname resolution requires a network roundtrip, imposing
+          latency on the request and blocking the request while the lookup is
+          in progress.
+
+        <dt>Reuse TCP connections
+
+        <dd>
+          <p>Leverage connection keepalive whenever possible to eliminate the
+          TCP handshake and slow-start latency overhead; see <a data-type=
+          "xref" href="/building-blocks-of-tcp/#slow-start">Slow-Start</a>.
+
+        <dt>Minimize number of HTTP redirects
+
+        <dd>
+          <p>HTTP redirects impose high latency overhead—e.g., a single
+          redirect to a different origin can result in DNS, TCP, TLS, and
+          request-response roundtrips that can add hundreds to thousands of
+          milliseconds of delay. The optimal number of redirects is zero.
+
+        <dt>Reduce roundtrip times
+
+        <dd>
+          <p>Locating servers closer to the user improves protocol performance
+          by reducing roundtrip times (e.g., faster TCP and TLS handshakes),
+          and improves the transfer throughput of static and dynamic content;
+          see <a data-type="xref" href=
+          "/transport-layer-security-tls/#uncached-origin-fetch">Uncached
+          Origin Fetch</a>.
+
+        <dt>Eliminate unnecessary resources
+
+        <dd>
+          <p>No request is faster than a request not made. Be vigilant about
+          auditing and removing unnecessary resources.
+        </dl>
+
+      <p>By this point, all of these recommendations should require no
+      explanation: latency is the bottleneck, and the fastest byte is a byte
+      not sent. However, HTTP provides some additional mechanisms, such as
+      caching and compression, as well as its set of version-specific
+      performance quirks:
+
+      <dl>
+        <dt>Cache resources on the client
+
+        <dd>
+          <p>Application resources should be cached to avoid re-requesting the
+          same bytes each time the resources are required.
+
+        <dt>Compress assets during transfer
+
+        <dd>
+          <p>Application resources should be transferred with the minimum
+          number of bytes: always apply the best compression method for each
+          transferred asset.
+
+        <dt>Eliminate unnecessary request bytes
+
+        <dd>
+          <p>Reducing the transferred HTTP header data (e.g., HTTP cookies) can
+          save entire roundtrips of network latency.
+
+        <dt>Parallelize request and response processing
+
+        <dd>
+          <p>Request and response queuing latency, both on the client and
+          server, often goes unnoticed, but contributes significant and
+          unnecessary latency delays.
+
+        <dt>Apply protocol-specific optimizations
+
+        <dd>
+          <p>HTTP/1.x offers limited parallelism, which requires that we bundle
+          resources, split delivery across domains, and more. By contrast,
+          HTTP/2 performs best when a single connection is used, and HTTP/1.x
+          specific optimizations are removed.
+        </dl>
+
+      <p>Each of these warrants closer examination. Let’s dive in.
+
+      <section>
+        <h3 id="cache-resources-on-the-client"><a href=
+        "#cache-resources-on-the-client" class="anchor">§</a>Cache Resources on
+        the Client</h3>
+
+        <p>The fastest network request is a request not made. Maintaining a
+        cache of previously downloaded data allows the client to use a local
+        copy of the resource, thereby eliminating the request. For resources
+        delivered over HTTP, make sure the appropriate cache headers are in
+        place:
+
+        <ul>
+          <li>
+            <p><code>Cache-Control</code> header can specify the cache lifetime
+            (max-age) of the resource.
+
+          <li>
+            <p><code>Last-Modified</code> and <code>ETag</code> headers provide
+            validation mechanisms.
+          </ul>
+
+        <p>Whenever possible, you should specify an explicit cache lifetime for
+        each resource, which allows the client to use a local copy, instead of
+        re-requesting the same object all the time. Similarly, specify a
+        validation mechanism to allow the client to check if the expired
+        resource has been updated: if the resource has not changed, we can
+        eliminate the data transfer.
+
+        <p>Finally, note that you need to specify both the cache lifetime and
+        the validation method! A common mistake is to provide only one of the
+        two, which results in either redundant transfers of resources that have
+        not changed (i.e., missing validation), or redundant validation checks
+        each time the resource is used (i.e., missing or unnecessarily short
+        cache lifetime).
+
+        <div data-type="note" id="id-xduaCbtgCV">
+          <p>For hands-on advice on optimizing your caching strategy, see the
+          <a href="https://hpbn.co/wf-caching">"HTTP caching" section on
+          Google’s Web Fundamentals</a>.
+        </div>
+
+        <aside>
+          <h4 id="web-caching-on-smartphones-ideal-vs-reality"><a href=
+          "#web-caching-on-smartphones-ideal-vs-reality" class=
+          "anchor">§</a>Web Caching on Smartphones: Ideal vs. Reality</h4>
+
+          <p>Caching of HTTP resources has been one of the top performance
+          optimizations ever since the very early versions of the HTTP
+          protocol. However, while seemingly everyone is aware of its benefits,
+          real-world studies continue to discover that it is nonetheless an
+          often-omitted optimization! A recent joint study by AT&amp;T Labs
+          Research and University of Michigan reports:
+
+          <blockquote>
+            <p>Our findings suggest that redundant transfers contribute 18% and
+            20% of the total HTTP traffic volume in the two datasets. Also they
+            are responsible for 17% of the bytes, 7% of the radio energy
+            consumption, 6% of the signaling load, and 9% of the radio resource
+            utilization of all cellular data traffic in the second dataset.
+            Most of such redundant transfers are caused by the smartphone web
+            caching implementation that does not fully support or strictly
+            follow the protocol specification, or by developers not fully
+            utilizing the caching support provided by the libraries.
+
+            <p data-type="attribution">Web Caching on Smartphones,
+            <cite>MobiSys 2012</cite>
+          </blockquote>
+
+          <p>Is your application fetching unnecessary resources over and over
+          again? As evidence shows, that’s not a rhetorical question.
+          Double-check your application and, even better, add some tests to
+          catch any regressions in the future.
+        </aside>
+      </section>
+
+      <section>
+        <h3 id="compress-transferred-data"><a href="#compress-transferred-data"
+        class="anchor">§</a>Compress Transferred Data</h3>
+
+        <p>Leveraging a local cache allows the client to avoid fetching
+        duplicate content on each request. However, if and when the resource
+        must be fetched, either because it has expired, it is new, or it cannot
+        be cached, then it should be transferred with the minimum number of
+        bytes. Always apply the best compression method for each asset.
+
+        <p>The size of text-based assets, such as HTML, CSS, and JavaScript,
+        can be reduced by 60%–80% on average when compressed with Gzip. Images,
+        on the other hand, require more nuanced consideration:
+
+        <ul>
+          <li>
+            <p>Images often carry a lot of metadata that can be stripped—e.g.,
+            EXIF.
+
+          <li>
+            <p>Images should be sized to their display width to minimize
+            transferred bytes.
+
+          <li>
+            <p>Images can be compressed with different lossy and lossless
+            formats.
+          </ul>
+
+        <p>Images account for over half of the transferred bytes of an average
+        page, which makes them a high-value optimization target: the simple
+        choice of an optimal image format can yield dramatically improved
+        compression ratios; lossy compression methods can reduce transfer sizes
+        by orders of magnitude; sizing the image to its display width will
+        reduce both the transfer and memory footprints (see <a data-type="xref"
+        href="/http1x/#calculating-image-memory-requirements">Calculating Image
+        Memory Requirements</a>) on the client. Invest into tools and
+        automation to optimize image delivery on your site.
+
+        <div data-type="note" id="id-gou0CEsnCP">
+          <p>For hands-on advice on reducing the transfer size of text, image,
+          webfont, and other resources, see the <a href=
+          "https://hpbn.co/wf-compression">"Optimizing Content Efficiency"
+          section on Google’s Web Fundamentals</a>.
+        </div>
+      </section>
+
+      <section>
+        <h3 id="eliminate-unnecessary-request-bytes"><a href=
+        "#eliminate-unnecessary-request-bytes" class="anchor">§</a>Eliminate
+        Unnecessary Request Bytes</h3>
+
+        <p>HTTP is a stateless protocol, which means that the server is not
+        required to retain any information about the client between different
+        requests. However, many applications require state for session
+        management, personalization, analytics, and more. To enable this
+        functionality, the HTTP State Management Mechanism (RFC 2965) extension
+        allows any website to associate and update "cookie" metadata for its
+        origin: the provided data is saved by the browser and is then
+        automatically appended onto every request to the origin within the
+        <code>Cookie</code> header.
+
+        <p>The standard does not specify a maximum limit on the size of a
+        cookie, but in practice most browsers enforce a 4 KB limit. However,
+        the standard also allows the site to associate many cookies per origin.
+        As a result, it is possible to associate tens to hundreds of kilobytes
+        of arbitrary metadata, split across multiple cookies, for each origin!
+
+        <p>Needless to say, this can have significant performance implications
+        for your application. Associated cookie data is automatically sent by
+        the browser on each request, which, in the worst case can add entire
+        roundtrips of network latency by exceeding the initial TCP congestion
+        window, regardless of whether HTTP/1.x or HTTP/2 is used:
+
+        <ul>
+          <li>
+            <p>In HTTP/1.x, all HTTP headers, including cookies, are
+            transferred uncompressed on each request.
+
+          <li>
+            <p>In HTTP/2, headers are compressed with HPACK, but at a minimum
+            the cookie value is transferred on the first request, which will
+            affect the performance of your initial page load.
+          </ul>
+
+        <p>Cookie size should be monitored judiciously: transfer the minimum
+        amount of required data, such as a secure session token, and leverage a
+        shared session cache on the server to look up other metadata. And even
+        better, eliminate cookies entirely wherever possible—chances are, you
+        do not need client-specific metadata when requesting static assets,
+        such as images, scripts, and stylesheets.
+
+        <div data-type="note" id="id-3GumtbcZC3">
+          <p>When using HTTP/1.x, a common best practice is to designate a
+          dedicated "cookie-free" origin, which can be used to deliver
+          responses that do not need client-specific optimization.
+        </div>
+      </section>
+
+      <section>
+        <h3 id="parallelize-request-and-response-processing"><a href=
+        "#parallelize-request-and-response-processing" class=
+        "anchor">§</a>Parallelize Request and Response Processing</h3>
+
+        <p>To achieve the fastest response times within your application, all
+        resource requests should be dispatched as soon as possible. However,
+        another important point to consider is how these requests will be
+        processed on the server. After all, if all of our requests are then
+        serially queued by the server, then we are once again incurring
+        unnecessary latency. Here’s how to get the best performance:
+
+        <ul>
+          <li>
+            <p>Reuse TCP connections by optimizing connection keepalive
+            timeouts.
+
+          <li>
+            <p>Use multiple HTTP/1.1 connections where necessary for parallel
+            downloads.
+
+          <li>
+            <p>Upgrade to HTTP/2 to enable multiplexing and best performance.
+
+          <li>
+            <p>Allocate sufficient server resources to process requests in
+            parallel.
+          </ul>
+
+        <p>Without connection keepalive, a new TCP connection is required for
+        each HTTP request, which incurs significant overhead due to the TCP
+        handshake and slow-start. Make sure to identify and optimize your
+        server and proxy connection timeouts to avoid closing the connection
+        prematurely. With that in place, and to get the best performance, use
+        HTTP/2 to allow the client and server to reuse the same connection for
+        all requests. If HTTP/2 is not an option, use multiple TCP connections
+        to achieve request parallelism with HTTP/1.x.
+
+        <p>Identifying the sources of unnecessary client and server latency is
+        both an art and science: examine the client resource waterfall (see
+        <a data-type="xref" href=
+        "/primer-on-web-performance/#analyzing-the-resource-waterfall">Analyzing
+        the Resource Waterfall</a>), as well as your server logs. Common
+        pitfalls often include the following:
+
+        <ul>
+          <li>
+            <p>Blocking resources on the client forcing delayed resource
+            fetches; see <a data-type="xref" href=
+            "/primer-on-web-performance/#dom-cssom-and-javascript">DOM, CSSOM,
+            and JavaScript</a>.
+
+          <li>
+            <p>Underprovisioned proxy and load balancer capacity, forcing
+            delayed delivery of the requests (queuing latency) to the
+            application servers.
+
+          <li>
+            <p>Underprovisioned servers, forcing slow execution and other
+            processing delays.
+          </ul>
+
+        <aside>
+          <h4 id="optimizing-resource-loading-in-the-browser"><a href=
+          "#optimizing-resource-loading-in-the-browser" class=
+          "anchor">§</a>Optimizing Resource Loading in the Browser</h4>
+
+          <p>The browser will automatically determine the optimal loading order
+          for each resource in the document, and we can both assist and hinder
+          the browser in this process:
+
+          <ul>
+            <li>
+              <p>We can provide hints to assist the browser; see <a data-type=
+              "xref" href=
+              "/primer-on-web-performance/#browser-optimization">Browser
+              Optimization</a>.
+
+            <li>
+              <p>We can hinder by hiding resources from the browser.
+            </ul>
+
+          <p>Modern browsers are designed to scan the contents of HTML and CSS
+          files as efficiently and as soon as possible. However, the document
+          parser is also frequently blocked while waiting for a script or other
+          blocking resources to download before it can proceed. During this
+          time, the browser uses a "preload scanner," which speculatively looks
+          ahead in the source for resource downloads that could be dispatched
+          early to reduce overall latency.
+
+          <p>Note that the use of the preload scanner is a speculative
+          optimization, and it is used only when the document parser is
+          blocked. However, in practice, it yields significant benefits: based
+          on experimental data with Google Chrome, it offers a ~20% improvement
+          in page loading times and rendering speeds!
+
+          <p>Unfortunately, these optimizations do not apply for resources that
+          are scheduled via JavaScript; the preload scanner cannot
+          speculatively execute scripts. As a result, moving resource
+          scheduling logic into scripts may offer the benefit of more granular
+          control to the application, but in doing so, it will hide the
+          resource from the preload scanner, a trade-off that warrants close
+          examination.
+        </aside>
+      </section>
+    </section>
+
+    <section>
+      <h2 id="optimizing-for-http1x"><a href="#optimizing-for-http1x" class=
+      "anchor">§</a>Optimizing for HTTP/1.x</h2>
+
+      <p>The order in which we optimize HTTP/1.x deployments is important:
+      configure servers to deliver the best possible TCP and TLS performance,
+      and then carefully review and apply mobile and evergreen application best
+      practices: measure, iterate.
+
+      <p>With the evergreen optimizations in place, and with good performance
+      instrumentation within the application, evaluate whether the application
+      can benefit from applying HTTP/1.x specific optimizations (read,
+      <em>protocol workarounds</em>):
+
+      <dl>
+        <dt>Leverage HTTP pipelining
+
+        <dd>
+          <p>If your application controls both the client and the server, then
+          pipelining can help eliminate unnecessary network latency; see
+          <a data-type="xref" href="/http1x/#http-pipelining">HTTP
+          Pipelining</a>.
+
+        <dt>Apply domain sharding
+
+        <dd>
+          <p>If your application performance is limited by the default six
+          connections per origin limit, consider splitting resources across
+          multiple origins; see <a data-type="xref" href=
+          "/http1x/#domain-sharding">Domain Sharding</a>.
+
+        <dt>Bundle resources to reduce HTTP requests
+
+        <dd>
+          <p>Techniques such as concatenation and spriting can both help
+          minimize the protocol overhead and deliver pipelining-like
+          performance benefits; see <a data-type="xref" href=
+          "/http1x/#concatenation-and-spriting">Concatenation and Spriting</a>.
+
+        <dt>Inline small resources
+
+        <dd>
+          <p>Consider embedding small resources directly into the parent
+          document to minimize the number of requests; see <a data-type="xref"
+          href="/http1x/#resource-inlining">Resource Inlining</a>.
+        </dl>
+
+      <p>Pipelining has limited support, and each of the remaining
+      optimizations comes with its set of benefits and trade-offs. In fact, it
+      is often overlooked that each of these techniques can hurt performance
+      when applied aggressively, or incorrectly; review <a data-type="xref"
+      href="/http1x/">HTTP/1.X</a> for an in-depth discussion.
+
+      <div data-type="note" id="id-RwuwCPtb">
+        <p>HTTP/2 eliminates the need for all of the above HTTP/1.x
+        workarounds, making our applications both simpler and more performant.
+        Which is to say, the best optimization for HTTP/1.x is to deploy
+        HTTP/2.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="optimizing-for-http2"><a href="#optimizing-for-http2" class=
+      "anchor">§</a>Optimizing for HTTP/2</h2>
+
+      <p>HTTP/2 enables more efficient use of network resources and reduced
+      latency by enabling request and response multiplexing, header
+      compression, prioritization, and more—see <a data-type="xref" href=
+      "/http2/#design-and-technical-goals">Design and Technical Goals</a>.
+      Getting the best performance out of HTTP/2, especially in light of the
+      one-connection-per-origin model, requires a well-tuned server network
+      stack. Review <a data-type="xref" href=
+      "/building-blocks-of-tcp/#optimizing-for-tcp">Optimizing for TCP</a> and
+      <a data-type="xref" href=
+      "/transport-layer-security-tls/#optimizing-for-tls">Optimizing for
+      TLS</a> for an in-depth discussion and optimization checklists.
+
+      <p>Next up—surprise—apply the evergreen application best practices: send
+      fewer bytes, eliminate requests, and adapt resource scheduling for
+      wireless networks. Reducing the amount of data transferred and
+      eliminating unnecessary network latency are the best optimizations for
+      any application, web or native, regardless of the version or type of the
+      application and transport protocols in use.
+
+      <p>Finally, undo and unlearn the bad habits of domain sharding,
+      concatenation, and image spriting. With HTTP/2 we are no longer
+      constrained by limited parallelism: requests are cheap, and both requests
+      and responses can be multiplexed efficiently. These workarounds are no
+      longer necessary and omitting them can improve performance.
+
+      <section>
+        <h3 id="eliminate-domain-sharding"><a href="#eliminate-domain-sharding"
+        class="anchor">§</a>Eliminate Domain Sharding</h3>
+
+        <p>HTTP/2 achieves the best performance by multiplexing requests over
+        the same TCP connection, which enables effective request and response
+        prioritization, flow control, and header compression. As a result, the
+        optimal number of connections is exactly one and domain sharding is an
+        anti-pattern.
+
+        <p>HTTP/2 also provides a TLS connection-coalescing mechanism that
+        allows the client to coalesce requests from different origins and
+        dispatch them over the same connection when the following conditions
+        are satisfied:
+
+        <ul>
+          <li>
+            <p>The origins are covered by the same TLS certificate—e.g., a
+            wildcard certificate, or a certificate with matching "Subject
+            Alternative Names."
+
+          <li>
+            <p>The origins resolve to the same server IP address.
+          </ul>
+
+        <p>For example, if <code>example.com</code> provides a wildcard TLS
+        certificate that is valid for all of its subdomains (i.e.,
+        <code>*.example.com</code>) and references an asset on
+        <code>static.example.com</code> that resolves to the same server IP
+        address as <code>example.com</code>, then the HTTP/2 client is allowed
+        to reuse the same TCP connection to fetch resources from
+        <code>example.com</code> and <code>static.example.com</code>.
+
+        <p>An interesting side effect of HTTP/2 connection coalescing is that
+        it enables an HTTP/1.x friendly deployment model: some assets can be
+        served from alternate origins, which enables higher parallelism for
+        HTTP/1 clients, and if those same origins satisfy the above criteria
+        then the HTTP/2 clients can coalesce requests and reuse the same
+        connection. Alternatively, the application can be more hands-on and
+        inspect the negotiated protocol and deliver alternate resources for
+        each client: with sharded asset references for HTTP/1.x clients and
+        with same-origin asset references for HTTP/2 clients.
+
+        <p>Depending on the architecture of your application you may be able to
+        rely on connection coalescing, you may need to serve alternate markup,
+        or you may use both techniques as necessary to provide the optimal
+        HTTP/1.x and HTTP/2 experience. Alternatively, you might consider
+        focusing on optimizing HTTP/2 performance only; the client adoption is
+        growing rapidly, and the extra complexity of optimizing for both
+        protocols may be unnecessary.
+
+        <div data-type="note" id="id-n4uBsrUgsd">
+          <p>Due to third-party dependencies it may not be possible to fetch
+          all the resources via the same TCP connection—that’s OK. Seek to
+          minimize the number of origins regardless of the protocol and
+          eliminate sharding when HTTP/2 is in use to get the best performance.
+        </div>
+      </section>
+
+      <section>
+        <h3 id="minimize-concatenation-and-image-spriting"><a href=
+        "#minimize-concatenation-and-image-spriting" class=
+        "anchor">§</a>Minimize Concatenation and Image Spriting</h3>
+
+        <p>Bundling multiple assets into a single response was a critical
+        optimization for HTTP/1.x where limited parallelism and high protocol
+        overhead typically outweighed all other concerns—see <a data-type=
+        "xref" href="/http1x/#concatenation-and-spriting">Concatenation and
+        Spriting</a>. However, with HTTP/2, multiplexing is no longer an issue,
+        and header compression dramatically reduces the metadata overhead of
+        each HTTP request. As a result, we need to reconsider the use of
+        concatenation and spriting in light of its new pros and cons:
+
+        <ul>
+          <li>
+            <p>Bundled resources may result in unnecessary data transfers: the
+            user might not need all the assets on a particular page, or at all.
+
+          <li>
+            <p>Bundled resources may result in expensive cache invalidations: a
+            single updated byte in one component forces a full fetch of the
+            entire bundle.
+
+          <li>
+            <p>Bundled resources may delay execution: many content-types cannot
+            be processed and applied until the entire response is transferred.
+
+          <li>
+            <p>Bundled resources may require additional infrastructure at build
+            or delivery time to generate the associated bundle.
+
+          <li>
+            <p>Bundled resources may provide better compression if the
+            resources contain similar content.
+          </ul>
+
+        <p>In practice, while HTTP/1.x provides the mechanisms for granular
+        cache management of each resource, the limited parallelism forced us to
+        bundle resources together. The latency penalty of delayed fetches
+        outweighed the costs of decreased effectiveness of caching, more
+        frequent and more expensive invalidations, and delayed execution.
+
+        <p>HTTP/2 removes this unfortunate trade-off by providing support for
+        request and response multiplexing, which means that we can now optimize
+        our applications by delivering more granular resources: each resource
+        can have an optimized caching policy (expiry time and revalidation
+        token) and be individually updated without invalidating other resources
+        in the bundle. In short, HTTP/2 enables our applications to make better
+        use of the HTTP cache.
+
+        <p>That said, HTTP/2 does not eliminate the utility of concatenation
+        and spriting entirely. A few additional considerations to keep in mind:
+
+        <ul>
+          <li>
+            <p>Files that contain similar data may achieve better compression
+            when bundled.
+
+          <li>
+            <p>Each resource request carries some overhead, both when reading
+            from cache (I/O requests), and from the network (I/O requests,
+            on-the-wire metadata, and server processing).
+          </ul>
+
+        <p>There is no single optimal strategy for all applications: delivering
+        a single large bundle is unlikely to yield best results, and issuing
+        hundreds of requests for small resources may not be the optimal
+        strategy either. The right trade-off will depend on the type of
+        content, frequency of updates, access patterns, and other criteria. To
+        get the best results, gather measurement data for your own application
+        and optimize accordingly.
+      </section>
+
+      <section>
+        <h3 id="eliminate-roundtrips-with-server-push"><a href=
+        "#eliminate-roundtrips-with-server-push" class="anchor">§</a>Eliminate
+        Roundtrips with Server Push</h3>
+
+        <p>Server push is a powerful new feature of HTTP/2 that enables the
+        server to send multiple responses for a single client request. That
+        said, recall that the use of resource inlining (e.g., embedding an
+        image into an HTML document via a data URI) is, in fact, a form of
+        application-layer server push. As such, while this is not an entirely
+        new capability for web developers, the use of HTTP/2 server push offers
+        many performance benefits over inlining: pushed resources can be cached
+        individually, reused across pages, canceled by the client, and more—see
+        <a data-type="xref" href="/http2/#server-push">Server Push</a>.
+
+        <p>With HTTP/2 there is no longer a reason to inline resources just
+        because they are small; we’re no longer constrained by the lack of
+        parallelism and request overhead is very low. As a result, server push
+        acts as a latency optimization that removes a full request-response
+        roundtrip between the client and server—e.g., if, after sending a
+        particular response, we know that the client will always come back and
+        request a specific subresource, we can eliminate the roundtrip by
+        pushing the subresource to the client.
+
+        <div data-type="note" id="id-xduJfbtJsV">
+          <p>If the client does not support, or disables the use of server
+          push, it will initiate the request for the same resource on its
+          own—i.e., server push is a safe and transparent latency optimization.
+        </div>
+
+        <p>Critical resources that block page construction and rendering (see
+        <a data-type="xref" href=
+        "/primer-on-web-performance/#dom-cssom-and-javascript">DOM, CSSOM, and
+        JavaScript</a>) are prime candidates for the use of server push, as
+        they are often known or can be specified upfront. Eliminating a full
+        roundtrip from the critical path can yield savings of tens to hundreds
+        of milliseconds, especially for users on mobile networks where
+        latencies are often both high and highly variable.
+
+        <ul>
+          <li>
+            <p>Server push, as its name indicates, is initiated by the server.
+            However, the client can control how and where it is used by
+            indicating to the server the maximum number of pushed streams that
+            can be initiated in parallel by the server, as well as the amount
+            of data that can be sent on each stream before it is acknowledged
+            by the client. This allows the client to limit, or outright
+            disable, the use of server push—e.g., if the user is on an
+            expensive network and wants to minimize the number of transferred
+            bytes, they may be willing to disable the latency optimization in
+            favor of explicit control over what is fetched.
+
+          <li>
+            <p>Server push is subject to same-origin restrictions; the server
+            initiating the push must be authoritative for the content and is
+            not allowed to push arbitrary third-party content to the client.
+            Consolidate your resources under the same origin (i.e., eliminate
+            domain sharding) to enable more opportunities to leverage server
+            push.
+
+          <li>
+            <p>Server push responses are processed in the same way as responses
+            received in reply to a browser-initiated requests—i.e., they can be
+            cached and reused across multiple pages and navigations! Leverage
+            this to avoid having to duplicate the same content across different
+            pages and navigations.
+          </ul>
+
+        <p>Note that even the most naive server push strategy that opts to push
+        assets regardless of their caching policy is, in effect, equivalent to
+        inlining: the resource is duplicated on each page and transferred each
+        time the parent resource is requested. However, even there, server push
+        offers important performance benefits: the pushed response can be
+        prioritized more effectively, it affords more control to the client,
+        and it provides an upgrade path towards implementing much smarter
+        strategies that leverage caching and other mechanisms that can
+        eliminate redundant transfers. In short, if your application is using
+        inlining, then you should consider replacing it with server push.
+
+        <aside>
+          <h4 id="automating-performance-optimization-via-server-push"><a href=
+          "#automating-performance-optimization-via-server-push" class=
+          "anchor">§</a>Automating Performance Optimization via Server
+          Push</h4>
+
+          <p>How does the server determine which resources should be delivered
+          via server push? The HTTP/2 standard does not specify any particular
+          algorithm, and the server is free to implement custom strategies for
+          each application.
+
+          <p>For example, server-side application code can specify which
+          resources should be pushed and when. This strategy requires explicit
+          configuration but provides full control to the application developer.
+          Alternatively, the server can learn the associated resources based on
+          observed traffic patterns (e.g., by observing <code>Referrer</code>
+          headers) and automatically initiate server push for related
+          resources; use some mechanism to track or guess client’s cache state
+          and initiate push for missing resources; and so on.
+
+          <p>Server push enables many new and previously not possible
+          optimization opportunities. Check the documentation of your HTTP/2
+          server for how to enable, configure, and deploy the use of server
+          push for your application.
+        </aside>
+      </section>
+
+      <section>
+        <h3 id="test-http2-server-quality"><a href="#test-http2-server-quality"
+        class="anchor">§</a>Test HTTP/2 Server Quality</h3>
+
+        <p>A naive implementation of an HTTP/2 server, or proxy, may "speak"
+        the protocol, but without well implemented support for features such as
+        flow control and request prioritization, it can easily yield less that
+        optimal performance. For example, it might saturate the user’s
+        bandwidth by sending large low priority resources (such as images),
+        while the browser is blocked from rendering the page until it receives
+        higher priority resources (such as HTML, CSS, or JavaScript).
+
+        <p>With HTTP/2 the client places a lot of trust on the server. To get
+        the best performance, an HTTP/2 client has to be "optimistic": it
+        annotates requests with priority information (see <a data-type="xref"
+        href="/http2/#stream-prioritization">Stream Prioritization</a>) and
+        dispatches them to the server as soon as possible; it relies on the
+        server to use the communicated dependencies and weights to optimize
+        delivery of each response. A well-optimized HTTP server has always been
+        important, but with HTTP/2 the server takes on additional and critical
+        responsibilities that, previously, were out of scope.
+
+        <p>Do your due diligence when testing and deploying your HTTP/2
+        infrastructure. Common benchmarks measuring server throughput and
+        requests per second do not capture these new requirements and may not
+        be representative of the actual experience as seen by your users when
+        loading your application.
+
+        <aside>
+          <h4 id="optimizing-response-delivery-with-request-prioritization">
+          <a href="#optimizing-response-delivery-with-request-prioritization"
+          class="anchor">§</a>Optimizing Response Delivery with Request
+          Prioritization</h4>
+
+          <p>The purpose of request prioritization is to allow the client to
+          express how it would prefer the server to deliver responses when
+          there is limited capacity—e.g., the server may be ready to send
+          multiple responses, but due to limited bandwidth it should prioritize
+          sending some resources ahead of others.
+
+          <ul>
+            <li>
+              <p>What if the server disregards all priority information?
+
+            <li>
+              <p>Should higher-priority streams always take precedence?
+
+            <li>
+              <p>Are there cases where different priority streams should be
+              interleaved?
+            </ul>
+
+          <p>If the server disregards all priority information, then it runs
+          the risk of causing unnecessary processing delays for the
+          client—e.g., block the browser from rendering the page by sending
+          images ahead of more critical CSS and JavaScript resources. However,
+          delivering streams in a strict dependency order can also yield
+          suboptimal performance as it may reintroduce the head-of-line
+          blocking problem where a high priority but slow response may
+          unnecessarily block delivery of other resources. As a result, a
+          well-implemented server should give precedence to high priority
+          streams, but it should also interleave lower priority streams if all
+          higher priority streams are blocked.
+        </aside>
+      </section>
+    </section>
+  </article>
+
+  <footer>
+    <div id="toast">
+      &nbsp;
+    </div>
+
+    <p><a href="/#toc"><em>« Back to the Table of Contents</em></a>
+
+    <p class="legal">Copyright © 2013 <a href="https://www.igvita.com/" rel=
+    "me">Ilya Grigorik</a>. Published by O'Reilly Media, Inc. Licensed under
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND
+    4.0</a>.
+  </footer>
+

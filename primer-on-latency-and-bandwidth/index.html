@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Networking 101: Primer on Latency and Bandwidth - High Performance
+Browser Networking (O'Reilly)</title>
+<meta name="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
+</script>
+<script async src="https://www.google-analytics.com/analytics.js">
+</script>
+<link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
+<link href=
+"https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
+rel="stylesheet">
+<link rel="stylesheet" href="/assets/b708e9296b5e26f6bd725561648a1dda.css">
+<link rel="manifest" href="/7a58c37113db4464699ec4f4646b5566.json">
+<link rel="icon" sizes="192x192" href="/assets/icons/icon-192.png">
+<meta name="theme-color" content="#000">
+<meta itemprop="name" content=
+"Networking 101: Primer on Latency and Bandwidth - High Performance Browser Networking (O'Reilly)">
+<meta itemprop="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content=
+"Networking 101: Primer on Latency and Bandwidth - High Performance Browser Networking (O'Reilly)">
+<meta name="twitter:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:creator" content="@igrigorik">
+<meta name="twitter:image:src" content="https://hpbn.co/assets/twitter.jpg">
+<meta property="og:title" content=
+"Networking 101: Primer on Latency and Bandwidth - High Performance Browser Networking (O'Reilly)">
+<meta property="og:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta property="og:site_name" content="High Performance Browser Networking">
+<meta property="fb:admins" content="688996186">
+<script type="application/ld+json">
+{"@context":"http://schema.org/","@type":"Article","headline":"Networking 101: Primer on Latency and Bandwidth - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2016-01-22T23:44:07Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+</script>
+
+<body data-type="book">
+  <header>
+    <div id="book-title">
+      <div class="center">
+        <input type="checkbox" class="check" id="check"> <label for="check"
+        class="icon"><svg viewbox="0 0 18 18">
+        <title>Menu</title>
+
+        <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
+        </path></svg></label> <a href="/">High Performance Browser
+        Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
+
+        <div class="drawer menu">
+          <div class="title">
+            Primer on Latency and Bandwidth
+          </div>
+
+          <hr>
+
+          <ul class="content-container" id="nav">
+          </ul>
+
+          <hr>
+
+          <ul class="content-container" id="nav-other">
+            <li>
+              <a href="/#toc">Table of Contents</a>
+
+            <li>
+              <a href="/#author">About the Author</a>
+
+            <li>
+              <a id="feedback" target="_blank" href=
+              "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BPrimer%20on%20Latency%20and%20Bandwidth%5D:%20...">
+              Submit Feedback</a>
+            </ul>
+        </div>
+        <label for="check" class="closemenu">&nbsp;</label>
+      </div>
+    </div>
+
+    <h1>Primer on Latency and Bandwidth</h1>
+
+    <p id="chapter">Networking 101, Chapter 1
+  </header>
+
+  <article data-type="chapter" id="LATENCY_BANDWIDTH_PRIMER" class=
+  "pagenumrestart">
+    <section>
+      <h2 id="speed-is-a-feature"><a href="#speed-is-a-feature" class=
+      "anchor">§</a>Speed Is a Feature</h2>
+
+      <p>The emergence and the fast growth of the web performance optimization
+      (WPO) industry within the past few years is a telltale sign of the
+      growing importance and demand for speed and faster user experiences by
+      the users. And this is not simply a psychological <em>need for speed</em>
+      in our ever accelerating and connected world, but a requirement driven by
+      empirical results, as measured with respect to the bottom-line
+      performance of the many online businesses:
+
+      <ul>
+        <li>
+          <p>Faster sites lead to better user engagement.
+
+        <li>
+          <p>Faster sites lead to better user retention.
+
+        <li>
+          <p>Faster sites lead to higher conversions.
+        </ul>
+
+      <p>Simply put, speed is a feature. And to deliver it, we need to
+      understand the many factors and fundamental limitations that are at play.
+      In this chapter, we will focus on the two critical components that
+      dictate the performance of all network traffic: latency and bandwidth
+      (<a data-type="xref" href="#bw-latency-fig">Figure&nbsp;1-1</a>).
+
+      <dl>
+        <dt>Latency
+
+        <dd>
+          <p>The time from the source sending a packet to the destination
+          receiving it
+
+        <dt>Bandwidth
+
+        <dd>
+          <p>Maximum throughput of a logical or physical communication path
+        </dl>
+
+      <figure id="bw-latency-fig">
+        <img src="/assets/diagrams/3394fb4dab93efdd5e49475316c9496f.svg" alt=
+        "Figure 1-1. Latency and bandwidth">
+
+        <figcaption>
+          <span class="label">Figure 1-1.</span> Latency and bandwidth
+        </figcaption>
+      </figure>
+
+      <p>Armed with a better understanding of how bandwidth and latency work
+      together, we will then have the tools to dive deeper into the internals
+      and performance characteristics of TCP, UDP, and all application
+      protocols above them.
+
+      <aside>
+        <h4 id="decreasing-transatlantic-latency-with-hibernia-express">
+        <a href="#decreasing-transatlantic-latency-with-hibernia-express"
+        class="anchor">§</a>Decreasing Transatlantic Latency with Hibernia
+        Express</h4>
+
+        <p>Latency is an important criteria for many high-frequency trading
+        algorithms in the financial markets, where a small edge of a few
+        milliseconds can translate to millions in loss or profit.
+
+        <p>In September 2015, Hibernia Networks launched a new fiber-optic link
+        ("Hibernia Express") specifically designed to ensure the lowest latency
+        between New York and London by following the great circle route between
+        the cities. The total cost of the project is estimated to be $300M+ and
+        the new route boasts 58.95 ms latency between the cities, which gives
+        it a ~5 millisecond edge compared to all other existing transatlantic
+        links. This translates to $60M+ per millisecond saved!
+
+        <p>Latency is expensive — literally and figuratively.
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="the-many-components-of-latency"><a href=
+      "#the-many-components-of-latency" class="anchor">§</a>The Many Components
+      of Latency</h2>
+
+      <p>Latency is the time it takes for a message, or a packet, to travel
+      from its point of origin to the point of destination. That is a simple
+      and useful definition, but it often hides a lot of useful information —
+      every system contains multiple sources, or components, contributing to
+      the overall time it takes for a message to be delivered, and it is
+      important to understand what these components are and what dictates their
+      performance.
+
+      <p>Let’s take a closer look at some common contributing components for a
+      typical router on the Internet, which is responsible for relaying a
+      message between the client and the server:
+
+      <dl>
+        <dt>Propagation delay
+
+        <dd>
+          <p>Amount of time required for a message to travel from the sender to
+          receiver, which is a function of distance over speed with which the
+          signal propagates.
+
+        <dt>Transmission delay
+
+        <dd>
+          <p>Amount of time required to push all the packet’s bits into the
+          link, which is a function of the packet’s length and data rate of the
+          link.
+
+        <dt>Processing delay
+
+        <dd>
+          <p>Amount of time required to process the packet header, check for
+          bit-level errors, and determine the packet’s destination.
+
+        <dt>Queuing delay
+
+        <dd>
+          <p>Amount of time the packet is waiting in the queue until it can be
+          processed.
+        </dl>
+
+      <p>The total latency between the client and the server is the sum of all
+      the delays just listed. Propagation time is dictated by the distance and
+      the medium through which the signal travels — as we will see, the
+      propagation speed is usually within a small constant factor of the speed
+      of light. On the other hand, transmission delay is dictated by the
+      available data rate of the transmitting link and has nothing to do with
+      the distance between the client and the server. As an example, let’s
+      assume we want to transmit a 10 Mb file over two links: 1 Mbps and 100
+      Mbps. It will take 10 seconds to put the entire file "on the wire" over
+      the 1 Mbps link and only 0.1 seconds over the 100 Mbps link.
+
+      <div data-type="note" id="id-Wms6U1SP">
+        <p>Network data rates are typically measured in bits per second (bps),
+        whereas data rates for non-network equipment are typically shown in
+        bytes per second (Bps). This is a common source of confusion, pay close
+        attention to the units.
+
+        <p>For example, to put a 10 megabyte (MB) file "on the wire" over a
+        1Mbps link, we will need 80 seconds. 10MB is equal to 80Mb because
+        there are 8 bits for every byte!
+      </div>
+
+      <p>Next, once the packet arrives at the router, the router must examine
+      the packet header to determine the outgoing route and may run other
+      checks on the data — this takes time as well. Much of this logic is now
+      often done in hardware, so the delays are very small, but they do exist.
+      And, finally, if the packets are arriving at a faster rate than the
+      router is capable of processing, then the packets are queued inside an
+      incoming buffer. The time data spends queued inside the buffer is, not
+      surprisingly, known as queuing delay.
+
+      <p>Each packet traveling over the network will incur many instances of
+      each of these delays. The farther the distance between the source and
+      destination, the more time it will take to propagate. The more
+      intermediate routers we encounter along the way, the higher the
+      processing and transmission delays for each packet. Finally, the higher
+      the load of traffic along the path, the higher the likelihood of our
+      packet being queued and delayed inside one or more buffers.
+
+      <aside>
+        <h4 id="bufferbloat-in-your-local-router"><a href=
+        "#bufferbloat-in-your-local-router" class="anchor">§</a>Bufferbloat in
+        Your Local Router</h4>
+
+        <p><em>Bufferbloat</em> is a term that was coined and popularized by
+        Jim Gettys in 2010, and is a great example of queuing delay affecting
+        the overall performance of the network.
+
+        <p>The underlying problem is that many routers are now shipping with
+        large incoming buffers under the assumption that dropping packets
+        should be avoided at all costs. However, this breaks TCP’s congestion
+        avoidance mechanisms (which we will cover in the next chapter), and
+        introduces high and variable latency delays into the network.
+
+        <p>The good news is that the new CoDel active queue management
+        algorithm has been proposed to address this problem, and is now
+        implemented within the Linux 3.5+ kernels. To learn more, refer to
+        <a href="https://hpbn.co/aqmacm">"Controlling Queue Delay"</a> in ACM
+        Queue.
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="speed-of-light-and-propagation-latency"><a href=
+      "#speed-of-light-and-propagation-latency" class="anchor">§</a>Speed of
+      Light and Propagation Latency</h2>
+
+      <p>As Einstein outlined in his theory of special relativity, the speed of
+      light is the maximum speed at which all energy, matter, and information
+      can travel. This observation places a hard limit, and a governor, on the
+      propagation time of any network packet.
+
+      <p>The good news is the speed of light is high: 299,792,458 meters per
+      second, or 186,282 miles per second. However, and there is always a
+      however, that is the speed of light in a vacuum. Instead, our packets
+      travel through a medium such as a copper wire or a fiber-optic cable,
+      which will slow down the signal (<a data-type="xref" href=
+      "#geo-latency-table">Table&nbsp;1-1</a>). This ratio of the speed of
+      light and the speed with which the packet travels in a material is known
+      as the refractive index of the material. The larger the value, the slower
+      light travels in that medium.
+
+      <p>The typical refractive index value of an optical fiber, through which
+      most of our packets travel for long-distance hops, can vary between 1.4
+      to 1.6 — slowly but surely we are making improvements in the quality of
+      the materials and are able to lower the refractive index. But to keep it
+      simple, the rule of thumb is to assume that the speed of light in fiber
+      is around 200,000,000 meters per second, which corresponds to a
+      refractive index of ~1.5. The remarkable part about this is that we are
+      already within a small constant factor of the maximum speed! An amazing
+      engineering achievement in its own right.
+
+      <figure id="geo-latency-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Route
+
+              <th>Distance
+
+              <th>Time, light in vacuum
+
+              <th>Time, light in fiber
+
+              <th>Round-trip time (RTT) in fiber
+
+          <tbody>
+            <tr>
+              <td>New York to San Francisco
+
+              <td>4,148 km
+
+              <td>14 ms
+
+              <td><strong>21 ms</strong>
+
+              <td>42 ms
+
+            <tr>
+              <td>New York to London
+
+              <td>5,585 km
+
+              <td>19 ms
+
+              <td><strong>28 ms</strong>
+
+              <td>56 ms
+
+            <tr>
+              <td>New York to Sydney
+
+              <td>15,993 km
+
+              <td>53 ms
+
+              <td><strong>80 ms</strong>
+
+              <td>160 ms
+
+            <tr>
+              <td>Equatorial circumference
+
+              <td>40,075 km
+
+              <td>133.7 ms
+
+              <td><strong>200 ms</strong>
+
+              <td>200 ms
+            </table>
+
+        <figcaption>
+          <span class="label">Table 1-1.</span> Signal latencies in vacuum and
+          fiber
+        </figcaption>
+      </figure>
+
+      <p>The speed of light is fast, but it nonetheless takes 160 milliseconds
+      to make the round-trip (RTT) from New York to Sydney. In fact, the
+      numbers in <a data-type="xref" href=
+      "#geo-latency-table">Table&nbsp;1-1</a> are also unrealistically
+      optimistic in that they assume that the packet travels over a fiber-optic
+      cable along the great-circle path (the shortest distance between two
+      points on the globe) between the cities. In practice, that is rarely the
+      case, and the packet would take a much longer route between New York and
+      Sydney. Each hop along this route will introduce additional routing,
+      processing, queuing, and transmission delays. As a result, the actual RTT
+      between New York and Sydney, over our existing networks, works out to be
+      in the 200–300 millisecond range. All things considered, that still seems
+      pretty fast, right?
+
+      <p>We are not accustomed to measuring our everyday encounters in
+      milliseconds, but studies have shown that most of us will reliably report
+      perceptible "lag" once a delay of over 100–200 milliseconds is introduced
+      into the system. Once the 300 millisecond delay threshold is exceeded,
+      the interaction is often reported as "sluggish," and at the 1,000
+      milliseconds (1 second) barrier, many users have already performed a
+      mental context switch while waiting for the response — see <a data-type=
+      "xref" href=
+      "/primer-on-web-performance/#speed-performance-and-human-perception">Speed,
+      Performance, and Human Perception</a>.
+
+      <p>The point is simple, to deliver the best experience and to keep our
+      users engaged in the task at hand, we need our applications to respond
+      within hundreds of milliseconds. That doesn’t leave us, and especially
+      the network, with much room for error. <strong>To succeed, network
+      latency has to be carefully managed and be an explicit design criteria at
+      all stages of development.</strong>
+
+      <div data-type="note" id="id-xesGuDH5">
+        <p>Content delivery network (CDN) services provide many benefits, but
+        chief among them is the simple observation that distributing the
+        content around the globe, and serving that content from a nearby
+        location to the client, enables us to significantly reduce the
+        propagation time of all the data packets.
+
+        <p>We may not be able to make the packets travel faster, but we can
+        reduce the distance by strategically positioning our servers closer to
+        the users! Leveraging a CDN to serve your data can offer significant
+        performance benefits.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="last-mile-latency"><a href="#last-mile-latency" class=
+      "anchor">§</a>Last-Mile Latency</h2>
+
+      <p>Ironically, it is often the last few miles, not the crossing of oceans
+      or continents, where significant latency is introduced: the infamous
+      last-mile problem. To connect your home or office to the Internet, your
+      local ISP needs to route the cables throughout the neighborhood,
+      aggregate the signal, and forward it to a local routing node. In
+      practice, depending on the type of connectivity, routing methodology, and
+      deployed technology, these first few hops alone can take tens of
+      milliseconds.
+
+      <p>According to the annual "Measuring Broadband America" reports
+      conducted by the Federal Communications Commission (FCC), the last-mile
+      latencies for terrestrial-based broadband (DSL, cable, fiber) within the
+      United States have remained relatively stable over time: fiber has best
+      average performance (10-20 ms), followed by cable (15-40 ms), and DSL
+      (30-65 ms).
+
+      <p>In practice this translates into 10-65 ms of latency just to the
+      closest measuring node within the ISP’s core network, before the packet
+      is even routed to its destination! The FCC report is focused on the
+      United States, but last-mile latency is a challenge for all Internet
+      providers, regardless of geography. For the curious, a simple
+      <code>traceroute</code> can often tell you volumes about the topology and
+      performance of your Internet provider.
+
+      <div data-type="example" id="-ensoIbIN">
+        <pre data-type="programlisting">
+  <strong>$&gt; traceroute google.com</strong>
+  traceroute to google.com (74.125.224.102), 64 hops max, 52 byte packets
+   1  10.1.10.1 (10.1.10.1)  7.120 ms  8.925 ms  1.199 ms <a class="counter"
+id="router-co" href="#router"></a>
+   2  96.157.100.1 (96.157.100.1)  20.894 ms  32.138 ms  28.928 ms
+   3  x.santaclara.xxxx.com (68.85.191.29)  9.953 ms  11.359 ms  9.686 ms
+   4  x.oakland.xxx.com (68.86.143.98)  24.013 ms 21.423 ms 19.594 ms
+   5  68.86.91.205 (68.86.91.205)  16.578 ms  71.938 ms  36.496 ms
+   6  x.sanjose.ca.xxx.com (68.86.85.78)  17.135 ms  17.978 ms  22.870 ms
+   7  x.529bryant.xxx.com (68.86.87.142)  25.568 ms  22.865 ms  23.392 ms
+   8  66.208.228.226 (66.208.228.226)  40.582 ms  16.058 ms  15.629 ms
+   9  72.14.232.136 (72.14.232.136)  20.149 ms  20.210 ms  18.020 ms
+  10  64.233.174.109 (64.233.174.109)  63.946 ms  18.995 ms  18.150 ms
+  11  x.1e100.net (74.125.224.102)  18.467 ms  17.839 ms  17.958 ms <a class=
+"counter" id="google-co" href="#google"></a>
+</pre>
+
+        <ol class="notation">
+          <li>
+            <a class="co" id="router" href="#router-co"></a>
+
+            <p>1st hop: local wireless router
+
+          <li>
+            <a class="co" id="google" href="#google-co"></a>
+
+            <p>11th hop: Google server
+          </ol>
+      </div>
+
+      <p>In the previous example, the packet started in the city of Sunnyvale,
+      bounced to Santa Clara, then Oakland, returned to San Jose, got routed to
+      the "529 Bryant" datacenter, at which point it was routed toward Google
+      and arrived at its destination on the 11th hop. This entire process took,
+      on average, 18 milliseconds. Not bad, all things considered, but in the
+      same time the packet could have traveled across most of the continental
+      USA!
+
+      <p>The last-mile latencies can vary wildly between ISP’s due to the
+      deployed technology, topology of the network, and even the time of day.
+      As an end user, and if you are looking to improve your web browsing
+      speeds, make sure to measure and compare the last-mile latencies of the
+      various providers available in your area.
+
+      <div data-type="note" id="id-xesvfZI5">
+        <p>Latency, not bandwidth, is the performance bottleneck for most
+        websites! To understand why, we need to understand the mechanics of TCP
+        and HTTP protocols — subjects we’ll be covering in subsequent chapters.
+        However, if you are curious, feel free to skip ahead to <a data-type=
+        "xref" href=
+        "/primer-on-web-performance/#more-bandwidth-doesnt-matter-much">More
+        Bandwidth Doesn’t Matter (Much)</a>.
+      </div>
+
+      <aside>
+        <h4 id="measuring-latency-with-traceroute"><a href=
+        "#measuring-latency-with-traceroute" class="anchor">§</a>Measuring
+        Latency with Traceroute</h4>
+
+        <p>Traceroute is a simple network diagnostics tool for identifying the
+        routing path of the packet and the latency of each network hop in an IP
+        network. To identify the individual hops, it sends a sequence of
+        packets toward the destination with an increasing "hop limit" (1, 2, 3,
+        and so on). When the hop limit is reached, the intermediary returns an
+        ICMP Time Exceeded message, allowing the tool to measure the latency
+        for each network hop.
+
+        <p>On Unix platforms the tool can be run from the command line via
+        <code>traceroute</code>, and on Windows it is known as
+        <code>tracert</code>.
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="bandwidth-in-core-networks"><a href="#bandwidth-in-core-networks"
+      class="anchor">§</a>Bandwidth in Core Networks</h2>
+
+      <p>An optical fiber acts as a simple "light pipe," slightly thicker than
+      a human hair, designed to transmit light between the two ends of the
+      cable. Metal wires are also used but are subject to higher signal loss,
+      electromagnetic interference, and higher lifetime maintenance costs.
+      Chances are, your packets will travel over both types of cable, but for
+      any long-distance hops, they will be transmitted over a fiber-optic link.
+
+      <p>Optical fibers have a distinct advantage when it comes to bandwidth
+      because each fiber can carry many different wavelengths (channels) of
+      light through a process known as wavelength-division multiplexing (WDM).
+      Hence, the total bandwidth of a fiber link is the multiple of per-channel
+      data rate and the number of multiplexed channels.
+
+      <p>As of early 2010, researchers have been able to multiplex over 400
+      wavelengths with the peak capacity of 171 Gbit/s per channel, which
+      translates to over 70 Tbit/s of total bandwidth for a single fiber link!
+      We would need thousands of copper wire (electrical) links to match this
+      throughput. Not surprisingly, most long-distance hops, such as subsea
+      data transmission between continents, is now done over fiber-optic links.
+      Each cable carries several strands of fiber (four strands is a common
+      number), which translates into bandwidth capacity in hundreds of terabits
+      per second for each cable.
+    </section>
+
+    <section>
+      <h2 id="bandwidth-at-the-network-edge"><a href=
+      "#bandwidth-at-the-network-edge" class="anchor">§</a>Bandwidth at the
+      Network Edge</h2>
+
+      <p>The backbones, or the fiber links, that form the core data paths of
+      the Internet are capable of moving hundreds of terabits per second.
+      However, the available capacity at the edges of the network is much, much
+      less, and varies wildly based on deployed technology: dial-up, DSL,
+      cable, a host of wireless technologies, fiber-to-the-home, and even the
+      performance of the local router. The available bandwidth to the user is a
+      function of the lowest capacity link between the client and the
+      destination server (<a data-type="xref" href=
+      "#bw-latency-fig">Figure&nbsp;1-1</a>).
+
+      <p>Akamai Technologies operates a global CDN, with servers positioned
+      around the globe, and provides free quarterly reports at <a href=
+      "http://www.akamai.io">Akamai’s website</a> on average broadband speeds,
+      as seen by their servers. <a data-type="xref" href=
+      "#global-bandwidth-table">Table&nbsp;1-2</a> captures the macro trends as
+      of late 2015.
+
+      <figure id="global-bandwidth-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Rank
+
+              <th>Country
+
+              <th>Average Mbps
+
+              <th>Year-over-year change
+
+          <tbody>
+            <tr>
+              <td>-
+
+              <td>Global
+
+              <td><strong>5.1</strong>
+
+              <td>14%
+
+            <tr>
+              <td>1
+
+              <td>South Korea
+
+              <td><strong>20.5</strong>
+
+              <td>-19%
+
+            <tr>
+              <td>2
+
+              <td>Sweden
+
+              <td><strong>17.4</strong>
+
+              <td>23%
+
+            <tr>
+              <td>3
+
+              <td>Norway
+
+              <td><strong>16.4</strong>
+
+              <td>44%
+
+            <tr>
+              <td>4
+
+              <td>Switzerland
+
+              <td><strong>16.2</strong>
+
+              <td>12%
+
+            <tr>
+              <td>5
+
+              <td>Hong Kong
+
+              <td><strong>15.8</strong>
+
+              <td>-2.7%
+
+            <tr>
+              <td>…
+
+              <td>&nbsp;
+
+              <td><strong>&nbsp;</strong>
+
+              <td>&nbsp;
+
+            <tr>
+              <td>21
+
+              <td>United States
+
+              <td><strong>12.6</strong>
+
+              <td>9.4%
+            </table>
+
+        <figcaption>
+          <span class="label">Table 1-2.</span> Average bandwidth speeds as
+          seen by Akamai servers in Q3 2015
+        </figcaption>
+      </figure>
+
+      <p>The preceding data excludes traffic from mobile carriers, a topic we
+      will come back to later to examine in closer detail. For now, it should
+      suffice to say that mobile speeds are highly variable and generally
+      slower. However, even with that in mind, the average global broadband
+      bandwidth in late 2015 was just 5.1 Mbps! South Korea led the world with
+      a 20.5 Mbps average throughput, and United States came in 21st place with
+      12.6 Mbps.
+
+      <p>As a reference point, streaming an HD video can require anywhere from
+      2 to 10 Mbps depending on resolution and the codec. So an average user
+      within the United States can stream a high-resolution video at the
+      network edge, but doing so would also consume much of their link capacity
+      — not a very promising story for a household with multiple users.
+
+      <p>Figuring out where the bandwidth bottleneck is for any given user is
+      often a nontrivial but important exercise. Once again, for the curious,
+      there are a number of online services, such as <a href=
+      "http://speedtest.net">speedtest.net</a> operated by Ookla (<a data-type=
+      "xref" href="#fig2">Figure&nbsp;1-2</a>), which provide upstream and
+      downstream tests against a nearby server — we will see why picking a
+      local server is important in our discussion on TCP. Running a test on one
+      of these services is a good way to check that your connection meets the
+      advertised speeds of your local ISP.
+
+      <figure id="fig2">
+        <img src="/assets/diagrams/13f28d4c3bcea2a8e4420b3278ebffaf.png" alt=
+        "Figure 1-2. Upstream and downstream test (speedtest.net)">
+
+        <figcaption>
+          <span class="label">Figure 1-2.</span> Upstream and downstream test
+          (speedtest.net)
+        </figcaption>
+      </figure>
+
+      <p>However, while a high-bandwidth link to your ISP is desirable, it is
+      also not a guarantee of end-to-end performance; just because a bandwidth
+      test promises high data rates does not mean that you can or should expect
+      same performance from other remote servers. The network could be
+      congested at any intermediate node due to high demand, hardware failures,
+      a concentrated network attack, or a host of other reasons. High
+      variability of throughput and latency performance is an inherent property
+      of our data networks — predicting, managing, and adapting to the
+      continuously changing "network weather" is a complex task.
+    </section>
+
+    <section>
+      <h2 id="delivering-higher-bandwidth-and-lower-latencies"><a href=
+      "#delivering-higher-bandwidth-and-lower-latencies" class=
+      "anchor">§</a>Delivering Higher Bandwidth and Lower Latencies</h2>
+
+      <p>Our demand for higher bandwidth is growing fast, in large part due to
+      the rising popularity of streaming video, which is now responsible for
+      well over half of all Internet traffic. The good news is, while it may
+      not be cheap, there are multiple strategies available for us to grow the
+      available capacity: we can add more fibers into our fiber-optic links, we
+      can deploy more links across the congested routes, or we can improve the
+      WDM techniques to transfer more data through existing links.
+
+      <p>TeleGeography, a telecommunications market research and consulting
+      firm, estimates that as of 2011, we are using, on average, just 20% of
+      the available capacity of the deployed subsea fiber links. Even more
+      importantly, between 2007 and 2011, more than half of all the added
+      capacity of the trans-Pacific cables was due to WDM upgrades: same fiber
+      links, better technology on both ends to multiplex the data. Of course,
+      we cannot expect these advances to go on indefinitely, as every medium
+      reaches a point of diminishing returns. Nonetheless, as long as economics
+      of the enterprise permit, there is no fundamental reason why bandwidth
+      throughput cannot be increased over time — if all else fails, we can add
+      more fiber links.
+
+      <p>Improving latency, on the other hand, is a very different story. The
+      quality of the fiber links could be improved to get us a little closer to
+      the speed of light: better materials with lower refractive index and
+      faster routers along the way. However, given that our current speeds are
+      within ~1.5 of the speed of light, the most we can expect from this
+      strategy is just a modest 30% improvement. Unfortunately, there is simply
+      no way around the laws of physics: the speed of light places a hard limit
+      on the minimum latency.
+
+      <p>Alternatively, since we can’t make light travel faster, we can make
+      the distance shorter — the shortest distance between any two points on
+      the globe is defined by the great-circle path between them. However,
+      laying new cables is also not always possible due to the constraints
+      imposed by the physical terrain, social and political reasons, and of
+      course, the associated costs.
+
+      <p>As a result, to improve performance of our applications, we need to
+      architect and optimize our protocols and networking code with explicit
+      awareness of the limitations of available bandwidth and the speed of
+      light: we need to reduce round trips, move the data closer to the client,
+      and build applications that can hide the latency through caching,
+      pre-fetching, and a variety of similar techniques, as explained in
+      subsequent chapters.
+    </section>
+  </article>
+
+  <footer>
+    <div id="toast">
+      &nbsp;
+    </div>
+
+    <p><a href="/#toc"><em>« Back to the Table of Contents</em></a>
+
+    <p class="legal">Copyright © 2013 <a href="https://www.igvita.com/" rel=
+    "me">Ilya Grigorik</a>. Published by O'Reilly Media, Inc. Licensed under
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND
+    4.0</a>.
+  </footer>
+

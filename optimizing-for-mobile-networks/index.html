@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Performance of Wireless Networks: Optimizing for Mobile Networks - High
+Performance Browser Networking (O'Reilly)</title>
+<meta name="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
+</script>
+<script async src="https://www.google-analytics.com/analytics.js">
+</script>
+<link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
+<link href=
+"https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
+rel="stylesheet">
+<link rel="stylesheet" href="/assets/b708e9296b5e26f6bd725561648a1dda.css">
+<link rel="manifest" href="/7a58c37113db4464699ec4f4646b5566.json">
+<link rel="icon" sizes="192x192" href="/assets/icons/icon-192.png">
+<meta name="theme-color" content="#000">
+<meta itemprop="name" content=
+"Performance of Wireless Networks: Optimizing for Mobile Networks - High Performance Browser Networking (O'Reilly)">
+<meta itemprop="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content=
+"Performance of Wireless Networks: Optimizing for Mobile Networks - High Performance Browser Networking (O'Reilly)">
+<meta name="twitter:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:creator" content="@igrigorik">
+<meta name="twitter:image:src" content="https://hpbn.co/assets/twitter.jpg">
+<meta property="og:title" content=
+"Performance of Wireless Networks: Optimizing for Mobile Networks - High Performance Browser Networking (O'Reilly)">
+<meta property="og:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta property="og:site_name" content="High Performance Browser Networking">
+<meta property="fb:admins" content="688996186">
+<script type="application/ld+json">
+{"@context":"http://schema.org/","@type":"Article","headline":"Performance of Wireless Networks: Optimizing for Mobile Networks - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2016-04-27T00:02:58Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+</script>
+
+<body data-type="book">
+  <header>
+    <div id="book-title">
+      <div class="center">
+        <input type="checkbox" class="check" id="check"> <label for="check"
+        class="icon"><svg viewbox="0 0 18 18">
+        <title>Menu</title>
+
+        <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
+        </path></svg></label> <a href="/">High Performance Browser
+        Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
+
+        <div class="drawer menu">
+          <div class="title">
+            Optimizing for Mobile Networks
+          </div>
+
+          <hr>
+
+          <ul class="content-container" id="nav">
+          </ul>
+
+          <hr>
+
+          <ul class="content-container" id="nav-other">
+            <li>
+              <a href="/#toc">Table of Contents</a>
+
+            <li>
+              <a href="/#author">About the Author</a>
+
+            <li>
+              <a id="feedback" target="_blank" href=
+              "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BOptimizing%20for%20Mobile%20Networks%5D:%20...">
+              Submit Feedback</a>
+            </ul>
+        </div>
+        <label for="check" class="closemenu">&nbsp;</label>
+      </div>
+    </div>
+
+    <h1>Optimizing for Mobile Networks</h1>
+
+    <p id="chapter">Performance of Wireless Networks, Chapter 8
+  </header>
+
+  <article data-type="chapter" id="OPTIMIZING_MOBILE">
+    <section id="introduction">
+      <h2>Introduction</h2>
+
+      <p>First off, minimizing latency through keepalive connections,
+      geo-positioning your servers and data closer to the client, optimizing
+      your TLS deployments, and all the other protocol optimizations we have
+      covered are only more important on mobile applications, where both
+      latency and throughput are always at a premium. Similarly, all the web
+      application performance best practices are equally applicable. Feel free
+      to flip ahead to <a data-type="xref" href=
+      "/primer-on-web-performance/">Primer on Web Performance</a>; we’ll wait.
+
+      <p>However, mobile networks also pose some new and unique requirements
+      for our performance strategy. Designing applications for the mobile web
+      requires careful planning and consideration of the presentation of the
+      content within the constraints of the form factor of the device, the
+      unique performance properties of the radio interface, and the impact on
+      the battery life. The three are inextricably linked.
+
+      <p>Perhaps because it is the easiest to control, the presentation layer,
+      with topics such as responsive design, tends to receive the most
+      attention. However, where most applications fall short, it is often due
+      to the incorrect design assumptions about networking performance: the
+      application protocols are the same, but the differences in the physical
+      delivery layers impose a number of constraints that, if unaccounted for,
+      will lead to slow response times, high latency variability, and
+      ultimately a compromised experience for the user. To add insult to
+      injury, poor networking decisions will also have an outsized negative
+      impact on the battery life of the device.
+
+      <p>There is no universal solution for these three constraints. There are
+      best practices for the presentation layer, the networking, and the
+      battery life performance, but frequently they are at odds; it is up to
+      you and your application to find the balance in your requirements. One
+      thing is for sure: simply disregarding any one of them won’t get you far.
+
+      <p>With that in mind, we won’t elaborate too much on the presentation
+      layer, as that varies with every platform and type of application—plus,
+      there are plenty of existing books dedicated to this subject. But,
+      regardless of the make or the operating system, the radio and battery
+      constraints imposed by mobile networks are universal, and that is what we
+      will focus on in this chapter.
+
+      <div data-type="note" id="id-AEtKUR">
+        <p>Throughout this chapter and especially in the following pages, the
+        term "mobile application" is used in its broadest definition: all of
+        our discussions on the performance of mobile networks are equally
+        applicable to native applications, regardless of the platform, and
+        applications running in your browser, regardless of the browser vendor.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="preserve-battery-power"><a href="#preserve-battery-power" class=
+      "anchor">§</a>Preserve Battery Power</h2>
+
+      <p>When it comes to mobile, conserving power is a critical concern for
+      everyone involved: device manufacturers, carriers, application
+      developers, and the end users of our applications. When in doubt, or
+      wondering why or how certain mobile behaviors were put in place, ask a
+      simple question: how does it impact or improve the battery life? In fact,
+      this is a great question to ask for any and every feature in your
+      application also.
+
+      <p>Networking performance on mobile networks is inherently linked to
+      battery performance. In fact, the physical layers of the radio interface
+      are specifically built to optimize the battery life against the following
+      constraints:
+
+      <ul>
+        <li>
+          <p>Radio use at full power can drain a full battery in a matter of
+          hours.
+
+        <li>
+          <p>Radio power requirements are going up with every wireless
+          generation.
+
+        <li>
+          <p>Radio is often second in power consumption only to the screen.
+
+        <li>
+          <p>Radio use has a nonlinear energy profile with respect to data
+          transferred.
+        </ul>
+
+      <p>With that in mind, mobile applications should aim to minimize their
+      use of the radio interface. To be clear, that is not to say that you
+      should avoid using the radio entirely; after all we are building
+      connected applications that rely on access to the network! However,
+      because keeping the radio active is so expensive in terms of battery
+      life, our applications should maximize the amount of transferred data
+      while the radio is on and then seek to minimize the number of additional
+      data transfers.
+
+      <div data-type="note" id="id-pRt2hESO">
+        <p>Even though WiFi uses a radio interface to transfer data, it is
+        important to realize that the underlying mechanics of WiFi, and
+        consequently the latency, throughput, and power profiles of WiFi, when
+        compared with 2G, 3G, and 4G mobile networks are fundamentally
+        different; see our earlier discussion on <a data-type="xref" href=
+        "/mobile-networks/#3g-4g-and-wifi-power-requirements">3G, 4G, and WiFi
+        Power Requirements</a>. Consequently, the networking behavior can and
+        often should be different when on WiFi vs. mobile networks.
+      </div>
+
+      <aside>
+        <h4 id="measuring-energy-use-with-att-application-resource-optimizer">
+        <a href="#measuring-energy-use-with-att-application-resource-optimizer"
+        class="anchor">§</a>Measuring Energy Use with AT&amp;T Application
+        Resource Optimizer</h4>
+
+        <p>Despite the high emphasis on optimizing energy use, most platforms
+        currently lack the necessary tools to help developers measure and
+        optimize their applications. Thankfully, there are third-party tools
+        that can help, such as the free Application Resource Optimizer (ARO)
+        toolkit developed by AT&amp;T.
+
+        <figure id="att-aro">
+          <img src="/assets/diagrams/37d7e7aded91fc715d7acdefb738793b.png" alt=
+          "Figure 8-1. AT&amp;T Application Resource Optimizer">
+
+          <figcaption>
+            <span class="label">Figure 8-1.</span> AT&amp;T Application
+            Resource Optimizer
+          </figcaption>
+        </figure>
+
+        <p>ARO consists of two components: a collector and an analyzer. The
+        collector is an Android application that runs in the background (on a
+        real phone, or within an emulator) and captures the transferred data
+        packets, radio activity, and other interactions with the phone. To
+        capture a trace, load the collector, hit Record, interact with your
+        application, and then copy the trace to your system.
+
+        <p>Once a trace is available, you can open it with the analyzer to get
+        insights into radio states, energy consumption, and traffic patterns of
+        your application. One of the great features about the analyzer is that
+        it will also provide recommendations for common performance pitfalls,
+        such as missing compression, redundant data transfers, and more.
+
+        <p>Two important things to note: the battery consumption and radio
+        states are generated via a specified model of the device and the type
+        of radio network. In other words, the generated numbers are not exact
+        measurements from the device in use but estimates based on specified
+        parameters in the model. On the upside, this allows you to import
+        different device and network models and compare their energy use—e.g.,
+        3G vs. 4G.
+
+        <p>Finally, the collector is Android only, but the ARO analyzer can
+        also accept any regular packet trace (pcap) file produced by
+        <code>tcpdump</code> or a compatible tool; iOS users will have to use
+        the <code>tcpdump</code> method.
+
+        <p>To get started with ARO, head to <em><a class="orm:hideurl" href=
+        "https://hpbn.co/attaro">https://hpbn.co/attaro</a></em>.
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="eliminate-periodic-and-inefficient-data-transfers"><a href=
+      "#eliminate-periodic-and-inefficient-data-transfers" class=
+      "anchor">§</a>Eliminate Periodic and Inefficient Data Transfers</h2>
+
+      <p>The fact that the mobile radio incurs a fixed power cost to cycle into
+      the full power state, regardless of the amount of data to be transferred,
+      tells us that there is no such thing as a "small request" as far as the
+      battery is concerned. Intermittent network access is a performance
+      anti-pattern on mobile networks; see <a data-type="xref" href=
+      "/mobile-networks/#inefficiency-of-periodic-transfers">Inefficiency of
+      Periodic Transfers</a>. In fact, extending this same logic yields the
+      following rules:
+
+      <ul>
+        <li>
+          <p>Polling is exceptionally expensive on mobile networks; minimize
+          it.
+
+        <li>
+          <p>Where possible, push delivery and notifications should be used.
+
+        <li>
+          <p>Outbound and inbound requests should be coalesced and aggregated.
+
+        <li>
+          <p>Noncritical requests should be deferred until the radio is active.
+        </ul>
+
+      <p>In general, push delivery is more efficient than polling. However, a
+      high-frequency push stream can be just as, if not more, expensive.
+      Whenever there is a need for real-time updates, you should consider the
+      following questions:
+
+      <ul>
+        <li>
+          <p>What is the best interval of updates and does it match user
+          expectations?
+
+        <li>
+          <p>Instead of a fixed update interval, can an adaptive strategy be
+          used?
+
+        <li>
+          <p>Can the inbound or outbound requests be aggregated into fewer
+          network calls?
+
+        <li>
+          <p>Can the inbound or outbound requests be deferred until later?
+        </ul>
+
+      <div data-type="note" id="id-7etyh0CD">
+        <p>For push delivery, native applications have access to
+        platform-specific push delivery services, which should be used when
+        possible. For web applications, server-sent events (SSEs) and WebSocket
+        delivery can be used to minimize latency and protocol overhead. Avoid
+        polling and costly XHR techniques when possible.
+      </div>
+
+      <p>A simple aggregation strategy of bundling multiple notifications into
+      a single push event, based on an adaptive interval, user preference, or
+      even the battery level on the device, can make a significant improvement
+      to the power profile of any application, especially background
+      applications, which often rely on this type of network access pattern.
+
+      <aside>
+        <h4 id="nagle-and-efficient-server-push"><a href=
+        "#nagle-and-efficient-server-push" class="anchor">§</a>Nagle and
+        Efficient Server Push</h4>
+
+        <p>TCP aficionados will undoubtedly recognize the request aggregation
+        and bundling advice as Nagle’s algorithm, except reimplemented at the
+        application layer! Nagle’s algorithm attempts to combine multiple small
+        TCP messages into a single packet to reduce protocol overhead and the
+        number of packets on the wire. Not surprisingly, our mobile
+        applications can benefit a great deal from leveraging the same
+        technique.
+
+        <p>A simple implementation of such a strategy is to aggregate messages
+        on the server by time, count, or size, instead of triggering an
+        individual push for each one. A more involved, but significantly more
+        efficient, strategy is to push updates only when the radio is already
+        active on the client—e.g., defer the messages until the client
+        initiates a request or leverage a third-party service that is aware of
+        the client’s radio state.
+
+        <p>For example, services such as Google Cloud Messaging (GCM) for
+        Android and Chrome offer message delivery APIs which can aggregate
+        messages and deliver updates only when the device is active: the server
+        pushes its messages to GCM, and GCM determines the optimal delivery
+        schedule.
+
+        <p>Unfortunately, today there is no cross-browser API to deliver a
+        GCM-like experience to all clients. However, the W3C Push API (see
+        <em><a class="orm:hideurl" href=
+        "http://www.w3.org/TR/push-api/">http://www.w3.org/TR/push-api/</a></em>)
+        should address this use case in the future.
+      </aside>
+
+      <p>Intermittent beacon requests such as audience measurement pings and
+      real-time analytics can easily negate all of your careful battery
+      optimizations. These pings are mostly harmless on wired and even WiFi
+      networks but carry an outsized cost on mobile networks. Do these beacons
+      need to happen instantaneously? There is a good chance that you can
+      easily log and defer these requests until next time the radio is active.
+      Piggyback your background pings, and pay close attention to the network
+      access patterns of third-party libraries and snippets in your code.
+
+      <p>Finally, while we have so far focused on the battery, intermittent
+      network access required for techniques such as progressive enhancement
+      and incremental loading also carries a large latency cost due to the RRC
+      state transitions! Recall that every state transition incurs a high
+      control-plane latency cost in mobile networks, which may inject hundreds
+      or thousands of extra milliseconds of latency—an especially expensive
+      proposition for user-initiated and interactive traffic.
+
+      <aside>
+        <h4 id="calculating-the-energy-cost-of-background-updates"><a href=
+        "#calculating-the-energy-cost-of-background-updates" class=
+        "anchor">§</a>Calculating the Energy Cost of Background Updates</h4>
+
+        <p>To illustrate the impact of periodic polling on battery life, let’s
+        do some simple math. The numbers are not exact but are within range of
+        a typical 3G/4G mobile handset:
+
+        <ul>
+          <li>
+            <p>5 watt-hours, or 18,000 joules of battery capacity (<img src=
+            "/assets/equations/3c920a91865a3a797bfed353b70448f9.svg" class=
+            "equation">)
+
+          <li>
+            <p>10 joules of consumed energy to cycle radio from idle to
+            connected and back
+
+          <li>
+            <p>1 minute polling interval consumes 600 joules of energy per hour
+            (<img src="/assets/equations/d9552b4fd523ec32e5b830d016cc9c56.svg"
+            class="equation">)
+
+          <li>
+            <p>600 joules of energy is ~3% of total battery capacity (<img src=
+            "/assets/equations/376a4471fad32292e6d2c8b8df0f1fdd.svg" class=
+            "equation">)
+          </ul>
+
+        <p>~3% of available battery capacity per hour for a single application!
+        All it would take is a couple of applications with non-overlapping
+        polling intervals to drain your battery by midday. Although, to be
+        fair, a push application with frequent, unbuffered updates can have an
+        even higher energy consumption profile.
+
+        <p>Battery life optimization and frequency of updates are inherently at
+        odds. Consider the requirements of your specific application to
+        determine the optimal strategy: bundling of updates, adaptive update
+        intervals, pull vs. push, and so on. Then, measure the impact with ARO
+        or a similar tool and adjust accordingly.
+      </aside>
+
+      <section>
+        <h3 id="eliminate-unnecessary-application-keepalives"><a href=
+        "#eliminate-unnecessary-application-keepalives" class=
+        "anchor">§</a>Eliminate Unnecessary Application Keepalives</h3>
+
+        <p>The connection state and the lifecycle of any TCP or UDP connection
+        is independent of the radio state on the device: the radio can be in a
+        low-power state while the connections are maintained by the carrier
+        network. Then, when a new packet arrives from the external network, the
+        carrier radio network will notify the device, promote its radio to a
+        connected state, and resume the data transfer.
+
+        <p>The application does not need to keep the radio "active" to ensure
+        that connections are not dropped. Unnecessary application keepalives
+        can have an enormous negative impact on battery life performance and
+        are often put in place due to simple misunderstanding of how the mobile
+        radio works. Refer to <a data-type="xref" href=
+        "/mobile-networks/#physical-layer-vs-application-layer-connectivity">Physical
+        Layer vs. Application Layer Connectivity</a> and <a data-type="xref"
+        href="/mobile-networks/#packet-flow-in-a-mobile-network">Packet Flow in
+        a Mobile Network</a>.
+
+        <div data-type="note" id="id-04tpT5flCj">
+          <p>Most mobile carriers set a 5–30 minute NAT connection timeout.
+          Hence, you may need a periodic (5 minute) keepalive to keep an idle
+          connection from being dropped. If you find yourself requiring more
+          frequent keepalives, check your own server, proxy, and load balancer
+          configuration first!
+        </div>
+      </section>
+    </section>
+
+    <section>
+      <h2 id="anticipate-network-latency-overhead"><a href=
+      "#anticipate-network-latency-overhead" class="anchor">§</a>Anticipate
+      Network Latency Overhead</h2>
+
+      <p>A single HTTP request for a required resource may incur anywhere from
+      hundreds to thousands of milliseconds of network latency overhead in a
+      mobile network. In part, this is due to the high roundtrip latencies, but
+      we also can’t forget the overhead (<a data-type="xref" href=
+      "#http-latency-components">Figure&nbsp;8-2</a>) of DNS, TCP, TLS, and
+      control-plane costs!
+
+      <figure id="http-latency-components">
+        <img src="/assets/diagrams/82966133085de5c9aed3229838166dc5.svg" alt=
+        'Figure 8-2. Components of a "simple" HTTP request'>
+
+        <figcaption>
+          <span class="label">Figure 8-2.</span> Components of a "simple" HTTP
+          request
+        </figcaption>
+      </figure>
+
+      <p>In the best case, the radio is already in a high-power state, the DNS
+      is pre-resolved, and an existing TCP connection is available: the client
+      may be able to reuse an existing connection and avoid the overhead of
+      establishing a new connection. However, if the connection is busy, or
+      nonexistent, then we must incur a number of additional roundtrips before
+      any application data can be sent.
+
+      <p>To illustrate the impact of these extra network roundtrips, let’s
+      assume an optimistic 100 ms roundtrip time for 4G and a 200 ms roundtrip
+      time for 3.5G+ networks:
+
+      <figure id="latency-overhead-http-table">
+        <table>
+          <thead>
+            <tr>
+              <th>
+
+              <th>3G
+
+              <th>4G
+
+          <tbody>
+            <tr>
+              <td>Control plane
+
+              <td>200–2,500 ms
+
+              <td>50–100 ms
+
+            <tr>
+              <td>DNS lookup
+
+              <td>200 ms
+
+              <td>100 ms
+
+            <tr>
+              <td>TCP handshake
+
+              <td>200 ms
+
+              <td>100 ms
+
+            <tr>
+              <td>TLS handshake
+
+              <td>200–400 ms
+
+              <td>100–200 ms
+
+            <tr>
+              <td>HTTP request
+
+              <td>200 ms
+
+              <td>100 ms
+
+            <tr>
+              <td><strong>Total latency overhead</strong>
+
+              <td><strong>200–3500 ms</strong>
+
+              <td><strong>100–600 ms</strong>
+            </table>
+
+        <figcaption>
+          <span class="label">Table 8-1.</span> Latency overhead of a single
+          HTTP request
+        </figcaption>
+      </figure>
+
+      <p>The RRC control-plane latency alone can add anywhere from hundreds to
+      thousands of milliseconds of overhead to reestablish the radio context on
+      a 3G network! Once the radio is active, we may need to resolve the
+      hostname to an IP address and then perform the TCP handshake—two network
+      roundtrips. Then, if a secure tunnel is required, we may need up to two
+      extra network roundtrips (see <a data-type="xref" href=
+      "/transport-layer-security-tls/#tls-session-resumption">TLS Session
+      Resumption</a>). Finally, the HTTP request can be sent, which adds a
+      minimum of another roundtrip.
+
+      <p>We have not accounted for the server response time or the size of the
+      response, which may require several roundtrips, and yet we have already
+      incurred up to half a dozen roundtrips. Multiply that by the roundtrip
+      time, and we are looking at entire seconds of latency overhead for 3G,
+      and roughly half a second for 4G networks.
+
+      <section>
+        <h3 id="account-for-rrc-state-transitions"><a href=
+        "#account-for-rrc-state-transitions" class="anchor">§</a>Account for
+        RRC State Transitions</h3>
+
+        <p>If the mobile device has been idle for more than a few seconds, you
+        should assume and anticipate that the first packet will incur hundreds,
+        or even thousands of milliseconds of extra RRC latency. As a rule of
+        thumb, add 100 ms for 4G, 150–500 ms for 3.5G+, and 500–2,500 ms for 3G
+        networks, as a one-time, control-plane latency cost.
+
+        <p>The RRC is specifically designed to help mitigate some of the cost
+        of operating the power-hungry radio. However, what we gain in battery
+        life is offset by increases in latency and lower throughput due to the
+        presence of the various timers, counters, and the consequent overhead
+        of required network negotiation to transition between the different
+        radio states. However, the RRC is also a fact of life on mobile
+        networks–there is no way around it–and if you want to build optimized
+        applications for the mobile web, you must design with the RRC in mind.
+
+        <p>A quick summary of what we have learned about the RRC:
+
+        <ul>
+          <li>
+            <p>RRC state machines are different for every wireless standard.
+
+          <li>
+            <p>RRC state machines are managed by the radio network for each
+            device.
+
+          <li>
+            <p>RRC state promotions to high power occur when data must be
+            transferred.
+
+          <li>
+            <p>RRC state demotions to lower power occur on network-configured
+            timeouts.
+
+          <li>
+            <p>(4G) LTE state transitions can take 10 to 100 milliseconds.
+
+          <li>
+            <p>(4G) HSPA+ state transitions are competitive with LTE.
+
+          <li>
+            <p>(3G) HSPA and CDMA state transitions can take several seconds.
+
+          <li>
+            <p>Every network transfer, no matter the size, incurs an energy
+            tail.
+          </ul>
+
+        <p>We have already covered why preserving battery is such an important
+        goal for mobile applications, and we have also highlighted the
+        inefficiency of intermittent transfers, which are a direct result of
+        the timeout-driven RRC state transitions. However, there is one more
+        thing you need to take away: if the device radio has been idle, then
+        initiating a new data transfer on mobile networks will incur an
+        additional latency delay, which may take anywhere from 100 milliseconds
+        on latest-generation networks to up to several seconds on older 3G and
+        2G networks.
+
+        <p>While the network presents the illusion of an always-on experience
+        to our applications, the physical or the radio layer controlled by the
+        RRC is continuously connecting and disconnecting. On the surface, this
+        is not an issue, but the delays imposed by the RRC are, in fact, often
+        easily noticeable by many users when unaccounted for.
+      </section>
+
+      <section>
+        <h3 id="decouple-user-interactions-from-network-communication"><a href=
+        "#decouple-user-interactions-from-network-communication" class=
+        "anchor">§</a>Decouple User Interactions from Network
+        Communication</h3>
+
+        <p>A well-designed application can <em>feel fast</em> by providing
+        instant feedback even if the underlying connection is slow or the
+        request is taking a long time to complete. Do not couple user
+        interactions, user feedback, and network communication. To deliver the
+        best experience, the application should acknowledge user input within
+        hundreds of milliseconds; see <a data-type="xref" href=
+        "/primer-on-web-performance/#speed-performance-and-human-perception">Speed,
+        Performance, and Human Perception</a>.
+
+        <p>If a network request is required, then initiate it in the
+        background, and provide immediate UI feedback to acknowledge user
+        input. The control plane latency alone will often push your application
+        over the allotted budget for providing instant user feedback. Plan for
+        high latencies—you cannot "fix" the latency imposed by the core network
+        and the RRC—and work with your design team to ensure that they are
+        aware of these limitations when designing the application.
+      </section>
+    </section>
+
+    <section>
+      <h2 id="design-for-variable-network-interface-availability"><a href=
+      "#design-for-variable-network-interface-availability" class=
+      "anchor">§</a>Design for Variable Network Interface Availability</h2>
+
+      <p>Users dislike slow applications, but broken applications, due to
+      transient network errors, are the worst experience of all. Your mobile
+      application must be robust in the face of common networking failures:
+      unreachable hosts, sudden drops in throughput or increases in latency, or
+      outright loss of connectivity. Unlike the tethered world, you simply
+      cannot assume that once the connection is established, it will remain
+      established. The user may be on the move and may enter an area with high
+      amounts of interference, many active users, or plain poor coverage.
+
+      <p>Further, just as you cannot design your pages just for the latest
+      browsers, you cannot design your application just for the
+      latest-generation mobile networks. As we have covered earlier
+      (<a data-type="xref" href=
+      "/mobile-networks/#building-for-the-multigeneration-future">Building for
+      the Multigeneration Future</a>), even users with the latest handsets will
+      continuously transition between 4G, 3G, and even 2G networks based on the
+      continuously changing conditions of their radio environments. Your
+      application should subscribe to these interface transitions and adjust
+      accordingly.
+
+      <div data-type="note" id="id-7etwToFD">
+        <p>The application can subscribe to navigator.onLine notifications to
+        monitor connection status. For a good introduction, also see Paul
+        Kinlan’s article on HTML5Rocks: <a href=
+        "https://hpbn.co/offline">Working Off the Grid with HTML5 Offline</a>.
+      </div>
+
+      <p>Change is the only constant in mobile networks. Radio channel quality
+      is always changing based on distance from the tower, congestion from
+      nearby users, ambient interference, and dozens of other factors. With
+      that in mind, while it may be tempting to perform various forms of
+      bandwidth and latency estimation to optimize your mobile application, the
+      results should be treated, at best, as transient data points.
+
+      <div data-type="note" id="id-avtgh9FG">
+        <p>The iPhone 4 "antennagate" serves as a great illustration of the
+        unpredictable nature of radio performance: reception quality was
+        affected by the physical location of your hand in regards to the
+        phone’s antenna, which gave birth to the infamous "You’re holding it
+        wrong."
+      </div>
+
+      <p>Latency and bandwidth estimates on mobile networks are stable on the
+      order of tens to hundreds of milliseconds, at most a second, but not
+      more. Hence, while optimizations such as adaptive bitrate streaming are
+      still useful for long-lived streams, such as video, which is adapted in
+      data chunks spanning a few seconds, these bandwidth estimates should
+      definitely not be cached or used later to make decisions about the
+      available throughput: even on 4G, you may measure your throughput as just
+      a few hundred Kbit/s, and then move your radio a few inches and get
+      Mbit/s+ performance!
+
+      <aside>
+        <h4 id="streaming-applications-on-mobile-networks"><a href=
+        "#streaming-applications-on-mobile-networks" class=
+        "anchor">§</a>Streaming Applications on Mobile Networks</h4>
+
+        <p>Streaming applications on mobile networks are a tricky problem. If
+        you need to perform a large download and have confidence that the
+        entire file will be used, then you should download the entire file in
+        one shot and then leave the radio idle for as long as possible—e.g.,
+        the behavior of music file downloads in the Pandora application we
+        covered earlier.
+
+        <p>However, if you cannot stream the full file (e.g., an HD video) due
+        to size or user behavior constraints, then you should leverage adaptive
+        bitrate streaming to continuously adjust to changes in network
+        throughput. You <em>will</em> incur high battery cost, but at least you
+        will deliver the best user experience while doing so! Alternatively,
+        consider prompting the user to switch to WiFi.
+      </aside>
+
+      <p>End-to-end bandwidth and latency estimation is a hard problem on any
+      network, but doubly so on mobile networks. Avoid it, because you will get
+      it wrong. Instead, use coarse-grained information about the generation of
+      the network, and adjust your code accordingly. To be clear, knowing the
+      generation or type of mobile network does not make any end-to-end
+      performance guarantees, but it does tell you important data about the
+      latency of the first wireless hop and the end-to-end performance of the
+      carrier network; see <a data-type="xref" href=
+      "/mobile-networks/#latency-and-jitter-in-mobile-networks">Latency and
+      Jitter in Mobile Networks</a> and <a data-type="xref" href=
+      "/mobile-networks/#hspa-to-lte-advanced">Table&nbsp;7-6</a>.
+
+      <p>Finally, throughput and latency aside, you should plan for loss of
+      connectivity: assume this case is not an exception but the rule. Your
+      application should remain operational, to the extent possible, when the
+      network is unavailable or a transient failure happens and should adapt
+      based on request type and specific error:
+
+      <ul>
+        <li>
+          <p>Do not cache or attempt to guess the state of the network.
+
+        <li>
+          <p>Dispatch the request, listen for failures, and diagnose what
+          happened.
+
+        <li>
+          <p>Transient errors will happen; plan for them, and use a retry
+          strategy.
+
+        <li>
+          <p>Listen to connection state to anticipate the best request
+          strategy.
+
+        <li>
+          <p>Use a backoff algorithm for request retries; do not spin forever.
+
+        <li>
+          <p>If offline, log and dispatch the request later if possible.
+
+        <li>
+          <p>Leverage HTML5 AppCache and localStorage for offline mode.
+        </ul>
+
+      <div data-type="note" id="id-w5t9fKFQ">
+        <p>With the growing adoption of HetNet infrastructure, the frequency of
+        cell handoffs is set to rise dramatically, which makes monitoring your
+        connection state and type only more important.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="burst-your-data-and-return-to-idle"><a href=
+      "#burst-your-data-and-return-to-idle" class="anchor">§</a>Burst Your Data
+      and Return to Idle</h2>
+
+      <p>Mobile radio interface is optimized for bursty transfers, which is a
+      property you should leverage whenever possible: group your requests
+      together and download as much as possible, as quickly as possible, and
+      then let the radio return to an idle state. This strategy will deliver
+      the best network throughput and maximize battery life of the device.
+
+      <div data-type="note" id="id-7etlcjfD">
+        <p>The only accurate way to estimate the network’s speed is, well, to
+        use it! Latest-generation networks, such as LTE and HSPA+, perform
+        dynamic allocation of resources in one-millisecond intervals and
+        prioritize bursty data flows. To go fast, keep it simple: batch and
+        pre-fetch as much data as you can, and let the network do the rest.
+      </div>
+
+      <p>An important corollary is that progressive loading of resources may do
+      more harm than good on mobile networks. By downloading content in small
+      chunks, we expose our applications to higher variability both in
+      throughput and latency, not to mention the much higher energy costs to
+      operate the radio. Instead, anticipate what your users will need next,
+      download the content ahead of time, and let the radio idle:
+
+      <ul>
+        <li>
+          <p>If you need to fetch a large music or a video file, consider
+          downloading the entire file upfront, instead of streaming in chunks.
+
+        <li>
+          <p>Prefetch application content and invest in metrics and statistical
+          models to help identify which content is appropriate to download
+          ahead of time.
+
+        <li>
+          <p>Prefetch third-party content, such as ads, ahead of time and add
+          application logic to show and update their state when necessary.
+
+        <li>
+          <p>Eliminate unnecessary intermittent transfers. See <a data-type=
+          "xref" href=
+          "/mobile-networks/#46-of-battery-consumption-to-transfer-02-of-total-bytes">
+          46% of Battery Consumption to Transfer 0.2% of Total Bytes</a>.
+        </ul>
+
+      <aside>
+        <h4 id="building-and-evaluating-a-prefetch-model"><a href=
+        "#building-and-evaluating-a-prefetch-model" class=
+        "anchor">§</a>Building and Evaluating a Prefetch Model</h4>
+
+        <p>Content pre-fetching will <em>always</em> create a natural tension:
+        on one hand, you want to download as few bytes as possible, and on the
+        other you want to minimize your latency and throughput variability and
+        reduce your impact on the battery. Which is more important? Wrong
+        question. The answer is always contextual to your application and the
+        metric you choose to use to determine the effectiveness of your
+        pre-fetch strategy.
+
+        <p>The important takeaway is that there are, at a minimum, three
+        variables to balance: number of transferred bytes, impact on the
+        battery, and variability in network throughput and latency. Further, as
+        we saw, these variables are not exclusive: transferring a larger batch
+        of bytes in a single transfer may give you better throughput.
+
+        <p>An application with a highly predictable usage pattern can make use
+        of aggressive pre-fetching, minimize battery consumption, improve user
+        experience, and simultaneously avoid incurring a large byte overhead.
+        Conversely, a poorly implemented pre-fetch strategy can download a lot
+        of unnecessary data and hurt the overall experience for the user.
+
+        <p>To determine how your application should behave, first determine
+        your primary goals and the primary usage patterns of your application.
+        Then use that data to implement a pre-fetch strategy and gather metrics
+        to validate the assumptions of your model. Rinse, lather, and repeat.
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="offload-to-wifi-networks"><a href="#offload-to-wifi-networks"
+      class="anchor">§</a>Offload to WiFi Networks</h2>
+
+      <p>Current industry estimates show that almost 90% of the worldwide
+      wireless traffic is expected to originate indoors, and frequently in
+      areas with WiFi connectivity within reach. Hence, while the latest 4G
+      networks may compete with WiFi over peak throughput and latency, very
+      frequently they still impose a monthly data cap: mobile access is metered
+      and often expensive to the user. Further, WiFi connections are more
+      battery efficient (see <a data-type="xref" href=
+      "/mobile-networks/#3g-4g-and-wifi-power-requirements">3G, 4G, and WiFi
+      Power Requirements</a>) for large transfers and do not require an RRC.
+
+      <p>Whenever possible, and especially if you are building a data-intensive
+      application, you should leverage WiFi connectivity when available, and if
+      not, then consider prompting the user to enable WiFi on her device to
+      improve experience and minimize costs.
+    </section>
+
+    <section>
+      <h2 id="apply-protocol-and-application-best-practices"><a href=
+      "#apply-protocol-and-application-best-practices" class=
+      "anchor">§</a>Apply Protocol and Application Best Practices</h2>
+
+      <p>One of the great properties of the layered architecture of our network
+      infrastructure is that it abstracts the physical delivery from the
+      transport layer, and the transport layer abstracts the routing and data
+      delivery from the application protocols. This separation provides great
+      API abstractions, but for best end-to-end performance, we still need to
+      consider the entire stack.
+
+      <p>Throughout this chapter, we have focused on the unique properties of
+      the physical layer of mobile networks, such as the presence of the RRC,
+      concerns over the battery life of the device, and incurred routing
+      latencies in mobile networks. However, on top of this physical layer
+      reside the transport and session protocols we have covered in earlier
+      chapters, and all of their optimizations are just as critical, perhaps
+      doubly so:
+
+      <ul>
+        <li>
+          <p><a data-type="xref" href=
+          "/building-blocks-of-tcp/#optimizing-for-tcp">Optimizing for TCP</a>
+
+        <li>
+          <p><a data-type="xref" href=
+          "/building-blocks-of-udp/#optimizing-for-udp">Optimizing for UDP</a>
+
+        <li>
+          <p><a data-type="xref" href=
+          "/transport-layer-security-tls/#optimizing-for-tls">Optimizing for
+          TLS</a>
+        </ul>
+
+      <p>Minimizing latency by reusing keepalive connections, geo-positioning
+      servers and data closer to the client, optimizing TLS deployments, and
+      all the other optimizations we outlined earlier are even more important
+      on mobile networks, where roundtrip latencies are high and bandwidth is
+      always at a premium.
+
+      <p>Of course, our optimization strategy does not stop with transport and
+      session protocols; they are simply the foundation. From there, we must
+      also consider the performance implications of different application
+      protocols (HTTP/1.0, 1.1, and 2), as well as general web application best
+      practices—keep reading, we are not done yet!
+    </section>
+  </article>
+
+  <footer>
+    <div id="toast">
+      &nbsp;
+    </div>
+
+    <p><a href="/#toc"><em>« Back to the Table of Contents</em></a>
+
+    <p class="legal">Copyright © 2013 <a href="https://www.igvita.com/" rel=
+    "me">Ilya Grigorik</a>. Published by O'Reilly Media, Inc. Licensed under
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND
+    4.0</a>.
+  </footer>
+

@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Browser APIs and Protocols: Server-Sent Events (SSE) - High Performance
+Browser Networking (O'Reilly)</title>
+<meta name="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
+</script>
+<script async src="https://www.google-analytics.com/analytics.js">
+</script>
+<link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
+<link href=
+"https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
+rel="stylesheet">
+<link rel="stylesheet" href="/assets/b708e9296b5e26f6bd725561648a1dda.css">
+<link rel="manifest" href="/7a58c37113db4464699ec4f4646b5566.json">
+<link rel="icon" sizes="192x192" href="/assets/icons/icon-192.png">
+<meta name="theme-color" content="#000">
+<meta itemprop="name" content=
+"Browser APIs and Protocols: Server-Sent Events (SSE) - High Performance Browser Networking (O'Reilly)">
+<meta itemprop="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content=
+"Browser APIs and Protocols: Server-Sent Events (SSE) - High Performance Browser Networking (O'Reilly)">
+<meta name="twitter:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:creator" content="@igrigorik">
+<meta name="twitter:image:src" content="https://hpbn.co/assets/twitter.jpg">
+<meta property="og:title" content=
+"Browser APIs and Protocols: Server-Sent Events (SSE) - High Performance Browser Networking (O'Reilly)">
+<meta property="og:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta property="og:site_name" content="High Performance Browser Networking">
+<meta property="fb:admins" content="688996186">
+<script type="application/ld+json">
+{"@context":"http://schema.org/","@type":"Article","headline":"Browser APIs and Protocols: Server-Sent Events (SSE) - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2015-11-30T23:06:25Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+</script>
+
+<body data-type="book">
+  <header>
+    <div id="book-title">
+      <div class="center">
+        <input type="checkbox" class="check" id="check"> <label for="check"
+        class="icon"><svg viewbox="0 0 18 18">
+        <title>Menu</title>
+
+        <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
+        </path></svg></label> <a href="/">High Performance Browser
+        Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
+
+        <div class="drawer menu">
+          <div class="title">
+            Server-Sent Events (SSE)
+          </div>
+
+          <hr>
+
+          <ul class="content-container" id="nav">
+          </ul>
+
+          <hr>
+
+          <ul class="content-container" id="nav-other">
+            <li>
+              <a href="/#toc">Table of Contents</a>
+
+            <li>
+              <a href="/#author">About the Author</a>
+
+            <li>
+              <a id="feedback" target="_blank" href=
+              "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BServer-Sent%20Events%20(SSE)%5D:%20...">
+              Submit Feedback</a>
+            </ul>
+        </div>
+        <label for="check" class="closemenu">&nbsp;</label>
+      </div>
+    </div>
+
+    <h1>Server-Sent Events (SSE)</h1>
+
+    <p id="chapter">Browser APIs and Protocols, Chapter 16
+  </header>
+
+  <article data-type="chapter" id="SERVER_SENT_EVENTS">
+    <section id="introduction">
+      <h2>Introduction</h2>
+
+      <p>Server-Sent Events enables efficient server-to-client streaming of
+      text-based event data—e.g., real-time notifications or updates generated
+      on the server. To meet this goal, SSE introduces two components: a new
+      EventSource interface in the browser, which allows the client to receive
+      push notifications from the server as DOM events, and the "event stream"
+      data format, which is used to deliver the individual updates.
+
+      <p>The combination of the EventSource API in the browser and the
+      well-defined event stream data format is what makes SSE both an efficient
+      and an indispensable tool for handling real-time data in the browser:
+
+      <ul>
+        <li>
+          <p>Low latency delivery via a single, long-lived connection
+
+        <li>
+          <p>Efficient browser message parsing with no unbounded buffers
+
+        <li>
+          <p>Automatic tracking of last seen message and auto reconnect
+
+        <li>
+          <p>Client message notifications as DOM events
+        </ul>
+
+      <p>Under the hood, SSE provides an efficient, cross-browser
+      implementation of XHR streaming; the actual delivery of the messages is
+      done over a single, long-lived HTTP connection. However, unlike dealing
+      XHR streaming on our own, the browser handles all the connection
+      management and message parsing, allowing our applications to focus on the
+      business logic! In short, SSE makes working with real-time data simple
+      and efficient. Let’s take a look under the hood.
+    </section>
+
+    <section>
+      <h2 id="eventsource-api"><a href="#eventsource-api" class=
+      "anchor">§</a>EventSource API</h2>
+
+      <p>The EventSource interface abstracts all the low-level connection
+      establishment and message parsing behind a simple browser API. To get
+      started, we simply need to specify the URL of the SSE event stream
+      resource and register the appropriate JavaScript event listeners on the
+      object:
+
+      <div data-type="example" id="-2eC1HVSX">
+        <pre data-type="programlisting">
+var source = new EventSource("/path/to/stream-url"); <a class="counter" id=
+"es-co" href="#es"></a>
+
+source.onopen = function () { ... }; <a class="counter" id="esopen-co" href=
+"#esopen"></a>
+source.onerror = function () { ... }; <a class="counter" id="eserror-co" href=
+"#eserror"></a>
+
+source.addEventListener("foo", function (event) { <a class="counter" id=
+"esfoo-co" href="#esfoo"></a>
+  processFoo(event.data);
+});
+
+source.onmessage = function (event) {  <a class="counter" id="esm-co" href=
+"#esm"></a>
+  log_message(event.id, event.data);
+
+  if (event.id == "CLOSE") {
+    source.close(); <a class="counter" id="esclose-co" href="#esclose"></a>
+  }
+}
+</pre>
+
+        <ol class="notation">
+          <li>
+            <a class="co" id="es" href="#es-co"></a>
+
+            <p>Open new SSE connection to stream endpoint
+
+          <li>
+            <a class="co" id="esopen" href="#esopen-co"></a>
+
+            <p>Optional callback, invoked when connection is established
+
+          <li>
+            <a class="co" id="eserror" href="#eserror-co"></a>
+
+            <p>Optional callback, invoked if the connection fails
+
+          <li>
+            <a class="co" id="esfoo" href="#esfoo-co"></a>
+
+            <p>Subscribe to event of type "foo"; invoke custom logic
+
+          <li>
+            <a class="co" id="esm" href="#esm-co"></a>
+
+            <p>Subscribe to all events without an explicit type
+
+          <li>
+            <a class="co" id="esclose" href="#esclose-co"></a>
+
+            <p>Close SSE connection if server sends a "CLOSE" message ID
+          </ol>
+      </div>
+
+      <div data-type="note" id="id-roCVIXSk">
+        <p>EventSource can stream event data from remote origins by leveraging
+        the same CORS permission and opt-in workflow as a regular XHR.
+      </div>
+
+      <p>That’s all there is to it for the client API. The implementation logic
+      is handled for us: the connection is negotiated on our behalf, received
+      data is parsed incrementally, message boundaries are identified, and
+      finally a DOM event is fired by the browser. EventSource interface allows
+      the application to focus on the business logic: open new connection,
+      process received event notifications, terminate stream when finished.
+
+      <div data-type="note" id="id-0MCeSWSk">
+        <p>SSE provides a memory-efficient implementation of XHR streaming.
+        Unlike a raw XHR connection, which buffers the full received response
+        until the connection is dropped, an SSE connection can discard
+        processed messages without accumulating all of them in memory.
+      </div>
+
+      <p>As icing on the cake, the EventSource interface also provides
+      auto-reconnect and tracking of the last seen message: if the connection
+      is dropped, EventSource will automatically reconnect to the server and
+      optionally advertise the ID of the last seen message, such that the
+      stream can be resumed and lost messages can be retransmitted.
+
+      <p>How does the browser know the ID, type, and boundary of each message?
+      This is where the event stream protocol comes in. The combination of a
+      simple client API and a well-defined data format is what allows us to
+      offload the bulk of the work to the browser. The two go hand in hand,
+      even though the low-level data protocol is completely transparent to the
+      application in the browser.
+
+      <aside>
+        <h4 id="emulating-eventsource-with-custom-javascript"><a href=
+        "#emulating-eventsource-with-custom-javascript" class=
+        "anchor">§</a>Emulating EventSource with Custom JavaScript</h4>
+
+        <p>SSE was an early addition to the HTML5 specification and is natively
+        supported by most modern browsers. The two notable omissions, as of
+        early 2013, are Internet Explorer and the stock Android browser. For
+        the latest status, see <a href=
+        "http://caniuse.com/eventsource">caniuse.com/eventsource</a>.
+
+        <p>However, the good news is the EventSource interface is simple enough
+        such that it can be emulated via an optional JavaScript library (i.e.,
+        a "polyfill") for browsers that do not support it natively. Similarly,
+        the delivery of the event stream can be implemented on top of existing
+        XHR mechanisms:
+
+        <pre data-type="programlisting" data-code-language="javascript"
+        data-highlighted="true"><code class="k">if</code> <code class=
+        "p">(</code><code class="o">!</code><code class=
+        "nb">window</code><code class="p">.</code><code class=
+        "nx">EventSource</code><code class="p">)</code> <code class=
+        "p">{</code>
+  <code class="c1">// load JavaScript polyfill library</code>
+<code class="p">}</code>
+
+<code class="kd">var</code> <code class="nx">source</code> <code class=
+"o">=</code> <code class="k">new</code> <code class=
+"nx">EventSource</code><code class="p">(</code><code class=
+"s2">"/event-stream-endpoint"</code><code class="p">);</code>
+<code class="p">...</code></pre>
+
+        <p>The benefit of using a polyfill library is that it allows our
+        applications to, once again, focus on the application logic, instead of
+        worrying about the browser quirks and implementation status. Having
+        said that, while a polyfill will provide a consistent API, be aware
+        that the underlying XHR transport will not be as efficient:
+
+        <ul>
+          <li>
+            <p>XHR polling will incur message delays and high request overhead.
+
+          <li>
+            <p>XHR long-polling minimizes latency delays but has high request
+            overhead.
+
+          <li>
+            <p>XHR streaming support is limited and buffers all the data in
+            memory.
+          </ul>
+
+        <p>Without native support for efficient XHR streaming of event stream
+        data, the polyfill library can fallback to polling, long-polling, or
+        XHR streaming, each of which has its own performance costs. For a full
+        discussion, refer to <a data-type="xref" href=
+        "/xmlhttprequest/#real-time-notifications-and-delivery">Real-Time
+        Notifications and Delivery</a>.
+
+        <p>In short, check the implementation of your polyfill library to
+        ensure that it meets your performance goals! Many of the most popular
+        libraries (e.g., jQuery.EventSource) use XHR polling to emulate the SSE
+        transport—simple, but also an inefficient transport.
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="event-stream-protocol"><a href="#event-stream-protocol" class=
+      "anchor">§</a>Event Stream Protocol</h2>
+
+      <p>An SSE event stream is delivered as a streaming HTTP response: the
+      client initiates a regular HTTP request, the server responds with a
+      custom <em>"text/event-stream"</em> content-type, and then streams the
+      UTF-8 encoded event data. However, even that sounds too complicated, so
+      an example is in order:
+
+      <div data-type="example" id="-roCpHysk">
+        <pre data-type="programlisting">
+=&gt; Request
+GET /stream HTTP/1.1 <a class="counter" id="esreq-co" href="#esreq"></a>
+Host: example.com
+Accept: text/event-stream
+
+&lt;= Response
+HTTP/1.1 200 OK <a class="counter" id="esresp-co" href="#esresp"></a>
+Connection: keep-alive
+Content-Type: text/event-stream
+Transfer-Encoding: chunked
+
+retry: 15000 <a class="counter" id="esretry-co" href="#esretry"></a>
+
+data: First message is a simple string. <a class="counter" id="esstring-co"
+href="#esstring"></a>
+
+data: {"message": "JSON payload"} <a class="counter" id="esjson-co" href=
+"#esjson"></a>
+
+event: foo <a class="counter" id="esevent-co" href="#esevent"></a>
+data: Message of type "foo"
+
+id: 42 <a class="counter" id="esid-co" href="#esid"></a>
+event: bar
+data: Multi-line message of
+data: type "bar" and id "42"
+
+id: 43 <a class="counter" id="esid2-co" href="#esid2"></a>
+data: Last message, id "43"
+</pre>
+
+        <ol class="notation">
+          <li>
+            <a class="co" id="esreq" href="#esreq-co"></a>
+
+            <p>Client connection initiated via EventSource interface
+
+          <li>
+            <a class="co" id="esresp" href="#esresp-co"></a>
+
+            <p>Server response with "text/event-stream" content-type
+
+          <li>
+            <a class="co" id="esretry" href="#esretry-co"></a>
+
+            <p>Server sets client reconnect interval (15s) if the connection
+            drops
+
+          <li>
+            <a class="co" id="esstring" href="#esstring-co"></a>
+
+            <p>Simple text event with no message type
+
+          <li>
+            <a class="co" id="esjson" href="#esjson-co"></a>
+
+            <p>JSON payload with no message type
+
+          <li>
+            <a class="co" id="esevent" href="#esevent-co"></a>
+
+            <p>Simple text event of type "foo"
+
+          <li>
+            <a class="co" id="esid" href="#esid-co"></a>
+
+            <p>Multiline event with message ID and type
+
+          <li>
+            <a class="co" id="esid2" href="#esid2-co"></a>
+
+            <p>Simple text event with optional ID
+          </ol>
+      </div>
+
+      <p>The event-stream protocol is trivial to understand and implement:
+
+      <ul>
+        <li>
+          <p>Event payload is the value of one or more adjacent
+          <code>data</code> fields.
+
+        <li>
+          <p>Event may carry an optional <code>ID</code> and an
+          <code>event</code> type string.
+
+        <li>
+          <p>Event boundaries are marked by newlines.
+        </ul>
+
+      <p>On the receiving end, the EventSource interface parses the incoming
+      stream by looking for newline separators, extracts the payload from data
+      fields, checks for optional ID and type, and finally dispatches a DOM
+      event to notify the application. If a type is present, then a custom DOM
+      event is fired, and otherwise the generic "onmessage" callback is
+      invoked; see <a data-type="xref" href="#eventsource-api">EventSource
+      API</a> for both cases.
+
+      <aside>
+        <h4 id="utf-8-encoding-and-binary-transfers-with-sse"><a href=
+        "#utf-8-encoding-and-binary-transfers-with-sse" class=
+        "anchor">§</a>UTF-8 Encoding and Binary Transfers with SSE</h4>
+
+        <p>EventSource does not perform any additional processing on the actual
+        payload: the message is extracted from one or more data fields,
+        concatenated together and passed directly to the application. As such,
+        the server can push any text-based format (e.g., a simple string, JSON
+        payload, etc.), and the application must decode it on its own.
+
+        <p>Having said that, note that all event source data is UTF-8 encoded:
+        SSE is not meant as a mechanism for transferring binary payloads! If
+        necessary, one could base64 encode an arbitrary binary object to make
+        it SSE friendly, but doing so would incur high (33%) byte overhead; see
+        <a data-type="xref" href="/http1x/#resource-inlining">Resource
+        Inlining</a>.
+
+        <p>Concerned by high overhead of UTF-8 on the wire? An SSE connection
+        is a streaming HTTP response, which means that it can be compressed
+        (i.e., gziped), just as any other HTTP response while in flight! While
+        SSE is not meant for delivery of binary data, it is nonetheless an
+        efficient transport: ensure that your server is applying gzip
+        compression on the SSE stream.
+
+        <p>Lack of support for binary streaming is not an oversight. SSE was
+        specifically designed as a simple, efficient, server-to-client
+        transport for text-based data. If you need to transfer binary payloads,
+        then a WebSocket is the right tool for the job.
+      </aside>
+
+      <p>Finally, in addition to automatic event parsing, SSE provides built-in
+      support for reestablishing dropped connections, as well as recovery of
+      messages the client may have missed while disconnected. By default, if
+      the connection is dropped, then the browser will automatically
+      reestablish the connection. The SSE specification recommends a 2–3 second
+      delay, which is a common default for most browsers, but the server can
+      also set a custom interval at any point by sending a <code>retry</code>
+      command to the client.
+
+      <p>Similarly, the server can also associate an arbitrary ID string with
+      each message. The browser automatically remembers the last seen ID and
+      will automatically append a "Last-Event-ID" HTTP header with the
+      remembered value when issuing a reconnect request. Here’s an example:
+
+      <div data-type="example" id="-eqC8CpsB">
+        <pre data-type="programlisting">
+(existing SSE connection)
+retry: 4500 <a class="counter" id="es1sretry-co" href="#es1sretry"></a>
+
+id: 43 <a class="counter" id="esid43-co" href="#esid43"></a>
+data: Lorem ipsum
+
+(connection dropped)
+(4500 ms later)
+
+=&gt; Request
+GET /stream HTTP/1.1 <a class="counter" id="esreqr-co" href="#esreqr"></a>
+Host: example.com
+Accept: text/event-stream
+Last-Event-ID: 43
+
+&lt;= Response
+HTTP/1.1 200 OK <a class="counter" id="esrespr-co" href="#esrespr"></a>
+Content-Type: text/event-stream
+Connection: keep-alive
+Transfer-Encoding: chunked
+
+id: 44 <a class="counter" id="esid44-co" href="#esid44"></a>
+data: dolor sit amet
+</pre>
+
+        <ol class="notation">
+          <li>
+            <a class="co" id="es1sretry" href="#es1sretry-co"></a>
+
+            <p>Server sets the client reconnect interval to 4.5 seconds
+
+          <li>
+            <a class="co" id="esid43" href="#esid43-co"></a>
+
+            <p>Simple text event, ID: 43
+
+          <li>
+            <a class="co" id="esreqr" href="#esreqr-co"></a>
+
+            <p>Automatic client reconnect request with last seen event ID
+
+          <li>
+            <a class="co" id="esrespr" href="#esrespr-co"></a>
+
+            <p>Server response with "text/event-stream" content-type
+
+          <li>
+            <a class="co" id="esid44" href="#esid44-co"></a>
+
+            <p>Simple text event, ID: 44
+          </ol>
+      </div>
+
+      <p>The client application does not need to provide any extra logic to
+      reestablish the connection or remember the last seen event ID. The entire
+      workflow is handled by the browser, and we rely on the server to handle
+      the recovery. Specifically, depending on the requirements of the
+      application and the data stream, the server can implement several
+      different strategies:
+
+      <ul>
+        <li>
+          <p>If lost messages are acceptable, then no event IDs or special
+          logic is required: simply let the client reconnect and resume the
+          stream.
+
+        <li>
+          <p>If message recovery is required, then the server needs to specify
+          IDs for relevant events, such that the client can report the last
+          seen ID when reconnecting. Also, the server needs to implement some
+          form of a local cache to recover and retransmit missed messages to
+          the client.
+        </ul>
+
+      <p>The exact implementation details of how far back the messages are
+      persisted are, of course, specific to the requirements of the
+      application. Further, note that the ID is an optional event stream field.
+      Hence, the server can also choose to checkpoint specific messages or
+      milestones in the delivered event stream. In short, evaluate your
+      requirements, and implement the appropriate logic on the server.
+    </section>
+
+    <section>
+      <h2 id="sse-use-cases-and-performance"><a href=
+      "#sse-use-cases-and-performance" class="anchor">§</a>SSE Use Cases and
+      Performance</h2>
+
+      <p>SSE is a high-performance transport for server-to-client streaming of
+      text-based real-time data: messages can be pushed the moment they become
+      available on the server (low latency), there is minimum message overhead
+      (long-lived connection, event-stream protocol, and gzip compression), the
+      browser handles all the message parsing, and there are no unbounded
+      buffers. Add to that a convenient EventSource API with auto-reconnect and
+      message notifications as DOM events, and SSE becomes an indispensable
+      tool for working with real-time data!
+
+      <p>There are two key limitations to SSE. First, it is server-to-client
+      only and hence does not address the request streaming use case—e.g.,
+      streaming a large upload to the server. Second, the event-stream protocol
+      is specifically designed to transfer UTF-8 data: binary streaming, while
+      possible, is inefficient.
+
+      <p>Having said that, the UTF-8 limitation can often be resolved at the
+      application layer: SSE delivers a notification to the application about a
+      new binary asset available on the server, and the application dispatches
+      an XHR request to fetch it. While this incurs an extra roundtrip of
+      latency, it also has the benefit of leveraging the numerous services
+      provided by the XHR: response caching, transfer-encoding (compression),
+      and so on. If an asset is streamed, it cannot be cached by the browser
+      cache.
+
+      <div data-type="note" id="id-PrC9hrFD">
+        <p>Real-time push, just as polling, can have a large negative impact on
+        battery life. First, consider batching messages to avoid waking up the
+        radio. Second, eliminate unnecessary keepalives; an SSE connection is
+        not "dropped" while the radio is idle. For more details, see
+        <a data-type="xref" href=
+        "/optimizing-for-mobile-networks/#eliminate-periodic-and-inefficient-data-transfers">
+        Eliminate Periodic and Inefficient Data Transfers</a>.
+      </div>
+
+      <aside>
+        <h4 id="sse-streaming-over-tls"><a href="#sse-streaming-over-tls"
+        class="anchor">§</a>SSE Streaming over TLS</h4>
+
+        <p>SSE provides a simple and convenient real-time transport on top of a
+        regular HTTP connection, which makes it simple to deploy on the server
+        and to polyfill on the client. However, existing network middleware,
+        such as proxy servers and firewalls, which are not SSE aware, may still
+        cause problems: intermediaries may choose to buffer the event-stream
+        data, which will translate to increased latency or an outright broken
+        SSE connection.
+
+        <p>As a result, if you experience this or similar problems, you may
+        want to consider delivering an SSE event-stream over a TLS connection;
+        see <a data-type="xref" href=
+        "/transport-layer-security-tls/#proxies-intermediaries-tls-and-new-protocols-on-the-web">
+        Proxies, Intermediaries, TLS, and New Protocols on the Web</a>.
+      </aside>
+    </section>
+  </article>
+
+  <footer>
+    <div id="toast">
+      &nbsp;
+    </div>
+
+    <p><a href="/#toc"><em>« Back to the Table of Contents</em></a>
+
+    <p class="legal">Copyright © 2013 <a href="https://www.igvita.com/" rel=
+    "me">Ilya Grigorik</a>. Published by O'Reilly Media, Inc. Licensed under
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND
+    4.0</a>.
+  </footer>
+

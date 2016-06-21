@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Performance of Wireless Networks: WiFi - High Performance Browser
+Networking (O'Reilly)</title>
+<meta name="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
+</script>
+<script async src="https://www.google-analytics.com/analytics.js">
+</script>
+<link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
+<link href=
+"https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
+rel="stylesheet">
+<link rel="stylesheet" href="/assets/b708e9296b5e26f6bd725561648a1dda.css">
+<link rel="manifest" href="/7a58c37113db4464699ec4f4646b5566.json">
+<link rel="icon" sizes="192x192" href="/assets/icons/icon-192.png">
+<meta name="theme-color" content="#000">
+<meta itemprop="name" content=
+"Performance of Wireless Networks: WiFi - High Performance Browser Networking (O'Reilly)">
+<meta itemprop="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content=
+"Performance of Wireless Networks: WiFi - High Performance Browser Networking (O'Reilly)">
+<meta name="twitter:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:creator" content="@igrigorik">
+<meta name="twitter:image:src" content="https://hpbn.co/assets/twitter.jpg">
+<meta property="og:title" content=
+"Performance of Wireless Networks: WiFi - High Performance Browser Networking (O'Reilly)">
+<meta property="og:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta property="og:site_name" content="High Performance Browser Networking">
+<meta property="fb:admins" content="688996186">
+<script type="application/ld+json">
+{"@context":"http://schema.org/","@type":"Article","headline":"Performance of Wireless Networks: WiFi - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2016-04-27T00:02:58Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+</script>
+
+<body data-type="book">
+  <header>
+    <div id="book-title">
+      <div class="center">
+        <input type="checkbox" class="check" id="check"> <label for="check"
+        class="icon"><svg viewbox="0 0 18 18">
+        <title>Menu</title>
+
+        <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
+        </path></svg></label> <a href="/">High Performance Browser
+        Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
+
+        <div class="drawer menu">
+          <div class="title">
+            WiFi
+          </div>
+
+          <hr>
+
+          <ul class="content-container" id="nav">
+          </ul>
+
+          <hr>
+
+          <ul class="content-container" id="nav-other">
+            <li>
+              <a href="/#toc">Table of Contents</a>
+
+            <li>
+              <a href="/#author">About the Author</a>
+
+            <li>
+              <a id="feedback" target="_blank" href=
+              "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BWiFi%5D:%20...">
+              Submit Feedback</a>
+            </ul>
+        </div>
+        <label for="check" class="closemenu">&nbsp;</label>
+      </div>
+    </div>
+
+    <h1>WiFi</h1>
+
+    <p id="chapter">Performance of Wireless Networks, Chapter 6
+  </header>
+
+  <article data-type="chapter" id="wifi-ZEefe">
+    <section id="introduction">
+      <h2>Introduction</h2>
+
+      <p>WiFi operates in the unlicensed ISM spectrum; it is trivial to deploy
+      by anyone, anywhere; and the required hardware is simple and cheap. Not
+      surprisingly, it has become one of the most widely deployed and popular
+      wireless standards.
+
+      <p>The name itself is a trademark of the WiFi Alliance, which is a trade
+      association established to promote wireless LAN technologies, as well as
+      to provide interoperability standards and testing. Technically, a device
+      must be submitted to and certified by the WiFi Alliance to carry the WiFi
+      name and logo, but in practice, the name is used to refer to any product
+      based on the IEEE 802.11 standards.
+
+      <p>The first 802.11 protocol was drafted in 1997, more or less as a
+      direct adaptation of the Ethernet standard (IEEE 802.3) to the world of
+      wireless communication. However, it wasn’t until 1999, when the 802.11b
+      standard was introduced, that the market for WiFi devices took off. The
+      relative simplicity of the technology, easy deployment, convenience, and
+      the fact that it operated in the unlicensed 2.4 GHz ISM band allowed
+      anyone to easily provide a "wireless extension" to their existing local
+      area network. Today, most every new desktop, laptop, tablet, smartphone,
+      and just about every other form-factor device is WiFi enabled.
+    </section>
+
+    <section>
+      <h2 id="from-ethernet-to-a-wireless-lan"><a href=
+      "#from-ethernet-to-a-wireless-lan" class="anchor">§</a>From Ethernet to a
+      Wireless LAN</h2>
+
+      <p>The 802.11 wireless standards were primarily designed as an adaptation
+      and an extension of the existing Ethernet (802.3) standard. Hence, while
+      Ethernet is commonly referred to as the LAN standard, the 802.11 family
+      (<a data-type="xref" href="#wifi-osi">Figure&nbsp;6-1</a>) is
+      correspondingly commonly known as the wireless LAN (WLAN). However, for
+      the history geeks, technically much of the Ethernet protocol was inspired
+      by the ALOHAnet protocol, which was the first public demonstration of a
+      wireless network developed in 1971 at the University of Hawaii. In other
+      words, we have come full circle.
+
+      <figure id="wifi-osi">
+        <img src="/assets/diagrams/f5a120c8182ae808792b8ad40b03a84d.svg" alt=
+        "Figure 6-1. 802.3 (Ethernet) and 802.11 (WiFi) data and physical layers">
+
+        <figcaption>
+          <span class="label">Figure 6-1.</span> 802.3 (Ethernet) and 802.11
+          (WiFi) data and physical layers
+        </figcaption>
+      </figure>
+
+      <p>The reason why this distinction is important is due to the mechanics
+      of how the ALOHAnet, and consequently Ethernet and WiFi protocols,
+      schedule all communication. Namely, they all treat the shared medium,
+      regardless of whether it is a wire or the radio waves, as a "random
+      access channel," which means that there is no central process, or
+      scheduler, that controls who or which device is allowed to transmit data
+      at any point in time. Instead, each device decides on its own, and all
+      devices must work together to guarantee good shared channel performance.
+
+      <p>The Ethernet standard has historically relied on a probabilistic
+      carrier sense multiple access (CSMA) protocol, which is a complicated
+      name for a simple "listen before you speak" algorithm. In brief, if you
+      have data to send:
+
+      <ul>
+        <li>
+          <p>Check whether anyone else is transmitting.
+
+        <li>
+          <p>If the channel is busy, listen until it is free.
+
+        <li>
+          <p>When the channel is free, transmit data immediately.
+        </ul>
+
+      <p>Of course, it takes time to propagate any signal; hence collisions can
+      still occur. For this reason, the Ethernet standard also added collision
+      detection (CSMA/CD): if a collision is detected, then both parties stop
+      transmitting immediately and sleep for a random interval (with
+      exponential backoff). This way, multiple competing senders won’t
+      synchronize and restart their transmissions simultaneously.
+
+      <p>WiFi follows a very similar but slightly different model: due to
+      hardware limitations of the radio, it cannot detect collisions while
+      sending data. Hence, WiFi relies on collision avoidance (CSMA/CA), where
+      each sender attempts to avoid collisions by transmitting only when the
+      channel is sensed to be idle, and then sends its full message frame in
+      its entirety. Once the WiFi frame is sent, the sender waits for an
+      explicit acknowledgment from the receiver before proceeding with the next
+      transmission.
+
+      <p>There are a few more details, but in a nutshell that’s all there is to
+      it: the combination of these techniques is how both Ethernet and WiFi
+      regulate access to the shared medium. In the case of Ethernet, the medium
+      is a physical wire, and in the case of WiFi, it is the shared radio
+      channel.
+
+      <p>In practice, the probabilistic access model works very well for
+      lightly loaded networks. In fact, we won’t show the math here, but we can
+      prove that to get good channel utilization (minimize number of
+      collisions), the channel load must be kept below 10%. If the load is kept
+      low, we can get good throughput without any explicit coordination or
+      scheduling. However, if the load increases, then the number of collisions
+      will quickly rise, leading to unstable performance of the entire network.
+
+      <div data-type="note" id="id-mJtpFQU6">
+        <p>If you have ever tried to use a highly loaded WiFi network, with
+        many peers competing for access—say, at a large public event, like a
+        conference hall—then chances are, you have firsthand experience with
+        "unstable WiFi performance." Of course, the probabilistic scheduling is
+        not the only factor, but it certainly plays a role.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="wifi-standards-and-features"><a href=
+      "#wifi-standards-and-features" class="anchor">§</a>WiFi Standards and
+      Features</h2>
+
+      <p>The 802.11b standard launched WiFi into everyday use, but as with any
+      popular technology, the IEEE 802 Standards Committee has not been idle
+      and has actively continued to release new protocols (<a data-type="xref"
+      href="#wifi-releases">Table&nbsp;6-1</a>) with higher throughput, better
+      modulation techniques, multistreaming, and many other new features.
+
+      <figure id="wifi-releases">
+        <table>
+          <thead>
+            <tr>
+              <th>802.11 protocol
+
+              <th>Release
+
+              <th>Freq (GHz)
+
+              <th>Bandwidth (MHz)
+
+              <th>Data rate per stream (Mbit/s)
+
+              <th>Max MIMO streams
+
+          <tbody>
+            <tr>
+              <td>b
+
+              <td>Sep 1999
+
+              <td>2.4
+
+              <td>20
+
+              <td>1, 2, 5.5, 11
+
+              <td>1
+
+            <tr>
+              <td>g
+
+              <td>Jun 2003
+
+              <td>2.4
+
+              <td>20
+
+              <td>6, 9, 12, 18, 24, 36, 48, 54
+
+              <td>1
+
+            <tr>
+              <td>n
+
+              <td>Oct 2009
+
+              <td>2.4
+
+              <td>20
+
+              <td>7.2, 14.4, 21.7, 28.9, 43.3, 57.8, 65, 72.2
+
+              <td>4
+
+            <tr>
+              <td>n
+
+              <td>Oct 2009
+
+              <td>5
+
+              <td>40
+
+              <td>15, 30, 45, 60, 90, 120, 135, 150
+
+              <td>4
+
+            <tr>
+              <td>ac
+
+              <td>~2014
+
+              <td>5
+
+              <td>20, 40, 80, 160
+
+              <td>up to 866.7
+
+              <td>8
+            </table>
+
+        <figcaption>
+          <span class="label">Table 6-1.</span> WiFi release history and
+          roadmap
+        </figcaption>
+      </figure>
+
+      <p>Today, the "b" and "g" standards are the most widely deployed and
+      supported. Both utilize the unlicensed 2.4 GHz ISM band, use 20 MHz of
+      bandwidth, and support at most one radio data stream. Depending on your
+      local regulations, the transmit power is also likely fixed at a maximum
+      of 200 mW. Some routers will allow you to adjust this value but will
+      likely override it with a regional maximum.
+
+      <p>So how do we increase performance of our future WiFi networks? The "n"
+      and upcoming "ac" standards are doubling the bandwidth from 20 to 40 MHz
+      per channel, using higher-order modulation, and adding multiple radios to
+      transmit multiple streams in parallel—multiple-input and multiple-output
+      (MIMO). All combined, and in ideal conditions, this should enable
+      gigabit-plus throughput with the upcoming "ac" wireless standard.
+    </section>
+
+    <section>
+      <h2 id="measuring-and-optimizing-wifi-performance"><a href=
+      "#measuring-and-optimizing-wifi-performance" class=
+      "anchor">§</a>Measuring and Optimizing WiFi Performance</h2>
+
+      <p>By this point you should be skeptical of the notion of "ideal
+      conditions," and for good reason. The wide adoption and popularity of
+      WiFi networks also created one of its biggest performance challenges:
+      inter- and intra-cell interference. The WiFi standard does not have any
+      central scheduler, which also means that there are no guarantees on
+      throughput or latency for any client.
+
+      <p>The new WiFi Multimedia (WMM) extension enables basic Quality of
+      Service (QoS) within the radio interface for latency-sensitive
+      applications (e.g., voice, video, best effort), but few routers, and even
+      fewer deployed clients, are aware of it. In the meantime, all traffic
+      both within your own network, and in nearby WiFi networks must compete
+      for access for the same shared radio resource.
+
+      <p>Your router may allow you to set some Quality of Service (QoS) policy
+      for clients within your own network (e.g., maximum total data rate per
+      client, or by type of traffic), but you nonetheless have no control over
+      traffic generated by other, nearby WiFi networks. The fact that WiFi
+      networks are so easy to deploy is what made them ubiquitous, but the
+      widespread adoption has also created a lot of performance problems: in
+      practice it is now not unusual to find several dozen different and
+      overlapping WiFi networks (<a data-type="xref" href=
+      "#ig-wifi">Figure&nbsp;6-2</a>) in any high-density urban or office
+      environment.
+
+      <figure id="ig-wifi">
+        <img src="/assets/diagrams/d754c6b39cccff80641b0030f9f59759.png" alt=
+        "Figure 6-2. inSSIDer visualization of overlapping WiFi networks (2.4 and 5 GHz bands)">
+
+        <figcaption>
+          <span class="label">Figure 6-2.</span> inSSIDer visualization of
+          overlapping WiFi networks (2.4 and 5 GHz bands)
+        </figcaption>
+      </figure>
+
+      <p>The most widely used 2.4 GHz band provides three non-overlapping 20
+      MHz radio channels: 1, 6, and 11 (<a data-type="xref" href=
+      "#wifi-channels">Figure&nbsp;6-3</a>). Although even this assignment is
+      not consistent among all countries. In some, you may be allowed to use
+      higher channels (13, 14), and in others you may be effectively limited to
+      an even smaller subset. However, regardless of local regulations, what
+      this effectively means is that the moment you have more than two or three
+      nearby WiFi networks, some must overlap and hence compete for the same
+      shared bandwidth in the same frequency ranges.
+
+      <figure id="wifi-channels">
+        <img src="/assets/diagrams/7791d95cced297a18105e4c33c4622a1.svg" alt=
+        "Figure 6-3. Wikipedia illustration of WiFi channels in the 2.4 GHz band">
+
+        <figcaption>
+          <span class="label">Figure 6-3.</span> Wikipedia illustration of WiFi
+          channels in the 2.4 GHz band
+        </figcaption>
+      </figure>
+
+      <p>Your 802.11g client and router may be capable of reaching 54 Mbps, but
+      the moment your neighbor, who is occupying the same WiFi channel, starts
+      streaming an HD video over WiFi, your bandwidth is cut in half, or worse.
+      Your access point has no say in this arrangement, and that is a feature,
+      not a bug!
+
+      <p>Unfortunately, latency performance fares no better. There are no
+      guarantees for the latency of the first hop between your client and the
+      WiFi access point. In environments with many overlapping networks, you
+      should not be surprised to see high variability, measured in tens and
+      even hundreds of milliseconds for the first wireless hop. You are
+      competing for access to a shared channel with every other wireless peer.
+
+      <p>The good news is, if you are an early adopter, then there is a good
+      chance that you can significantly improve performance of your own WiFi
+      network. The 5 GHz band, used by the new 802.11n and 802.11ac standards,
+      offers both a much wider frequency range and is still largely
+      interference free in most environments. That is, at least for the moment,
+      and assuming you don’t have too many tech-savvy friends nearby, like
+      yourself! A dual-band router, which is capable of transmitting both on
+      the 2.4 GHz and the 5 GHz bands will likely offer the best of both
+      worlds: compatibility with old clients limited to 2.4 GHz, and much
+      better performance for any client on the 5 GHz band.
+
+      <aside>
+        <h4 id="measuring-your-wifi-first-hop-latency"><a href=
+        "#measuring-your-wifi-first-hop-latency" class="anchor">§</a>Measuring
+        Your WiFi First-Hop Latency</h4>
+
+        <p>Running a ping to your wireless gateway is a simple way to estimate
+        the latency of your first wireless hop. Your results <em>will</em> be
+        different, but just as an example, performing this test in my own home
+        environment with a dual-band 802.11n router yields the following
+        results.
+
+        <figure id="wifi-latency-difference-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Freq (GHz)
+
+                <th>Median (ms)
+
+                <th>95% (ms)
+
+                <th>99% (ms)
+
+            <tbody>
+              <tr>
+                <td>2.4
+
+                <td>6.22
+
+                <td>34.87
+
+                <td>58.91
+
+              <tr>
+                <td>5
+
+                <td>0.90
+
+                <td>1.58
+
+                <td>7.89
+              </table>
+
+          <figcaption>
+            <span class="label">Table 6-2.</span> Latency difference between
+            2.4GHz and 5GHz WiFi bands
+          </figcaption>
+        </figure>
+
+        <p>A dramatic performance difference between the overloaded 2.4 GHz
+        band and the mostly open 5 GHz band (<a data-type="xref" href=
+        "#ig-wifi">Figure&nbsp;6-2</a>): over a dozen overlapping networks in
+        the 2.4 GHz band is resulting in a 35 ms latency delay (for 95th
+        percentile) for the first hop from my laptop to my wireless router,
+        which is less than 20 feet away!
+      </aside>
+
+      <p>Putting it all together, what does this tell us about the performance
+      of WiFi?
+
+      <ul>
+        <li>
+          <p>WiFi provides no bandwidth or latency guarantees or assignment to
+          its users.
+
+        <li>
+          <p>WiFi provides variable bandwidth based on signal-to-noise in its
+          environment.
+
+        <li>
+          <p>WiFi transmit power is limited to 200 mW, and likely less in your
+          region.
+
+        <li>
+          <p>WiFi has a limited amount of spectrum in 2.4 GHz and the newer 5
+          GHz bands.
+
+        <li>
+          <p>WiFi access points overlap in their channel assignment by design.
+
+        <li>
+          <p>WiFi access points and peers compete for access to the same radio
+          channel.
+        </ul>
+
+      <p>There is no such thing as "typical" WiFi performance. The operating
+      range will vary based on the standard, location of the user, used
+      devices, and the local radio environment. If you are lucky, and you are
+      the only WiFi user, then you can expect high throughput, low latency, and
+      low variability in both. But once you are competing for access with other
+      peers, or nearby WiFi networks, then all bets are off—expect high
+      variability for latency and bandwidth.
+
+      <section>
+        <h3 id="packet-loss-in-wifi-networks"><a href=
+        "#packet-loss-in-wifi-networks" class="anchor">§</a>Packet Loss in WiFi
+        Networks</h3>
+
+        <p>The probabilistic scheduling of WiFi transmissions can result in a
+        high number of collisions between multiple wireless peers in the area.
+        However, even if that is the case, this does not necessarily translate
+        to higher amounts of observed TCP packet loss. The data and physical
+        layer implementations of all WiFi protocols have their own
+        retransmission and error correction mechanisms, which hide these
+        wireless collisions from higher layers of the networking stack.
+
+        <p>In other words, while TCP packet loss is definitely a concern for
+        data delivered over WiFi, the absolute rate observed by TCP is often no
+        higher than that of most wired networks. Instead of direct TCP packet
+        loss, you are much more likely to see higher variability in packet
+        arrival times due to the underlying collisions and retransmissions
+        performed by the lower link and physical layers.
+
+        <div data-type="note" id="id-o1tDTGu7Sp">
+          <p>Prior to 802.11n, the WiFi protocol allowed at most one in-flight
+          frame at any point in time, which had to be ACKed by the link layer
+          before the next frame is sent. With 802.11n, a new "frame
+          aggregation" feature was introduced, which allows multiple WiFi
+          frames to be sent and ACKed at once.
+        </div>
+      </section>
+    </section>
+
+    <section>
+      <h2 id="optimizing-for-wifi-networks"><a href=
+      "#optimizing-for-wifi-networks" class="anchor">§</a>Optimizing for WiFi
+      Networks</h2>
+
+      <p>The preceding performance characteristics of WiFi may paint an overly
+      stark picture against it. In practice, it seems to work "well enough" in
+      most cases, and the simple convenience that WiFi enables is hard to beat.
+      In fact, you are now more likely to have a device that requires an extra
+      peripheral to get an Ethernet jack for a wired connection than to find a
+      computer, smartphone, or tablet that is not WiFi enabled.
+
+      <p>With that in mind, it is worth considering whether your application
+      can benefit from knowing about and optimizing for WiFi networks.
+
+      <section>
+        <h3 id="leverage-unmetered-bandwidth"><a href=
+        "#leverage-unmetered-bandwidth" class="anchor">§</a>Leverage Unmetered
+        Bandwidth</h3>
+
+        <p>In practice, a WiFi network is usually an extension to a wired LAN,
+        which is in turn connected via DSL, cable, or fiber to the wide area
+        network. For an average user in the U.S., this translates to 8.6 Mbps
+        of edge bandwidth and a 3.1 Mbps global average (<a data-type="xref"
+        href=
+        "/primer-on-latency-and-bandwidth/#global-bandwidth-table">Table&nbsp;1-2</a>).
+        In other words, most WiFi clients are still likely to be limited by the
+        available WAN bandwidth, not by WiFi itself. That is, when the "radio
+        network weather" is nice!
+
+        <p>However, bandwidth bottlenecks aside, this also frequently means
+        that a typical WiFi deployment is backed by an unmetered WAN
+        connection—or, at the very least, a connection with much higher data
+        caps and maximum throughput. While many users may be sensitive to large
+        downloads over their 3G or 4G connections due to associated costs and
+        bandwidth caps, frequently this is not as much of a concern when on
+        WiFi.
+
+        <p>Of course, the unmetered assumption is not true in all cases (e.g.,
+        a WiFi tethered device backed by a 3G or 4G connection), but in
+        practice it holds true more often than not. Consequently, large
+        downloads, updates, and streaming use cases are best done over WiFi
+        when possible. Don’t be afraid to prompt the user to switch to WiFi on
+        such occasions!
+
+        <div data-type="note" id="id-mJtMUwTysO">
+          <p>Many mobile carriers recommend "Wi-Fi offloading" as an explicit
+          strategy for data-intensive applications: prompt the user to switch
+          to WiFi, or leverage WiFi connectivity whenever possible to perform
+          your background syncs and large data transfers.
+        </div>
+      </section>
+
+      <section>
+        <h3 id="adapt-to-variable-bandwidth"><a href=
+        "#adapt-to-variable-bandwidth" class="anchor">§</a>Adapt to Variable
+        Bandwidth</h3>
+
+        <p>As we saw, WiFi provides no bandwidth or latency guarantees. The
+        user’s router may have some application-level QoS policies, which may
+        provide a degree of fairness to multiple peers on the same wireless
+        network. However, the WiFi radio interface itself has very limited
+        support for QoS. Worse, there are no QoS policies between multiple,
+        overlapping WiFi networks.
+
+        <p>As a result, the available bandwidth allocation may change
+        dramatically, on a second-to-second basis, based on small changes in
+        location, activity of nearby wireless peers, and the general radio
+        environment.
+
+        <p>As an example, an HD video stream may require several megabits per
+        second of bandwidth (<a data-type="xref" href=
+        "#youtube-bitrate">Table&nbsp;6-3</a>), and while most WiFi standards
+        are sufficient in ideal conditions, in practice you should not be
+        surprised to see, and should anticipate, intermittent drops in
+        throughput. In fact, due to the dynamic nature of available bandwidth,
+        you cannot and should not extrapolate past download bitrate too far
+        into the future. Testing for bandwidth rate just at the beginning of
+        the video will likely result in intermittent buffering pauses as the
+        radio conditions change during playback.
+
+        <figure id="youtube-bitrate">
+          <table>
+            <thead>
+              <tr>
+                <th>Container
+
+                <th>Video resolution
+
+                <th>Encoding
+
+                <th>Video bitrate (Mbit/s)
+
+            <tbody>
+              <tr>
+                <td>mp4
+
+                <td>360p
+
+                <td>H.264
+
+                <td><strong>0.5</strong>
+
+              <tr>
+                <td>mp4
+
+                <td>480p
+
+                <td>H.264
+
+                <td><strong>1–1.5</strong>
+
+              <tr>
+                <td>mp4
+
+                <td>720p
+
+                <td>H.264
+
+                <td><strong>2–2.9</strong>
+
+              <tr>
+                <td>mp4
+
+                <td>1080p
+
+                <td>H.264
+
+                <td><strong>3–4.3</strong>
+              </table>
+
+          <figcaption>
+            <span class="label">Table 6-3.</span> Sample YouTube video bitrates
+            for H.264 video codec
+          </figcaption>
+        </figure>
+
+        <p>Instead, while we can’t predict the available bandwidth, we can and
+        should adapt based on continuous measurement through techniques such as
+        adaptive bitrate streaming.
+
+        <aside>
+          <h4 id="adaptive-bitrate-streaming"><a href=
+          "#adaptive-bitrate-streaming" class="anchor">§</a>Adaptive Bitrate
+          Streaming</h4>
+
+          <p>While adaptive bitrate streaming is not applicable to all resource
+          types, it is a perfect match for long-lived streams such as video and
+          audio content.
+
+          <p>In the case of video, the resource may be encoded and stored at
+          multiple bitrates and then segmented into many parts (e.g., 5–10
+          second chunks for YouTube videos). Then, while the client is
+          streaming the data, either the client or the server can monitor the
+          download rate of each segment and dynamically switch the bitrate of
+          the next segment to adjust for the varying bandwidth. In fact, in
+          practice many video streaming services begin the stream with a low
+          bitrate segment to get fast playback start and then continuously
+          adjust the bitrate of the following segments based on the available
+          bandwidth.
+
+          <p>How many different bitrate levels do you need? The answer depends
+          on your application! But as an example, Netflix encodes each and
+          every stream in over 120 different versions to adjust for the varying
+          screen sizes and available bandwidth bitrates. Delivering a smooth,
+          on-demand video experience is not a trivial exercise.
+        </aside>
+      </section>
+
+      <section>
+        <h3 id="adapt-to-variable-latency"><a href="#adapt-to-variable-latency"
+        class="anchor">§</a>Adapt to Variable Latency</h3>
+
+        <p>Just as there are no bandwidth guarantees when on WiFi, similarly,
+        there are no guarantees on the latency of the first wireless hop.
+        Further, things get only more unpredictable if multiple wireless hops
+        are needed, such as in the case when a wireless bridge (relay) access
+        point is used.
+
+        <p>In the ideal case, when there is minimum interference and the
+        network is not loaded, the wireless hop can take less than one
+        millisecond with very low variability. However, in practice, in
+        high-density urban and office environments the presence of dozens of
+        competing WiFi access points and peers creates a lot of contention for
+        the same radio frequencies. As a result, you should not be surprised to
+        see a 1–10 millisecond median for the first wireless hop, with a long
+        latency tail: expect an occasional 10–50 millisecond delay and, in the
+        worst case, even as high as hundreds of milliseconds.
+
+        <p>If your application is latency sensitive, then you may need to think
+        carefully about adapting its behavior when running over a WiFi network.
+        In fact, this may be a good reason to consider WebRTC, which offers the
+        option of an unreliable UDP transport. Of course, switching transports
+        won’t fix the radio network, but it can help lower the protocol and
+        application induced latency overhead.
+      </section>
+    </section>
+  </article>
+
+  <footer>
+    <div id="toast">
+      &nbsp;
+    </div>
+
+    <p><a href="/#toc"><em>« Back to the Table of Contents</em></a>
+
+    <p class="legal">Copyright © 2013 <a href="https://www.igvita.com/" rel=
+    "me">Ilya Grigorik</a>. Published by O'Reilly Media, Inc. Licensed under
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND
+    4.0</a>.
+  </footer>
+

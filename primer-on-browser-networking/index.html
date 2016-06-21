@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Browser APIs and Protocols: Primer on Browser Networking - High
+Performance Browser Networking (O'Reilly)</title>
+<meta name="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
+</script>
+<script async src="https://www.google-analytics.com/analytics.js">
+</script>
+<link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
+<link href=
+"https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
+rel="stylesheet">
+<link rel="stylesheet" href="/assets/b708e9296b5e26f6bd725561648a1dda.css">
+<link rel="manifest" href="/7a58c37113db4464699ec4f4646b5566.json">
+<link rel="icon" sizes="192x192" href="/assets/icons/icon-192.png">
+<meta name="theme-color" content="#000">
+<meta itemprop="name" content=
+"Browser APIs and Protocols: Primer on Browser Networking - High Performance Browser Networking (O'Reilly)">
+<meta itemprop="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content=
+"Browser APIs and Protocols: Primer on Browser Networking - High Performance Browser Networking (O'Reilly)">
+<meta name="twitter:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:creator" content="@igrigorik">
+<meta name="twitter:image:src" content="https://hpbn.co/assets/twitter.jpg">
+<meta property="og:title" content=
+"Browser APIs and Protocols: Primer on Browser Networking - High Performance Browser Networking (O'Reilly)">
+<meta property="og:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta property="og:site_name" content="High Performance Browser Networking">
+<meta property="fb:admins" content="688996186">
+<script type="application/ld+json">
+{"@context":"http://schema.org/","@type":"Article","headline":"Browser APIs and Protocols: Primer on Browser Networking - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2016-01-22T22:53:46Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+</script>
+
+<body data-type="book">
+  <header>
+    <div id="book-title">
+      <div class="center">
+        <input type="checkbox" class="check" id="check"> <label for="check"
+        class="icon"><svg viewbox="0 0 18 18">
+        <title>Menu</title>
+
+        <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
+        </path></svg></label> <a href="/">High Performance Browser
+        Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
+
+        <div class="drawer menu">
+          <div class="title">
+            Primer on Browser Networking
+          </div>
+
+          <hr>
+
+          <ul class="content-container" id="nav">
+          </ul>
+
+          <hr>
+
+          <ul class="content-container" id="nav-other">
+            <li>
+              <a href="/#toc">Table of Contents</a>
+
+            <li>
+              <a href="/#author">About the Author</a>
+
+            <li>
+              <a id="feedback" target="_blank" href=
+              "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BPrimer%20on%20Browser%20Networking%5D:%20...">
+              Submit Feedback</a>
+            </ul>
+        </div>
+        <label for="check" class="closemenu">&nbsp;</label>
+      </div>
+    </div>
+
+    <h1>Primer on Browser Networking</h1>
+
+    <p id="chapter">Browser APIs and Protocols, Chapter 14
+  </header>
+
+  <article data-type="chapter" id="primer-on-browser-networking-NGxUV">
+    <section id="introduction">
+      <h2>Introduction</h2>
+
+      <p>A modern browser is a platform specifically designed for fast,
+      efficient, and secure delivery of web applications. In fact, under the
+      hood, a modern browser is an entire operating system with hundreds of
+      components: process management, security sandboxes, layers of
+      optimization caches, JavaScript VMs, graphics rendering and GPU
+      pipelines, storage, sensors, audio and video, networking, and much more.
+
+      <p>Not surprisingly, the overall performance of the browser, and any
+      application that it runs, is determined by a number of components:
+      parsing, layout, style calculation of HTML and CSS, JavaScript execution
+      speed, rendering pipelines, and of course the networking stack. Each
+      component plays a critical role, but networking often doubly so, since if
+      the browser is blocked on the network, waiting for the resources to
+      arrive, then all other steps are blocked!
+
+      <p>As a result, it is not surprising to discover that the networking
+      stack of a modern browser is much more than a simple socket manager. From
+      the outside, it may present itself as a simple resource-fetching
+      mechanism, but from the inside it is its own platform (<a data-type=
+      "xref" href="#browser-networking">Figure&nbsp;14-1</a>), with its own
+      optimization criteria, APIs, and services.
+
+      <figure id="browser-networking">
+        <img src="/assets/diagrams/0b393b7cfa29c3479ab323f5e768c055.svg" alt=
+        "Figure 14-1. High-level browser networking APIs, protocols, and services">
+
+        <figcaption>
+          <span class="label">Figure 14-1.</span> High-level browser networking
+          APIs, protocols, and services
+        </figcaption>
+      </figure>
+
+      <p>When designing a web application, we don’t have to worry about the
+      individual TCP or UDP sockets; the browser manages that for us. Further,
+      the network stack takes care of imposing the right connection limits,
+      formatting our requests, sandboxing individual applications from one
+      another, dealing with proxies, caching, and much more. In turn, with all
+      of this complexity removed, our applications can focus on the application
+      logic.
+
+      <p>However, out of sight does not mean out of mind! As we saw,
+      understanding the performance characteristics of TCP, HTTP, and mobile
+      networks can help us build faster applications. Similarly, understanding
+      how to optimize for the various browser networking APIs, protocols, and
+      services can make a dramatic difference in performance of any
+      application.
+    </section>
+
+    <section>
+      <h2 id="connection-management-and-optimization"><a href=
+      "#connection-management-and-optimization" class="anchor">§</a>Connection
+      Management and Optimization</h2>
+
+      <p>Web applications running in the browser do not manage the lifecycle of
+      individual network sockets, and that’s a good thing. By deferring this
+      work to the browser, we allow it to automate a number of critical
+      performance optimizations, such as socket reuse, request prioritization
+      and late binding, protocol negotiation, enforcing connection limits, and
+      much more. In fact, the browser intentionally separates the <em>request
+      management</em> lifecycle from <em>socket management</em>. This is a
+      subtle but critical distinction.
+
+      <p>Sockets are organized in pools (<a data-type="xref" href=
+      "#socket-pools">Figure&nbsp;14-2</a>), which are grouped by origin, and
+      each pool enforces its own connection limits and security constraints.
+      Pending requests are queued, prioritized, and then bound to individual
+      sockets in the pool. Consequently, unless the server intentionally closes
+      the connection, the same socket can be automatically reused across
+      multiple requests!
+
+      <figure id="socket-pools">
+        <img src="/assets/diagrams/1d7d7e4dc5954b7ee5beb4312a660849.svg" alt=
+        "Figure 14-2. Auto-managed socket pools are shared among all browser processes">
+
+        <figcaption>
+          <span class="label">Figure 14-2.</span> Auto-managed socket pools are
+          shared among all browser processes
+        </figcaption>
+      </figure>
+
+      <dl>
+        <dt>Origin
+
+        <dd>
+          <p>A triple of application protocol, domain name, and port
+          number—e.g., (http, www.example.com, 80) and (https, www.example.com,
+          443) are considered as different origins.
+
+        <dt>Socket pool
+
+        <dd>
+          <p>A group of sockets belonging to the same origin. In practice, all
+          major browsers limit the maximum pool size to six sockets.
+        </dl>
+
+      <p>Automatic socket pooling automates TCP connection reuse, which offers
+      significant performance benefits; see <a data-type="xref" href=
+      "/http1x/#benefits-of-keepalive-connections">Benefits of Keepalive
+      Connections</a>. However, that’s not all. This architecture also enables
+      a number of additional optimization opportunities:
+
+      <ul>
+        <li>
+          <p>The browser can service queued requests in priority order.
+
+        <li>
+          <p>The browser can reuse sockets to minimize latency and improve
+          throughput.
+
+        <li>
+          <p>The browser can be proactive in opening sockets in anticipation of
+          request.
+
+        <li>
+          <p>The browser can optimize when idle sockets are closed.
+
+        <li>
+          <p>The browser can optimize bandwidth allocation across all sockets.
+        </ul>
+
+      <p>In short, the browser networking stack is our strategic ally on our
+      quest to deliver high-performance applications. None of the functionality
+      we have covered requires any work on our behalf! However, that’s not to
+      say that we can’t help the browser. Design decisions in our applications
+      that determine the network communication patterns, type and frequency of
+      transfers, choice of protocols, and tuning and optimization of our server
+      stacks play critical roles in the end performance of every application.
+
+      <aside>
+        <h4 id="speculative-networking-optimization-in-google-chrome"><a href=
+        "#speculative-networking-optimization-in-google-chrome" class=
+        "anchor">§</a>Speculative Networking Optimization in Google Chrome</h4>
+
+        <p>We have already established that the network stack of a modern
+        browser is much more than a simple socket manager. However, even that
+        does not do full justice to some of the optimization techniques
+        performed by modern browsers.
+
+        <p>For example, Google Chrome browser gets faster as you use it. Chrome
+        learns the topology of visited sites and typical browsing patterns and
+        then leverages this information to perform a variety of "speculative
+        optimizations" designed to anticipate likely user actions and eliminate
+        unnecessary network latency: DNS pre-resolving, TCP pre-connect, page
+        pre-rendering, and more. Simple actions, such as a mouse hover over a
+        link can trigger a signal from the browser to the network stack
+        "predictor," which may then select the best optimization based on past
+        performance data!
+
+        <p>For more details, see our earlier discussion on <a data-type="xref"
+        href="/primer-on-web-performance/#browser-optimization">Browser
+        Optimization</a>. And if you’re curious to learn more about Chrome’s
+        networking optimization, check out <a href=
+        "https://hpbn.co/chrome-networking">"High Performance Networking in
+        Google Chrome"</a>.
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="network-security-and-sandboxing"><a href=
+      "#network-security-and-sandboxing" class="anchor">§</a>Network Security
+      and Sandboxing</h2>
+
+      <p>Deferring management of individual sockets serves another important
+      purpose: it allows the browser to sandbox and enforce a consistent set of
+      security and policy constraints on untrusted application code. For
+      example, the browser does not permit direct API access to raw network
+      sockets, as that would allow a malicious application to initiate
+      arbitrary connections to any host—e.g., run a port scan, connect to a
+      mail server and start sending unintended messages, and so on.
+
+      <dl>
+        <dt>Connection limits
+
+        <dd>
+          <p>Browser manages all open socket pools and enforces connection
+          limits to protect both the client and server from resource
+          exhaustion.
+
+        <dt>Request formatting and response processing
+
+        <dd>
+          <p>Browser formats all outgoing requests to enforce consistent and
+          well-formed protocol semantics to protect the server. Similarly,
+          response decoding is done automatically to protect the user from
+          malicious servers.
+
+        <dt>TLS negotiation
+
+        <dd>
+          <p>Browser performs the TLS handshake and performs the necessary
+          verification checks of the certificates. The user is warned when and
+          if any of the verification fails—e.g., server is using a self-signed
+          certificate.
+
+        <dt>Same-origin policy
+
+        <dd>
+          <p>Browser enforces constraints on which requests can be initiated by
+          the application and to which origin.
+        </dl>
+
+      <p>The previous list is not complete, but it highlights the principle of
+      "least privilege" at work. The browser exposes only the APIs and
+      resources that are necessary for the application code: the application
+      supplies the data and URL, and the browser formats the request and
+      handles the full lifecycle of each connection.
+
+      <div data-type="note" id="id-e3COI6TV">
+        <p>It is worth noting that there is no single "same-origin policy."
+        Instead, there is a set of related mechanisms that enforce restrictions
+        on DOM access, cookie and session state management, networking, and
+        other components of the browser.
+
+        <p>A full discussion on browser security requires its own separate
+        book. If you are curious, Michal Zalewski’s <em>The Tangled Web: A
+        Guide to Securing Modern Web Applications</em> is a fantastic resource.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="resource-and-client-state-caching"><a href=
+      "#resource-and-client-state-caching" class="anchor">§</a>Resource and
+      Client State Caching</h2>
+
+      <p>The best and fastest request is a request not made. Prior to
+      dispatching a request, the browser automatically checks its resource
+      cache, performs the necessary validation checks, and returns a local copy
+      of the resources if the specified constraints are satisfied. Similarly,
+      if a local resource is not available in cache, then a network request is
+      made and the response is automatically placed in cache for subsequent
+      access if permitted.
+
+      <ul>
+        <li>
+          <p>The browser automatically evaluates caching directives on each
+          resource.
+
+        <li>
+          <p>The browser automatically revalidates expired resources when
+          possible.
+
+        <li>
+          <p>The browser automatically manages the size of cache and resource
+          eviction.
+        </ul>
+
+      <p>Managing an efficient and optimized resource cache is hard.
+      Thankfully, the browser takes care of all of the complexity on our
+      behalf, and all we need to do is ensure that our servers are returning
+      the appropriate cache directives; see <a data-type="xref" href=
+      "/optimizing-application-delivery/#cache-resources-on-the-client">Cache
+      Resources on the Client</a>. You are providing Cache-Control, ETag, and
+      Last-Modified response headers for all the resources on your pages,
+      right?
+
+      <p>Finally, an often-overlooked but critical function of the browser is
+      to provide authentication, session, and cookie management. The browser
+      maintains separate "cookie jars" for each origin, provides necessary
+      application and server APIs to read and write new cookie, session, and
+      authentication data and automatically appends and processes appropriate
+      HTTP headers to automate the entire process on our behalf.
+
+      <div data-type="note" id="id-pLC0FrCL">
+        <p>A simple but illustrative example of the convenience of deferring
+        session state management to the browser: an authenticated session can
+        be shared across multiple tabs or browser windows, and vice versa; a
+        sign-out action in a single tab will invalidate open sessions in all
+        other open windows.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="application-apis-and-protocols"><a href=
+      "#application-apis-and-protocols" class="anchor">§</a>Application APIs
+      and Protocols</h2>
+
+      <p>Walking up the ladder of provided network services we finally arrive
+      at the application APIs and protocols. As we saw, the lower layers
+      provide a wide array of critical services: socket and connection
+      management, request and response processing, enforcement of various
+      security policies, caching, and much more. Every time we initiate an HTTP
+      or an XMLHttpRequest, a long-lived Server-Sent Events or WebSocket
+      session, or open a WebRTC connection, we are interacting with some or all
+      of these underlying services.
+
+      <p>There is no one best protocol or API. Every nontrivial application
+      will require a mix of different transports based on a variety of
+      requirements: interaction with the browser cache, protocol overhead,
+      message latency, reliability, type of data transfer, and more. Some
+      protocols may offer low-latency delivery (e.g., Server-Sent Events,
+      WebSocket), but may not meet other critical criteria, such as the ability
+      to leverage the browser cache or support efficient binary transfers in
+      all cases.
+
+      <figure id="xhr-sse-websocket-comparison">
+        <table>
+          <thead>
+            <tr>
+              <th>
+
+              <th>XMLHttpRequest
+
+              <th>Server-Sent Events
+
+              <th>WebSocket
+
+          <tbody>
+            <tr>
+              <td>Request streaming
+
+              <td>no
+
+              <td>no
+
+              <td>yes
+
+            <tr>
+              <td>Response streaming
+
+              <td>limited
+
+              <td>yes
+
+              <td>yes
+
+            <tr>
+              <td>Framing mechanism
+
+              <td>HTTP
+
+              <td>event stream
+
+              <td>binary framing
+
+            <tr>
+              <td>Binary data transfers
+
+              <td>yes
+
+              <td>no (base64)
+
+              <td>yes
+
+            <tr>
+              <td>Compression
+
+              <td>yes
+
+              <td>yes
+
+              <td>limited
+
+            <tr>
+              <td>Application transport protocol
+
+              <td>HTTP
+
+              <td>HTTP
+
+              <td>WebSocket
+
+            <tr>
+              <td>Network transport protocol
+
+              <td>TCP
+
+              <td>TCP
+
+              <td>TCP
+            </table>
+
+        <figcaption>
+          <span class="label">Table 14-1.</span> High-level features of XHR,
+          SSE, and WebSocket
+        </figcaption>
+      </figure>
+
+      <div data-type="note" id="id-pLCDI6cL">
+        <p>We are intentionally omitting WebRTC from this comparison, as its
+        peer-to-peer delivery model offers a significant departure from XHR,
+        SSE, and WebSocket protocols.
+      </div>
+
+      <p>This comparison of high-level features is incomplete—that’s the
+      subject of the following chapters—but serves as a good illustration of
+      the many differences among each protocol. Understanding the pros, cons,
+      and trade-offs of each, and matching them to the requirements of our
+      applications, can make all the difference between a high-performance
+      application and a consistently poor experience for the user.
+    </section>
+  </article>
+
+  <footer>
+    <div id="toast">
+      &nbsp;
+    </div>
+
+    <p><a href="/#toc"><em>« Back to the Table of Contents</em></a>
+
+    <p class="legal">Copyright © 2013 <a href="https://www.igvita.com/" rel=
+    "me">Ilya Grigorik</a>. Published by O'Reilly Media, Inc. Licensed under
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND
+    4.0</a>.
+  </footer>
+

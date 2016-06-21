@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Browser APIs and Protocols: XMLHttpRequest - High Performance Browser
+Networking (O'Reilly)</title>
+<meta name="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
+</script>
+<script async src="https://www.google-analytics.com/analytics.js">
+</script>
+<link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
+<link href=
+"https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
+rel="stylesheet">
+<link rel="stylesheet" href="/assets/b708e9296b5e26f6bd725561648a1dda.css">
+<link rel="manifest" href="/7a58c37113db4464699ec4f4646b5566.json">
+<link rel="icon" sizes="192x192" href="/assets/icons/icon-192.png">
+<meta name="theme-color" content="#000">
+<meta itemprop="name" content=
+"Browser APIs and Protocols: XMLHttpRequest - High Performance Browser Networking (O'Reilly)">
+<meta itemprop="description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content=
+"Browser APIs and Protocols: XMLHttpRequest - High Performance Browser Networking (O'Reilly)">
+<meta name="twitter:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta name="twitter:creator" content="@igrigorik">
+<meta name="twitter:image:src" content="https://hpbn.co/assets/twitter.jpg">
+<meta property="og:title" content=
+"Browser APIs and Protocols: XMLHttpRequest - High Performance Browser Networking (O'Reilly)">
+<meta property="og:description" content=
+"What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
+<meta property="og:site_name" content="High Performance Browser Networking">
+<meta property="fb:admins" content="688996186">
+<script type="application/ld+json">
+{"@context":"http://schema.org/","@type":"Article","headline":"Browser APIs and Protocols: XMLHttpRequest - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2015-11-30T23:06:25Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+</script>
+
+<body data-type="book">
+  <header>
+    <div id="book-title">
+      <div class="center">
+        <input type="checkbox" class="check" id="check"> <label for="check"
+        class="icon"><svg viewbox="0 0 18 18">
+        <title>Menu</title>
+
+        <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
+        </path></svg></label> <a href="/">High Performance Browser
+        Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
+
+        <div class="drawer menu">
+          <div class="title">
+            XMLHttpRequest
+          </div>
+
+          <hr>
+
+          <ul class="content-container" id="nav">
+          </ul>
+
+          <hr>
+
+          <ul class="content-container" id="nav-other">
+            <li>
+              <a href="/#toc">Table of Contents</a>
+
+            <li>
+              <a href="/#author">About the Author</a>
+
+            <li>
+              <a id="feedback" target="_blank" href=
+              "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BXMLHttpRequest%5D:%20...">
+              Submit Feedback</a>
+            </ul>
+        </div>
+        <label for="check" class="closemenu">&nbsp;</label>
+      </div>
+    </div>
+
+    <h1>XMLHttpRequest</h1>
+
+    <p id="chapter">Browser APIs and Protocols, Chapter 15
+  </header>
+
+  <article data-type="chapter" id="XHR">
+    <section id="introduction">
+      <h2>Introduction</h2>
+
+      <p>XMLHttpRequest (XHR) is a browser-level API that enables the client to
+      script data transfers via JavaScript. XHR made its first debut in
+      Internet Explorer 5, became one of the key technologies behind the
+      Asynchronous JavaScript and XML (AJAX) revolution, and is now a
+      fundamental building block of nearly every modern web application.
+
+      <blockquote>
+        <p>XMLHTTP changed everything. It put the "D" in DHTML. It allowed us
+        to asynchronously get data from the server and preserve document state
+        on the client… The Outlook Web Access (OWA) team’s desire to build a
+        rich Win32 like application in a browser pushed the technology into IE
+        that allowed AJAX to become a reality.
+
+        <p data-type="attribution">Jim Van Eaton, <cite>Outlook Web Access: A
+        catalyst for web evolution</cite>
+      </blockquote>
+
+      <p>Prior to XHR, the web page had to be refreshed to send or fetch any
+      state updates between the client and server. With XHR, this workflow
+      could be done asynchronously and under full control of the application
+      JavaScript code. XHR is what enabled us to make the leap from building
+      pages to building interactive web applications in the browser.
+
+      <p>However, the power of XHR is not only that it enabled asynchronous
+      communication within the browser, but also that it made it simple. XHR is
+      an application API provided by the browser, which is to say that the
+      browser automatically takes care of all the low-level connection
+      management, protocol negotiation, formatting of HTTP requests, and much
+      more:
+
+      <ul>
+        <li>
+          <p>The browser manages connection establishment, pooling, and
+          termination.
+
+        <li>
+          <p>The browser determines the best HTTP(S) transport (HTTP/1.0, 1.1,
+          2).
+
+        <li>
+          <p>The browser handles HTTP caching, redirects, and content-type
+          negotiation.
+
+        <li>
+          <p>The browser enforces security, authentication, and privacy
+          constraints.
+
+        <li>
+          <p><em>And more…</em>
+        </ul>
+
+      <p>Free from worrying about all the low-level details, our applications
+      can focus on the business logic of initiating requests, managing their
+      progress, and processing returned data from the server. The combination
+      of a simple API and its ubiquitous availability across all the browsers
+      makes XHR the "Swiss Army knife" of networking in the browser.
+
+      <p>As a result, nearly every networking use case (scripted downloads,
+      uploads, streaming, and even real-time notifications) can and have been
+      built on top of XHR. Of course, this doesn’t mean that XHR is the most
+      efficient transport in each case—in fact, as we will see, far from it—but
+      it is nonetheless often used as a fallback transport for older clients,
+      which may not have access to newer browser networking APIs. With that in
+      mind, let’s take a closer look at the latest capabilities of XHR, its use
+      cases, and performance do’s and don’ts.
+
+      <div data-type="note" id="id-zqCdTK">
+        <p>An exhaustive analysis of the full XHR API and its capabilities is
+        outside the scope of our discussion—our focus is on performance! Refer
+        to the official W3C standard for an overview of the <a href=
+        "http://www.w3.org/TR/XMLHttpRequest/">XMLHttpRequest API</a>.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="brief-history-of-xhr"><a href="#brief-history-of-xhr" class=
+      "anchor">§</a>Brief History of XHR</h2>
+
+      <p>Despite its name, XHR was never intended to be tied to XML
+      specifically. The XML prefix is a vestige of a decision to ship the first
+      version of what became known as XHR as part of the MSXML library in
+      Internet Explorer 5:
+
+      <blockquote>
+        <p>This was the good-old-days when critical features were crammed in
+        just days before a release…I realized that the MSXML library shipped
+        with IE and I had some good contacts over in the XML team who would
+        probably help out—I got in touch with Jean Paoli who was running that
+        team at the time and we pretty quickly struck a deal to ship the thing
+        as part of the MSXML library. Which is the real explanation of where
+        the name XMLHTTP comes from—the thing is mostly about HTTP and doesn’t
+        have any specific tie to XML other than that was the easiest excuse for
+        shipping it so I needed to cram XML into the name.
+
+        <p data-type="attribution">Alex Hopmann, <cite>The story of
+        XMLHTTP</cite>
+      </blockquote>
+
+      <p>Mozilla modeled its own implementation of XHR against Microsoft’s and
+      exposed it via the XMLHttpRequest interface. Safari, Opera, and other
+      browsers followed, and XHR became a de facto standard in all major
+      browsers—hence the name and why it stuck. In fact, the official W3C
+      Working Draft specification for XHR was only published in 2006, well
+      after XHR came into widespread use!
+
+      <p>However, despite its popularity and key role in the AJAX revolution,
+      the early versions of XHR provided limited capabilities: text-based-only
+      data transfers, restricted support for handling uploads, and inability to
+      handle cross-domain requests. To address these shortcomings, the
+      "XMLHttpRequest Level 2" draft was published in 2008, which added a
+      number of new features:
+
+      <ul>
+        <li>
+          <p>Support for request timeouts
+
+        <li>
+          <p>Support for binary and text-based data transfers
+
+        <li>
+          <p>Support for application override of media type and encoding of
+          responses
+
+        <li>
+          <p>Support for monitoring progress events of each request
+
+        <li>
+          <p>Support for efficient file uploads
+
+        <li>
+          <p>Support for safe cross-origin requests
+        </ul>
+
+      <p>In 2011, "XMLHttpRequest Level 2" specification was merged with the
+      original XMLHttpRequest working draft. Hence, while you will often find
+      references to XHR version or level 1 and 2, these distinctions are no
+      longer relevant; today, there is only one, unified XHR specification. In
+      fact, all the new XHR2 features and capabilities are offered via the same
+      XMLHttpRequest API: same interface, more features.
+
+      <div data-type="note" id="id-WaCyuLCq">
+        <p>New XHR2 features are now supported by all the modern browsers; see
+        <a href="http://caniuse.com/xhr2">caniuse.com/xhr2</a>. Hence, whenever
+        we refer to XHR, we are implicitly referring to the XHR2 standard.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="cross-origin-resource-sharing-cors"><a href=
+      "#cross-origin-resource-sharing-cors" class="anchor">§</a>Cross-Origin
+      Resource Sharing (CORS)</h2>
+
+      <p>XHR is a browser-level API that automatically handles myriad low-level
+      details such as caching, handling redirects, content negotiation,
+      authentication, and much more. This serves a dual purpose. First, it
+      makes the application APIs much easier to work with, allowing us to focus
+      on the business logic. But, second, it allows the browser to sandbox and
+      enforce a set of security and policy constraints on the application code.
+
+      <p>The XHR interface enforces strict HTTP semantics on each request: the
+      application supplies the data and URL, and the browser formats the
+      request and handles the full lifecycle of each connection. Similarly,
+      while the XHR API allows the application to add custom HTTP headers (via
+      the <code>setRequestHeader()</code> method), there are a number of
+      protected headers that are off-limits to application code:
+
+      <ul>
+        <li>
+          <p>Accept-Charset, Accept-Encoding, Access-Control-*
+
+        <li>
+          <p>Host, Upgrade, Connection, Referer, Origin
+
+        <li>
+          <p>Cookie, Sec-*, Proxy-*, and a dozen others…
+        </ul>
+
+      <p>The browser will refuse to override any of the unsafe headers, which
+      guarantees that the application cannot impersonate a fake user-agent,
+      user, or the origin from where the request is being made. In fact,
+      protecting the origin header is especially important, as it is the key
+      piece of the "same-origin policy" applied to all XHR requests.
+
+      <div data-type="note" id="id-adCwhycQ">
+        <p>An "origin" is defined as a triple of application protocol, domain
+        name, and port number—e.g., (http, example.com, 80) and (https,
+        example.com, 443) are considered as different origins. For more details
+        see <a href="http://tools.ietf.org/html/draft-abarth-origin">The Web
+        Origin Concept</a>.
+      </div>
+
+      <p>The motivation for the same-origin policy is simple: the browser
+      stores user data, such as authentication tokens, cookies, and other
+      private metadata, which cannot be leaked across different
+      applications—e.g., without the same origin sandbox an arbitrary script on
+      <em>example.com</em> could access and manipulate users’ data on
+      <em>thirdparty.com</em>!
+
+      <p>To address this specific problem, early versions of XHR were
+      restricted to same-origin requests only, where the requesting origin had
+      to match the origin of the requested resource: an XHR initiated from
+      <em>example.com</em> could request another resource only from the same
+      <em>example.com</em> origin. Alternatively, if the same origin
+      precondition failed, then the browser would simply refuse to initiate the
+      XHR request and raise an error.
+
+      <p>However, while necessary, the same-origin policy also places severe
+      restrictions on the usefulness of XHR: what if the server wants to offer
+      a resource to a script running in a different origin? That’s where
+      "Cross-Origin Resource Sharing" (CORS) comes in! CORS provides a secure
+      opt-in mechanism for client-side cross-origin requests:
+
+      <div data-type="example" id="-GBCwC6ce">
+        <pre data-type="programlisting">
+// script origin: (http, example.com, 80)
+var xhr = new XMLHttpRequest();
+xhr.open('GET', '/resource.js'); <a class="counter" id="xhrreq-co" href=
+"#xhrreq"></a>
+xhr.onload = function() { ... };
+xhr.send();
+
+var cors_xhr = new XMLHttpRequest();
+cors_xhr.open('GET', 'http://thirdparty.com/resource.js'); <a class="counter"
+id="xhrcorsreq-co" href="#xhrcorsreq"></a>
+cors_xhr.onload = function() { ... };
+cors_xhr.send();
+</pre>
+
+        <ol class="notation">
+          <li>
+            <a class="co" id="xhrreq" href="#xhrreq-co"></a>
+
+            <p>Same-origin XHR request
+
+          <li>
+            <a class="co" id="xhrcorsreq" href="#xhrcorsreq-co"></a>
+
+            <p>Cross-origin XHR request
+          </ol>
+      </div>
+
+      <p>CORS requests use the same XHR API, with the only difference that the
+      URL to the requested resource is associated with a different origin from
+      where the script is being executed: in the previous example, the script
+      is executed from <em>(http, example.com, 80)</em>, and the second XHR
+      request is accessing <code>resource.js</code> from <em>(http,
+      thirdparty.com, 80)</em>.
+
+      <p>The opt-in authentication mechanism for the CORS request is handled at
+      a lower layer: when the request is made, the browser automatically
+      appends the protected <em>Origin</em> HTTP header, which advertises the
+      origin from where the request is being made. In turn, the remote server
+      is then able to examine the <em>Origin</em> header and decide if it
+      should allow the request by returning an
+      <em>Access-Control-Allow-Origin</em> header in its response:
+
+      <div data-type="example" id="-DKCRf9cL">
+        <pre data-type="programlisting">
+=&gt; Request
+GET /resource.js HTTP/1.1
+Host: thirdparty.com
+Origin: http://example.com <a class="counter" id="origin-co" href=
+"#origin"></a>
+...
+
+&lt;= Response
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: http://example.com <a class="counter" id="acao-co"
+href="#acao"></a>
+...
+</pre>
+
+        <ol class="notation">
+          <li>
+            <a class="co" id="origin" href="#origin-co"></a>
+
+            <p>Origin header is automatically set by the browser.
+
+          <li>
+            <a class="co" id="acao" href="#acao-co"></a>
+
+            <p>Opt-in header is set by the server.
+          </ol>
+      </div>
+
+      <p>In the preceding example, <em>thirdparty.com</em> decided to opt into
+      cross-origin resource sharing with <em>example.com</em> by returning an
+      appropriate access control header in its response. Alternatively, if it
+      wanted to disallow access, it could simply omit the
+      <em>Access-Control-Allow-Origin</em> header, and the client’s browser
+      would automatically fail the sent request.
+
+      <div data-type="note" id="id-eoCOs1c0">
+        <p>If the third-party server is not CORS aware, then the client request
+        will fail, as the client always verifies the presence of the opt-in
+        header. As a special case, CORS also allows the server to return a
+        wildcard (<code>Access-Control-Allow-Origin: *</code>) to indicate that
+        it allows access from any origin. However, think twice before enabling
+        this policy!
+      </div>
+
+      <p>With that, we are all done, right? Turns out, not quite, as CORS takes
+      a number of additional security precautions to ensure that the server is
+      CORS aware:
+
+      <ul>
+        <li>
+          <p>CORS requests omit user credentials such as cookies and HTTP
+          authentication.
+
+        <li>
+          <p>The client is limited to issuing "simple cross-origin requests,"
+          which restricts both the allowed methods (GET, POST, HEAD) and access
+          to HTTP headers that can be sent and read by the XHR.
+        </ul>
+
+      <p>To enable cookies and HTTP authentication, the client must set an
+      extra property (<code>withCredentials</code>) on the XHR object when
+      making the request, and the server must also respond with an appropriate
+      header (<em>Access-Control-Allow-Credentials</em>) to indicate that it is
+      knowingly allowing the application to include private user data.
+      Similarly, if the client needs to write or read custom HTTP headers or
+      wants to use a "non-simple method" for the request, then it must first
+      ask for permission from the third-party server by issuing a preflight
+      request:
+
+      <div data-type="example" id="-OlCKFocq">
+        <pre data-type="programlisting">
+=&gt; Preflight request
+OPTIONS /resource.js HTTP/1.1 <a class="counter" id="preflight-co" href=
+"#preflight"></a>
+Host: thirdparty.com
+Origin: http://example.com
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: My-Custom-Header
+...
+
+&lt;= Preflight response
+HTTP/1.1 200 OK <a class="counter" id="pre-response-co" href=
+"#pre-response"></a>
+Access-Control-Allow-Origin: http://example.com
+Access-Control-Allow-Methods: GET, POST, PUT
+Access-Control-Allow-Headers: My-Custom-Header
+...
+
+(actual HTTP request) <a class="counter" id="corsreq-co" href="#corsreq"></a>
+
+</pre>
+
+        <ol class="notation">
+          <li>
+            <a class="co" id="preflight" href="#preflight-co"></a>
+
+            <p>Preflight OPTIONS request to verify permissions
+
+          <li>
+            <a class="co" id="pre-response" href="#pre-response-co"></a>
+
+            <p>Successful preflight response from third-party origin
+
+          <li>
+            <a class="co" id="corsreq" href="#corsreq-co"></a>
+
+            <p>Actual CORS request
+          </ol>
+      </div>
+
+      <p>The official W3C CORS specification defines when and where a preflight
+      request must be used: "simple" requests can skip it, but there are a
+      variety of conditions that will trigger it and add a minimum of a full
+      roundtrip of network latency to verify permissions. The good news is,
+      once a preflight request is made, it can be cached by the client to avoid
+      the same verification on each request.
+
+      <div data-type="note" id="id-PzCeSgcE">
+        <p>CORS is supported by all modern browsers; see <a href=
+        "http://caniuse.com/cors">caniuse.com/cors</a>. For a deep dive on
+        various CORS policies and implementation refer to the <a href=
+        "http://www.w3.org/TR/cors/">official W3C standard</a>.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="downloading-data-with-xhr"><a href="#downloading-data-with-xhr"
+      class="anchor">§</a>Downloading Data with XHR</h2>
+
+      <p>XHR can transfer both text-based and binary data. In fact, the browser
+      offers automatic encoding and decoding for a variety of native data
+      types, which allows the application to pass these types directly to XHR
+      to be properly encoded, and vice versa, for the types to be automatically
+      decoded by the browser:
+
+      <dl>
+        <dt><code>ArrayBuffer</code>
+
+        <dd>
+          <p>Fixed-length binary data buffer
+
+        <dt><code>Blob</code>
+
+        <dd>
+          <p>Binary large object of immutable data
+
+        <dt><code>Document</code>
+
+        <dd>
+          <p>Parsed HTML or XML document
+
+        <dt><code>JSON</code>
+
+        <dd>
+          <p>JavaScript object representing a simple data structure
+
+        <dt><code>Text</code>
+
+        <dd>
+          <p>A simple text string
+        </dl>
+
+      <p>Either the browser can rely on the HTTP content-type negotiation to
+      infer the appropriate data type (e.g., decode an
+      <em>application/json</em> response into a JSON object), or the
+      application can explicitly override the data type when initiating the XHR
+      request:
+
+      <div data-type="example" id="-adCgF8UQ">
+        <pre data-type="programlisting">
+var xhr = new XMLHttpRequest();
+xhr.open('GET', '/images/photo.webp');
+xhr.responseType = 'blob'; <a class="counter" id="blob-co" href="#blob"></a>
+
+xhr.onload = function() {
+  if (this.status == 200) {
+    var img = document.createElement('img');
+    img.src = window.URL.createObjectURL(this.response); <a class="counter" id=
+"object-co" href="#object"></a>
+    img.onload = function() {
+        window.URL.revokeObjectURL(this.src); <a class="counter" id=
+"cleanup-co" href="#cleanup"></a>
+    }
+    document.body.appendChild(img);
+  }
+};
+
+xhr.send();
+</pre>
+
+        <ol class="notation">
+          <li>
+            <a class="co" id="blob" href="#blob-co"></a>
+
+            <p>Set return data type to blob
+
+          <li>
+            <a class="co" id="object" href="#object-co"></a>
+
+            <p>Create unique object URI from blob and set as image source
+
+          <li>
+            <a class="co" id="cleanup" href="#cleanup-co"></a>
+
+            <p>Release the object URI once image is loaded
+          </ol>
+      </div>
+
+      <p>Note that we are transferring an image asset in its native format,
+      without relying on base64 encoding, and adding an image element to the
+      page without relying on data URIs. There is no network transmission
+      overhead or encoding overhead when handling the received binary data in
+      JavaScript! XHR API allows us to script efficient, dynamic applications,
+      regardless of the data type, right from JavaScript.
+
+      <div data-type="note" id="id-r5CVS1Uz">
+        <p>The blob interface is part of the HTML5 File API and acts as an
+        opaque reference for an arbitrary chunk of data (binary or text). By
+        itself, a blob reference has limited functionality: you can query its
+        size, MIME type, and split it into smaller blobs. However, its real
+        role is to serve as an efficient interchange mechanism between various
+        JavaScript APIs.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="uploading-data-with-xhr"><a href="#uploading-data-with-xhr"
+      class="anchor">§</a>Uploading Data with XHR</h2>
+
+      <p>Uploading data via XHR is just as simple and efficient for all data
+      types. In fact, the code is effectively the same, with the only
+      difference that we also pass in a data object when calling
+      <em>send()</em> on the XHR request. The rest is handled by the browser:
+
+      <div data-type="example" id="-APCyIDfg">
+        <pre data-type="programlisting">
+var xhr = new XMLHttpRequest();
+xhr.open('POST','/upload');
+xhr.onload = function() { ... };
+xhr.send("text string"); <a class="counter" id="text-co" href="#text"></a>
+
+var formData = new FormData(); <a class="counter" id="formdata-co" href=
+"#formdata"></a>
+formData.append('id', 123456);
+formData.append('topic', 'performance');
+
+var xhr = new XMLHttpRequest();
+xhr.open('POST', '/upload');
+xhr.onload = function() { ... };
+xhr.send(formData); <a class="counter" id="form-co" href="#form"></a>
+
+var xhr = new XMLHttpRequest();
+xhr.open('POST', '/upload');
+xhr.onload = function() { ... };
+var uInt8Array = new Uint8Array([1, 2, 3]); <a class="counter" id="ab-co" href=
+"#ab"></a>
+xhr.send(uInt8Array.buffer); <a class="counter" id="bytes-co" href=
+"#bytes"></a>
+</pre>
+
+        <ol class="notation">
+          <li>
+            <a class="co" id="text" href="#text-co"></a>
+
+            <p>Upload a simple text string to the server
+
+          <li>
+            <a class="co" id="formdata" href="#formdata-co"></a>
+
+            <p>Create a dynamic form via FormData API
+
+          <li>
+            <a class="co" id="form" href="#form-co"></a>
+
+            <p>Upload multipart/form-data object to the server
+
+          <li>
+            <a class="co" id="ab" href="#ab-co"></a>
+
+            <p>Create a typed array (ArrayBuffer) of unsigned, 8-bit integers
+
+          <li>
+            <a class="co" id="bytes" href="#bytes-co"></a>
+
+            <p>Upload chunk of bytes to the server
+          </ol>
+      </div>
+
+      <p>The XHR <em>send()</em> method accepts one of <code>DOMString</code>,
+      <code>Document</code>, <code>FormData</code>, <code>Blob</code>,
+      <code>File</code>, or <code>ArrayBuffer</code> objects, automatically
+      performs the appropriate encoding, sets the appropriate HTTP
+      content-type, and dispatches the request. Need to send a binary blob or
+      upload a file provided by the user? Simple: grab a reference to the
+      object and pass it to XHR. In fact, with a little extra work, we can also
+      split a large file into smaller chunks:
+
+      <div data-type="example" id="-WaCVFyfq">
+        <pre data-type="programlisting">
+var blob = ...; <a class="counter" id="file-co" href="#file"></a>
+
+const BYTES_PER_CHUNK = 1024 * 1024; <a class="counter" id="mb-co" href=
+"#mb"></a>
+const SIZE = blob.size;
+
+var start = 0;
+var end = BYTES_PER_CHUNK;
+
+while(start &lt; SIZE) { <a class="counter" id="iterate-co" href=
+"#iterate"></a>
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/upload');
+  xhr.onload = function() { ... };
+
+  xhr.setRequestHeader('Content-Range', start+'-'+end+'/'+SIZE); <a class=
+"counter" id="range-co" href="#range"></a>
+  xhr.send(blob.slice(start, end)); <a class="counter" id="slice-co" href=
+"#slice"></a>
+
+  start = end;
+  end = start + BYTES_PER_CHUNK;
+}
+</pre>
+
+        <ol class="notation">
+          <li>
+            <a class="co" id="file" href="#file-co"></a>
+
+            <p>An arbitrary blob of data (binary or text)
+
+          <li>
+            <a class="co" id="mb" href="#mb-co"></a>
+
+            <p>Set chunk size to 1 MB
+
+          <li>
+            <a class="co" id="iterate" href="#iterate-co"></a>
+
+            <p>Iterate over provided data in 1MB increments
+
+          <li>
+            <a class="co" id="range" href="#range-co"></a>
+
+            <p>Advertise the uploaded range of data (start-end/total)
+
+          <li>
+            <a class="co" id="slice" href="#slice-co"></a>
+
+            <p>Upload 1 MB slice of data via XHR
+          </ol>
+      </div>
+
+      <p>XHR does not support request streaming, which means that we must
+      provide the full payload when calling <em>send()</em>. However, this
+      example illustrates a simple application workaround: the file is split
+      and uploaded in chunks via multiple XHR requests. This implementation
+      pattern is by no means a replacement for a true request streaming API,
+      but it is nonetheless a viable solution for some applications.
+
+      <div data-type="note" id="id-2aClSEfM">
+        <p>Slicing large file uploads is a good technique to provide more
+        robust API where connectivity is unstable or intermittent—e.g., if a
+        chunk fails due to dropped connection, the application can retry, or
+        resume the upload later instead of restarting the full transfer from
+        the start.
+      </div>
+    </section>
+
+    <section>
+      <h2 id="monitoring-download-and-upload-progress"><a href=
+      "#monitoring-download-and-upload-progress" class="anchor">§</a>Monitoring
+      Download and Upload Progress</h2>
+
+      <p>Network connectivity can be intermittent, and latency and bandwidth
+      are highly variable. So how do we know if an XHR request has succeeded,
+      timed out, or failed? The XHR object provides a convenient API for
+      listening to progress events (<a data-type="xref" href=
+      "#xhr-progress">Table&nbsp;15-1</a>), which indicate the current status
+      of the request.
+
+      <figure id="xhr-progress">
+        <table>
+          <thead>
+            <tr>
+              <th>Event type
+
+              <th>Description
+
+              <th>Times fired
+
+          <tbody>
+            <tr>
+              <td>loadstart
+
+              <td>Transfer has begun
+
+              <td>once
+
+            <tr>
+              <td>progress
+
+              <td>Transfer is in progress
+
+              <td>zero or more
+
+            <tr>
+              <td>error
+
+              <td>Transfer has failed
+
+              <td>zero or once
+
+            <tr>
+              <td>abort
+
+              <td>Transfer is terminated
+
+              <td>zero or once
+
+            <tr>
+              <td>load
+
+              <td>Transfer is successful
+
+              <td>zero or once
+
+            <tr>
+              <td>loadend
+
+              <td>Transfer has finished
+
+              <td>once
+            </table>
+
+        <figcaption>
+          <span class="label">Table 15-1.</span> XHR progress events
+        </figcaption>
+      </figure>
+
+      <p>Each XHR transfer begins with a <em>loadstart</em> and finishes with a
+      <em>loadend</em> event, and in between, one or more additional events are
+      fired to indicate the status of the transfer. Hence, to monitor progress
+      the application can register a set of JavaScript event listeners on the
+      XHR object:
+
+      <div data-type="example" id="-r5CRFZiz">
+        <pre data-type="programlisting">
+var xhr = new XMLHttpRequest();
+xhr.open('GET','/resource');
+xhr.timeout = 5000; <a class="counter" id="timeout-co" href="#timeout"></a>
+
+xhr.addEventListener('load', function() { ... }); <a class="counter" id=
+"onload-co" href="#onload"></a>
+xhr.addEventListener('error', function() { ... }); <a class="counter" id=
+"onerror-co" href="#onerror"></a>
+
+var onProgressHandler = function(event) {
+  if(event.lengthComputable) {
+    var progress = (event.loaded / event.total) * 100; <a class="counter" id=
+"computable-co" href="#computable"></a>
+    ...
+  }
+}
+
+xhr.upload.addEventListener('progress', onProgressHandler); <a class="counter"
+id="upload-co" href="#upload"></a>
+xhr.addEventListener('progress', onProgressHandler); <a class="counter" id=
+"download-co" href="#download"></a>
+xhr.send();
+</pre>
+
+        <ol class="notation">
+          <li>
+            <a class="co" id="timeout" href="#timeout-co"></a>
+
+            <p>Set request timeout to 5,000 ms (default: no timeout)
+
+          <li>
+            <a class="co" id="onload" href="#onload-co"></a>
+
+            <p>Register callback for successful request
+
+          <li>
+            <a class="co" id="onerror" href="#onerror-co"></a>
+
+            <p>Register callback for failed request
+
+          <li>
+            <a class="co" id="computable" href="#computable-co"></a>
+
+            <p>Compute transfer progress
+
+          <li>
+            <a class="co" id="upload" href="#upload-co"></a>
+
+            <p>Register callback for upload progress events
+
+          <li>
+            <a class="co" id="download" href="#download-co"></a>
+
+            <p>Register callback for download progress events
+          </ol>
+      </div>
+
+      <p>Either the <em>load</em> or <em>error</em> event will fire once to
+      indicate the final status of the XHR transfer, whereas the
+      <em>progress</em> event can fire any number of times and provides a
+      convenient API for tracking transfer status: we can compare the
+      <em>loaded</em> attribute against <em>total</em> to estimate the amount
+      of transferred data.
+
+      <div data-type="note" id="id-GBCeS2ie">
+        <p>To estimate the amount of transferred data, the server must provide
+        a content length in its response: we can’t estimate progress of chunked
+        transfers, since by definition, the total size of the response is
+        unknown.
+
+        <p>Also, XHR requests do not have a default timeout, which means that a
+        request can be "in progress" indefinitely. As a best practice, always
+        set a meaningful timeout for your application and handle the error!
+      </div>
+    </section>
+
+    <section>
+      <h2 id="streaming-data-with-xhr"><a href="#streaming-data-with-xhr"
+      class="anchor">§</a>Streaming Data with XHR</h2>
+
+      <p>In some cases an application may need or want to process a stream of
+      data incrementally: upload the data to the server as it becomes available
+      on the client, or process the downloaded data as it arrives from the
+      server. Unfortunately, while this is an important use case, today there
+      is no simple, efficient, cross-browser API for XHR streaming:
+
+      <ul>
+        <li>
+          <p>The <em>send</em> method expects the full payload in case of
+          uploads.
+
+        <li>
+          <p>The <em>response</em>, <em>responseText</em>, and
+          <em>responseXML</em> attributes are not designed for streaming.
+        </ul>
+
+      <p>Streaming has never been an official use case within the official XHR
+      specification. As a result, short of manually splitting an upload into
+      smaller, individual XHRs, there is no API for streaming data from client
+      to server. Similarly, while the XHR2 specification does provide some
+      ability to read a partial response from the server, the implementation is
+      inefficient and very limited. That’s the bad news.
+
+      <p>The good news is that there is hope on the horizon! Lack of streaming
+      support as a first-class use case for XHR is a well-recognized
+      limitation, and there is work in progress to address the problem:
+
+      <blockquote>
+        <p>Web applications should have the ability to acquire and manipulate
+        data in a wide variety of forms, including as a sequence of data made
+        available over time. This specification defines the basic
+        representation for Streams, errors raised by Streams, and programmatic
+        ways to read and create Streams.
+
+        <p data-type="attribution">W3C Streams API
+      </blockquote>
+
+      <p>The combination of XHR and Streams API will enable efficient XHR
+      streaming in the browser. However, the Streams API is still under active
+      discussion, and is not yet available in any browser. So, with that, we’re
+      stuck, right? Well, not quite. As we noted earlier, streaming uploads
+      with XHR is not an option, but we do have limited support for streaming
+      downloads with XHR:
+
+      <div data-type="example" id="-JjCxu8sn">
+        <pre data-type="programlisting">
+var xhr = new XMLHttpRequest();
+xhr.open('GET', '/stream');
+xhr.seenBytes = 0;
+
+xhr.onreadystatechange = function() { <a class="counter" id="subscribe-co"
+href="#subscribe"></a>
+  if(xhr.readyState &gt; 2) {
+    var newData = xhr.responseText.substr(xhr.seenBytes); <a class="counter"
+id="strchunk-co" href="#strchunk"></a>
+    // process newData
+
+    xhr.seenBytes = xhr.responseText.length; <a class="counter" id="offset-co"
+href="#offset"></a>
+  }
+};
+
+xhr.send();
+</pre>
+
+        <ol class="notation">
+          <li>
+            <a class="co" id="subscribe" href="#subscribe-co"></a>
+
+            <p>Subscribe to state and progress notifications
+
+          <li>
+            <a class="co" id="strchunk" href="#strchunk-co"></a>
+
+            <p>Extract new data from partial response
+
+          <li>
+            <a class="co" id="offset" href="#offset-co"></a>
+
+            <p>Update processed byte offset
+          </ol>
+      </div>
+
+      <p>This example will work in most modern browsers. However, performance
+      is not great, and there are a large number of implementation caveats and
+      gotchas:
+
+      <ul>
+        <li>
+          <p>Note that we are manually tracking the offset for seen bytes and
+          then manually slicing the data: <em>responseText</em> is buffering
+          the full response! For small transfers, this may not be an issue, but
+          for larger downloads, and especially on memory-constrained devices
+          such as mobile handsets, this is a problem. The only way to release
+          the buffered response is to finish the request and open a new one.
+
+        <li>
+          <p>Partial response can be read only from the <em>responseText</em>
+          attribute, which limits us to text-only transfers. There is no way to
+          read partial response of a binary transfer.
+
+        <li>
+          <p>Once partial data is read, we must identify message boundaries:
+          application logic must define its own data format and then buffer and
+          parse the stream to extract individual messages.
+
+        <li>
+          <p>Browsers differ in how they buffer received data: some browsers
+          may release data immediately, while others may buffer small responses
+          and release them in larger chunks.
+
+        <li>
+          <p>Browsers differ in which content-types they allow to be read
+          incrementally—e.g., some allow "text/html," while others will only
+          work with "application/x-javascript."
+        </ul>
+
+      <p>In short, currently, XHR streaming is neither efficient nor
+      convenient, and to make matters worse, the lack of a common specification
+      also means that the implementations differ from browser to browser. As a
+      result, at least until the Streams API is available, XHR is not a good
+      fit for streaming.
+
+      <div data-type="note" id="id-dOCNURsR">
+        <p>No need to despair! While XHR may not meet the criteria, we do have
+        other transports that are optimized for the streaming use case:
+        Server-Sent Events offers a convenient API for streaming text-based
+        data from server to client, and WebSocket offers efficient,
+        bidirectional streaming for both binary and text-based data.
+      </div>
+
+      <aside>
+        <h4 id="proprietary-apis-and-extensions-for-xhr-streaming"><a href=
+        "#proprietary-apis-and-extensions-for-xhr-streaming" class=
+        "anchor">§</a>Proprietary APIs and Extensions for XHR Streaming</h4>
+
+        <p>Both Firefox and Internet Explorer provide custom "streaming XHR
+        extensions":
+
+        <ul>
+          <li>
+            <p>Firefox supports <code>moz-chunked-text</code> and
+            <code>moz-chunked-arraybuffer</code>.
+
+          <li>
+            <p>Internet Explorer supports <code>ms-stream</code>.
+          </ul>
+
+        <p>By setting the <code>responseType</code> attribute on the XHR object
+        to one of the preceding types, both browsers will avoid buffering the
+        full response and will also allow a binary response to be read
+        incrementally from the XHR object. Unfortunately, there are no
+        equivalent APIs in Chrome, Opera, or other popular browsers. As a
+        result, XHR streaming is still an impractical transport for
+        cross-browser applications.
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="real-time-notifications-and-delivery"><a href=
+      "#real-time-notifications-and-delivery" class="anchor">§</a>Real-Time
+      Notifications and Delivery</h2>
+
+      <p>XHR enables a simple and efficient way to synchronize client updates
+      with the server: whenever necessary, an XHR request is dispatched by the
+      client to update the appropriate data on the server. However, the same
+      problem, but in reverse, is much harder. If data is updated on the
+      server, how does the server notify the client?
+
+      <p>HTTP does not provide any way for the server to initiate a new
+      connection to the client. As a result, to receive real-time
+      notifications, the client must either poll the server for updates or
+      leverage a streaming transport to allow the server to push new
+      notifications as they become available. Unfortunately, as we saw in the
+      preceding section, support for XHR streaming is limited, which leaves us
+      with XHR polling.
+
+      <div data-type="note" id="id-2aCZtYHM">
+        <p>"Real-time" has different meanings for different applications: some
+        applications demand submillisecond overhead, while others may be just
+        fine with delays measured in minutes. To determine the optimal
+        transport, first define clear latency and overhead targets for your
+        application!
+      </div>
+
+      <section>
+        <h3 id="polling-with-xhr"><a href="#polling-with-xhr" class=
+        "anchor">§</a>Polling with XHR</h3>
+
+        <p>One of the simplest strategies to retrieve updates from the server
+        is to have the client do a periodic check: the client can initiate a
+        background XHR request on a periodic interval (poll the server) to
+        check for updates. If new data is available on the server, then it is
+        returned in the response, and otherwise the response is empty.
+
+        <p>Polling is simple to implement but frequently is also very
+        inefficient. The choice of the polling interval is critical: long
+        polling intervals translate to delayed delivery of updates, whereas
+        short intervals result in unnecessary traffic and high overhead both
+        for the client and the server. Let’s consider the simplest possible
+        example:
+
+        <div data-type="example" id="-DKCPt5FdHP">
+          <pre data-type="programlisting">
+function checkUpdates(url) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url);
+  xhr.onload = function() { ... }; <a class="counter" id="xhrcheck-co" href=
+"#xhrcheck"></a>
+  xhr.send();
+}
+
+setInterval(function() { checkUpdates('/updates') }, 60000); <a class="counter"
+id="xhrpoll-co" href="#xhrpoll"></a>
+</pre>
+
+          <ol class="notation">
+            <li>
+              <a class="co" id="xhrcheck" href="#xhrcheck-co"></a>
+
+              <p>Process received updates from server
+
+            <li>
+              <a class="co" id="xhrpoll" href="#xhrpoll-co"></a>
+
+              <p>Issue an XHR request every 60 seconds
+            </ol>
+        </div>
+
+        <ul>
+          <li>
+            <p>Each XHR request is a standalone HTTP request, and on average,
+            HTTP incurs ~800 bytes of overhead (without HTTP cookies) for
+            request/response headers.
+
+          <li>
+            <p>Periodic checks work well when data arrives at predictable
+            intervals. Unfortunately, predictable arrival rates are an
+            exception, not the norm. Consequently, periodic polling will
+            introduce additional latency delays between the message being
+            available on the server and its delivery to the client.
+
+          <li>
+            <p>Unless thought through carefully, polling often becomes a costly
+            performance anti-pattern on wireless networks; see <a data-type=
+            "xref" href=
+            "/optimizing-for-mobile-networks/#eliminate-periodic-and-inefficient-data-transfers">
+            Eliminate Periodic and Inefficient Data Transfers</a>. Waking up
+            the radio consumes a lot of battery power!
+          </ul>
+
+        <p>What is the optimal polling interval? There isn’t one. The frequency
+        depends on the requirements of the application, and there is an
+        inherent trade-off between efficiency and message latency. As a result,
+        polling is a good fit for applications where polling intervals are
+        long, new events are arriving at a predictable rate, and the
+        transferred payloads are large. This combination offsets the extra HTTP
+        overhead and minimizes message delivery delays.
+
+        <aside>
+          <h4 id="modeling-performance-of-xhr-polling"><a href=
+          "#modeling-performance-of-xhr-polling" class="anchor">§</a>Modeling
+          Performance of XHR Polling</h4>
+
+          <p>To illustrate the trade-off between latency and overhead of XHR
+          polling, let’s consider a simple email application that is using XHR
+          polling to check for message updates on the server. The
+          implementation is as follows:
+
+          <ul>
+            <li>
+              <p>Every 60 seconds the client sends an XHR to check for updates.
+
+            <li>
+              <p>Each XHR request includes the most recent message ID known by
+              the client.
+
+            <li>
+              <p>The server compares the client ID against its list of
+              messages.
+
+            <li>
+              <p>The server responds with a list of new messages or an empty
+              list (no updates).
+            </ul>
+
+          <dl>
+            <dt>What is the average message latency delay?
+
+            <dd>
+              <p>If a new message arrives on the server just before the client
+              checks for updates, then the delay is minimal—just the latency
+              between client and server. Conversely, the same new message can
+              arrive moments after the client check, in which case the message
+              will have to wait until the next client check (60 seconds).
+              Hence, if the message arrival rate is random, then an average
+              message would wait for 30 seconds on the server before the client
+              gets it.
+
+            <dt>What is the overhead of polling?
+
+            <dd>
+              <p>An average HTTP 1.x request adds 800 bytes of request and
+              response overhead (see <a data-type="xref" href=
+              "/http1x/#measuring-and-controlling-protocol-overhead">Measuring
+              and Controlling Protocol Overhead</a>). Because the client is
+              logged in, we will also have an extra authentication cookie and
+              the message ID; let’s say this adds another 50 bytes. Hence, a
+              request that returns no new messages will incur 850 bytes! Now
+              imagine we have 10,000 clients, all polling on a 60-second
+              interval:
+
+              <figure data-type="equation" id="id-kncdhltytwswf6h9">
+                <img src=
+                "/assets/equations/ff529f93b49270aac2bb7a2707a445e8.svg" class=
+                "equation">
+              </figure>
+
+              <p>Each client sends 850 bytes of data on each request, which
+              translates to 167 requests per second and a sustained rate of
+              1.13 Mbps of ingress throughput on the server! And that’s a
+              constant rate without actually delivering any new messages to any
+              of the clients.
+            </dl>
+
+          <p>Is the 30-second delay too high? We can decrease the polling
+          interval, but in doing so, we would incur higher throughput and
+          overhead: the same 10,000 clients, but on a 1-second interval, would
+          generate over 60 Mbps of throughput! In short, unless the polling
+          intervals are long, polling is expensive.
+        </aside>
+      </section>
+
+      <section>
+        <h3 id="long-polling-with-xhr"><a href="#long-polling-with-xhr" class=
+        "anchor">§</a>Long-Polling with XHR</h3>
+
+        <p>The challenge with periodic polling is that there is potential for
+        many unnecessary and empty checks. With that in mind, what if we made a
+        slight modification (<a data-type="xref" href=
+        "#polling-longpolling">Figure&nbsp;15-1</a>) to the polling workflow:
+        instead of returning an empty response when no updates are available,
+        could we keep the connection idle until an update is available?
+
+        <figure id="polling-longpolling">
+          <img src="/assets/diagrams/4ee6145071a2992920f9681c069824a4.svg" alt=
+          "Figure 15-1. Polling (left) vs. long-polling (right) latency">
+
+          <figcaption>
+            <span class="label">Figure 15-1.</span> Polling (left) vs.
+            long-polling (right) latency
+          </figcaption>
+        </figure>
+
+        <div data-type="note" id="id-x6CMtEhdHz">
+          <p>The technique of leveraging a long-held HTTP request ("a hanging
+          GET") to allow the server to push data to the browser is commonly
+          known as "Comet." However, you may also encounter it under other
+          names, such as "reverse AJAX," "AJAX push," and "HTTP push."
+        </div>
+
+        <p>By holding the connection open until an update is available
+        (long-polling), data can be sent immediately to the client once it
+        becomes available on the server. As a result, long-polling offers the
+        best-case scenario for message latency, and it also eliminates empty
+        checks, which reduces the number of XHR requests and the overall
+        overhead of polling. Once an update is delivered, the long-poll request
+        is finished and the client can issue another long-poll request and wait
+        for the next available message:
+
+        <div data-type="example" id="-dOCPhmhKH5">
+          <pre data-type="programlisting">
+function checkUpdates(url) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url);
+  xhr.onload = function() { <a class="counter" id="xhrlpollfn-co" href=
+"#xhrlpollfn"></a>
+    ...
+    checkUpdates('/updates'); <a class="counter" id="xhrnext-co" href=
+"#xhrnext"></a>
+  };
+  xhr.send();
+}
+
+checkUpdates('/updates'); <a class="counter" id="xhrlpoll-co" href=
+"#xhrlpoll"></a>
+</pre>
+
+          <ol class="notation">
+            <li>
+              <a class="co" id="xhrlpollfn" href="#xhrlpollfn-co"></a>
+
+              <p>Process received updates and open new long-poll XHR
+
+            <li>
+              <a class="co" id="xhrnext" href="#xhrnext-co"></a>
+
+              <p>Issue long-poll request for next update (and loop forever)
+
+            <li>
+              <a class="co" id="xhrlpoll" href="#xhrlpoll-co"></a>
+
+              <p>Issue initial long-poll XHR request
+            </ol>
+        </div>
+
+        <p>With that, is long-polling always a better choice than periodic
+        polling? Unless the message arrival rate is known and constant,
+        long-polling will always deliver better message latency. If that’s the
+        primary criteria, then long-polling is the winner.
+
+        <p>On the other hand, the overhead discussion requires a more nuanced
+        view. First, note that each delivered message still incurs the same
+        HTTP overhead; each new message is a standalone HTTP request. However,
+        if the message arrival rate is high, then long-polling will issue more
+        XHR requests than periodic polling!
+
+        <p>Long-polling dynamically adapts to the message arrival rate by
+        minimizing message latency, which is a behavior you may or may not
+        want. If there is some tolerance for message latency, then polling may
+        be a more efficient transport—e.g., if the update rate is high, then
+        polling provides a simple "message aggregation" mechanism, which can
+        reduce the number of requests and improve battery life on mobile
+        handsets.
+
+        <div data-type="note" id="id-ojCPC4hYHO">
+          <p>In practice, not all messages have the same priority or latency
+          requirements. As a result, you may want to consider a mix of
+          strategies: aggregate low-priority updates on the server, and trigger
+          immediate delivery for high priority updates; see <a data-type="xref"
+          href=
+          "/optimizing-for-mobile-networks/#nagle-and-efficient-server-push">Nagle
+          and Efficient Server Push</a>.
+        </div>
+
+        <aside>
+          <h4 id="facebook-chat-via-xhr-long-polling"><a href=
+          "#facebook-chat-via-xhr-long-polling" class="anchor">§</a>Facebook
+          Chat via XHR Long-Polling</h4>
+
+          <p>In practice, long-polling has become one of the most widely used
+          methods for delivering real-time notifications via XHR. While it may
+          not be the most efficient transport, it is simple, robust, and
+          supported by any XHR-capable browser. Popular products such as
+          Facebook’s Chat were first deployed in 2008 via this very method:
+
+          <blockquote>
+            <p>The method we chose to get text from one user to another
+            involves loading an iframe on each Facebook page, and having that
+            iframe’s JavaScript make an HTTP GET request over a persistent
+            connection that doesn’t return until the server has data for the
+            client. The request gets reestablished if it’s interrupted or times
+            out. This isn’t by any means a new technique: it’s a variation of
+            Comet, specifically XHR long-polling, and/or BOSH.
+
+            <p data-type="attribution">Facebook Chat, <cite>Facebook
+            Engineering Blog</cite>
+          </blockquote>
+
+          <p>Today, we can deliver the same functionality much more efficiently
+          via Server-Sent Events and WebSocket. Having said that, XHR is still
+          a common fallback strategy for many real-time frameworks. If all else
+          fails, long-polling to the rescue!
+        </aside>
+      </section>
+    </section>
+
+    <section>
+      <h2 id="xhr-use-cases-and-performance"><a href=
+      "#xhr-use-cases-and-performance" class="anchor">§</a>XHR Use Cases and
+      Performance</h2>
+
+      <p>XMLHttpRequest is what enabled us to make the leap from building pages
+      to building interactive web applications in the browser. First, it
+      enabled asynchronous communication within the browser, but just as
+      importantly, it also made the process simple. Dispatching and controlling
+      a scripted HTTP request takes just a few lines of JavaScript code, and
+      the browser handles all the rest:
+
+      <ul>
+        <li>
+          <p>Browser formats the HTTP request and parses the response.
+
+        <li>
+          <p>Browser enforces relevant security (same-origin) policies.
+
+        <li>
+          <p>Browser handles content negotiation (e.g., gzip).
+
+        <li>
+          <p>Browser handles request and response caching.
+
+        <li>
+          <p>Browser handles authentication, redirects, and more…
+        </ul>
+
+      <p>As such, XHR is a versatile and a high-performance transport for any
+      transfers that follow the HTTP request-response cycle. Need to fetch a
+      resource that requires authentication, should be compressed while in
+      transfer, and should be cached for future lookups? The browser takes care
+      of all of this and more, allowing us to focus on the application logic!
+
+      <p>However, XHR also has its limitations. As we saw, streaming has never
+      been an official use case in the XHR standard, and the support is
+      limited: streaming with XHR is neither efficient nor convenient.
+      Different browsers have different behaviors, and efficient binary
+      streaming is impossible. In short, XHR is not a good fit for streaming.
+
+      <p>Similarly, there is no one best strategy for delivering real-time
+      updates with XHR. Periodic polling incurs high overhead and message
+      latency delays. Long-polling delivers low latency but still has the same
+      per-message overhead; each message is its own HTTP request. To have both
+      low latency and low overhead, we need XHR streaming!
+
+      <p>As a result, while XHR is a popular mechanism for "real-time"
+      delivery, it may not be the best-performing transport for the job. Modern
+      browsers support both simpler and more efficient options, such as
+      Server-Sent Events and WebSocket. Hence, unless you have a specific
+      reason why XHR polling is required, use them.
+    </section>
+  </article>
+
+  <footer>
+    <div id="toast">
+      &nbsp;
+    </div>
+
+    <p><a href="/#toc"><em>« Back to the Table of Contents</em></a>
+
+    <p class="legal">Copyright © 2013 <a href="https://www.igvita.com/" rel=
+    "me">Ilya Grigorik</a>. Published by O'Reilly Media, Inc. Licensed under
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND
+    4.0</a>.
+  </footer>
+
