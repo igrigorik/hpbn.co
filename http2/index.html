@@ -39,7 +39,7 @@ rel="stylesheet">
 <meta property="og:site_name" content="High Performance Browser Networking">
 <meta property="fb:admins" content="688996186">
 <script type="application/ld+json">
-{"@context":"http://schema.org/","@type":"Article","headline":"HTTP: HTTP/2 - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2015-12-20T21:07:47Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+{"@context":"http://schema.org/","@type":"Article","headline":"HTTP: HTTP/2 - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2016-06-29T02:48:02Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
 </script>
 
 <body data-type="book">
@@ -324,839 +324,822 @@ rel="stylesheet">
       low-level changes address the performance limitations of the previous
       protocols. Let’s take a brief tour of the binary framing layer and its
       features.
+    </section>
 
-      <section>
-        <h3 id="binary-framing-layer"><a href="#binary-framing-layer" class=
-        "anchor">§</a>Binary Framing Layer</h3>
+    <section>
+      <h2 id="binary-framing-layer"><a href="#binary-framing-layer" class=
+      "anchor">§</a>Binary Framing Layer</h2>
 
-        <p>At the core of all performance enhancements of HTTP/2 is the new
-        <em>binary framing layer</em> (<a data-type="xref" href=
-        "#http2-framing-layer">Figure&nbsp;12-1</a>), which dictates how the
-        HTTP messages are encapsulated and transferred between the client and
-        server.
+      <p>At the core of all performance enhancements of HTTP/2 is the new
+      <em>binary framing layer</em> (<a data-type="xref" href=
+      "#http2-framing-layer">Figure&nbsp;12-1</a>), which dictates how the HTTP
+      messages are encapsulated and transferred between the client and server.
 
-        <figure id="http2-framing-layer">
-          <img src="/assets/diagrams/ae09920e853bee0b21be83f8e770ba01.svg" alt=
-          "Figure 12-1. HTTP/2 binary framing layer">
+      <figure id="http2-framing-layer">
+        <img src="/assets/diagrams/ae09920e853bee0b21be83f8e770ba01.svg" alt=
+        "Figure 12-1. HTTP/2 binary framing layer">
 
-          <figcaption>
-            <span class="label">Figure 12-1.</span> HTTP/2 binary framing layer
-          </figcaption>
-        </figure>
+        <figcaption>
+          <span class="label">Figure 12-1.</span> HTTP/2 binary framing layer
+        </figcaption>
+      </figure>
 
-        <p>The "layer" refers to a design choice to introduce a new optimized
-        encoding mechanism between the socket interface and the higher HTTP API
-        exposed to our applications: the HTTP semantics, such as verbs,
-        methods, and headers, are unaffected, but the way they are encoded
-        while in transit is what’s different. Unlike the newline delimited
-        plaintext HTTP/1.x protocol, all HTTP/2 communication is split into
-        smaller messages and frames, each of which is encoded in binary format.
+      <p>The "layer" refers to a design choice to introduce a new optimized
+      encoding mechanism between the socket interface and the higher HTTP API
+      exposed to our applications: the HTTP semantics, such as verbs, methods,
+      and headers, are unaffected, but the way they are encoded while in
+      transit is what’s different. Unlike the newline delimited plaintext
+      HTTP/1.x protocol, all HTTP/2 communication is split into smaller
+      messages and frames, each of which is encoded in binary format.
 
-        <p>As a result, both client and server must use the new binary encoding
-        mechanism to understand each other: an HTTP/1.x client won’t understand
-        an HTTP/2 only server, and vice versa. Thankfully, our applications
-        remain blissfully unaware of all these changes, as the client and
-        server perform all the necessary framing work on our behalf.
+      <p>As a result, both client and server must use the new binary encoding
+      mechanism to understand each other: an HTTP/1.x client won’t understand
+      an HTTP/2 only server, and vice versa. Thankfully, our applications
+      remain blissfully unaware of all these changes, as the client and server
+      perform all the necessary framing work on our behalf.
 
-        <aside>
-          <h4 id="the-pros-and-cons-of-binary-protocols"><a href=
-          "#the-pros-and-cons-of-binary-protocols" class="anchor">§</a>The Pros
-          and Cons of Binary Protocols</h4>
+      <aside>
+        <h4 id="the-pros-and-cons-of-binary-protocols"><a href=
+        "#the-pros-and-cons-of-binary-protocols" class="anchor">§</a>The Pros
+        and Cons of Binary Protocols</h4>
 
-          <p>ASCII protocols are easy to inspect and get started with. However,
-          they are not very efficient and are typically harder to implement
-          correctly: optional whitespace, varying termination sequences, and
-          other quirks make it hard to distinguish the protocol from the
-          payload and lead to parsing and security errors. By contrast, while
-          binary protocols may take more effort to get started with, they tend
-          to lead to more performant, robust, and provably correct
-          implementations.
+        <p>ASCII protocols are easy to inspect and get started with. However,
+        they are not very efficient and are typically harder to implement
+        correctly: optional whitespace, varying termination sequences, and
+        other quirks make it hard to distinguish the protocol from the payload
+        and lead to parsing and security errors. By contrast, while binary
+        protocols may take more effort to get started with, they tend to lead
+        to more performant, robust, and provably correct implementations.
 
-          <p>HTTP/2 uses binary framing. As a result, you will need a tool that
-          understands it to inspect and debug the protocol—e.g., Wireshark or
-          equivalent. In practice, this is less of an issue than it seems,
-          since you would have to use the same tools to inspect the encrypted
-          TLS flows—which also rely on binary framing (see <a data-type="xref"
-          href="/transport-layer-security-tls/#tls-record-protocol">TLS Record
-          Protocol</a>)—carrying HTTP/1.x and HTTP/2 data.
-        </aside>
-      </section>
+        <p>HTTP/2 uses binary framing. As a result, you will need a tool that
+        understands it to inspect and debug the protocol—e.g., Wireshark or
+        equivalent. In practice, this is less of an issue than it seems, since
+        you would have to use the same tools to inspect the encrypted TLS
+        flows—which also rely on binary framing (see <a data-type="xref" href=
+        "/transport-layer-security-tls/#tls-record-protocol">TLS Record
+        Protocol</a>)—carrying HTTP/1.x and HTTP/2 data.
+      </aside>
+    </section>
 
-      <section>
-        <h3 id="streams-messages-and-frames"><a href=
-        "#streams-messages-and-frames" class="anchor">§</a>Streams, Messages,
-        and Frames</h3>
+    <section>
+      <h2 id="streams-messages-and-frames"><a href=
+      "#streams-messages-and-frames" class="anchor">§</a>Streams, Messages, and
+      Frames</h2>
 
-        <p>The introduction of the new binary framing mechanism changes how the
-        data is exchanged (<a data-type="xref" href=
-        "#http2-terminology">Figure&nbsp;12-2</a>) between the client and
-        server. To describe this process, let’s familiarize ourselves with the
-        HTTP/2 terminology:
+      <p>The introduction of the new binary framing mechanism changes how the
+      data is exchanged (<a data-type="xref" href=
+      "#http2-terminology">Figure&nbsp;12-2</a>) between the client and server.
+      To describe this process, let’s familiarize ourselves with the HTTP/2
+      terminology:
 
-        <dl>
-          <dt>Stream
+      <dl>
+        <dt>Stream
 
-          <dd>
-            <p>A bidirectional flow of bytes within an established connection,
-            which may carry one or more messages.
+        <dd>
+          <p>A bidirectional flow of bytes within an established connection,
+          which may carry one or more messages.
 
-          <dt>Message
+        <dt>Message
 
-          <dd>
-            <p>A complete sequence of frames that map to a logical request or
-            response message.
+        <dd>
+          <p>A complete sequence of frames that map to a logical request or
+          response message.
 
-          <dt>Frame
+        <dt>Frame
 
-          <dd>
-            <p>The smallest unit of communication in HTTP/2, each containing a
-            frame header, which at a minimum identifies the stream to which the
-            frame belongs.
+        <dd>
+          <p>The smallest unit of communication in HTTP/2, each containing a
+          frame header, which at a minimum identifies the stream to which the
+          frame belongs.
 
-            <ul>
-              <li>
-                <p>All <em>communication</em> is performed over a single TCP
-                connection that can carry any number of bidirectional streams.
+          <ul>
+            <li>
+              <p>All <em>communication</em> is performed over a single TCP
+              connection that can carry any number of bidirectional streams.
 
-              <li>
-                <p>Each <em>stream</em> has a unique identifier and optional
-                priority information that is used to carry bidirectional
-                messages.
+            <li>
+              <p>Each <em>stream</em> has a unique identifier and optional
+              priority information that is used to carry bidirectional
+              messages.
 
-              <li>
-                <p>Each <em>message</em> is a logical HTTP message, such as a
-                request, or response, which consists of one or more frames.
+            <li>
+              <p>Each <em>message</em> is a logical HTTP message, such as a
+              request, or response, which consists of one or more frames.
 
-              <li>
-                <p>The <em>frame</em> is the smallest unit of communication
-                that carries a specific type of data—e.g., HTTP headers,
-                message payload, and so on. Frames from different streams may
-                be interleaved and then reassembled via the embedded stream
-                identifier in the header of each frame.
-              </ul>
-          </dl>
+            <li>
+              <p>The <em>frame</em> is the smallest unit of communication that
+              carries a specific type of data—e.g., HTTP headers, message
+              payload, and so on. Frames from different streams may be
+              interleaved and then reassembled via the embedded stream
+              identifier in the header of each frame.
+            </ul>
+        </dl>
 
-        <figure id="http2-terminology">
-          <img src="/assets/diagrams/8e6931bb40fc26c511ad15645e7b6113.svg" alt=
-          "Figure 12-2. HTTP/2 streams, messages, and frames">
+      <figure id="http2-terminology">
+        <img src="/assets/diagrams/8e6931bb40fc26c511ad15645e7b6113.svg" alt=
+        "Figure 12-2. HTTP/2 streams, messages, and frames">
 
-          <figcaption>
-            <span class="label">Figure 12-2.</span> HTTP/2 streams, messages,
-            and frames
-          </figcaption>
-        </figure>
+        <figcaption>
+          <span class="label">Figure 12-2.</span> HTTP/2 streams, messages, and
+          frames
+        </figcaption>
+      </figure>
 
-        <p>In short, HTTP/2 breaks down the HTTP protocol communication into an
-        exchange of binary-encoded frames, which are then mapped to messages
-        that belong to a particular stream, and all of which are multiplexed
-        within a single TCP connection. This is the foundation that enables all
-        other features and performance optimizations provided by the HTTP/2
-        protocol.
-      </section>
+      <p>In short, HTTP/2 breaks down the HTTP protocol communication into an
+      exchange of binary-encoded frames, which are then mapped to messages that
+      belong to a particular stream, and all of which are multiplexed within a
+      single TCP connection. This is the foundation that enables all other
+      features and performance optimizations provided by the HTTP/2 protocol.
+    </section>
 
-      <section>
-        <h3 id="request-and-response-multiplexing"><a href=
-        "#request-and-response-multiplexing" class="anchor">§</a>Request and
-        Response Multiplexing</h3>
+    <section>
+      <h2 id="request-and-response-multiplexing"><a href=
+      "#request-and-response-multiplexing" class="anchor">§</a>Request and
+      Response Multiplexing</h2>
 
-        <p>With HTTP/1.x, if the client wants to make multiple parallel
-        requests to improve performance, then multiple TCP connections must be
-        used; see <a data-type="xref" href=
-        "/http1x/#using-multiple-tcp-connections">Using Multiple TCP
-        Connections</a>. This behavior is a direct consequence of the HTTP/1.x
-        delivery model, which ensures that only one response can be delivered
-        at a time (response queuing) per connection. Worse, this also results
-        in head-of-line blocking and inefficient use of the underlying TCP
-        connection.
+      <p>With HTTP/1.x, if the client wants to make multiple parallel requests
+      to improve performance, then multiple TCP connections must be used; see
+      <a data-type="xref" href="/http1x/#using-multiple-tcp-connections">Using
+      Multiple TCP Connections</a>. This behavior is a direct consequence of
+      the HTTP/1.x delivery model, which ensures that only one response can be
+      delivered at a time (response queuing) per connection. Worse, this also
+      results in head-of-line blocking and inefficient use of the underlying
+      TCP connection.
 
-        <p>The new binary framing layer in HTTP/2 removes these limitations,
-        and enables full request and response multiplexing, by allowing the
-        client and server to break down an HTTP message into independent frames
-        (<a data-type="xref" href="#http2-multiplexing">Figure&nbsp;12-3</a>),
-        interleave them, and then reassemble them on the other end.
+      <p>The new binary framing layer in HTTP/2 removes these limitations, and
+      enables full request and response multiplexing, by allowing the client
+      and server to break down an HTTP message into independent frames
+      (<a data-type="xref" href="#http2-multiplexing">Figure&nbsp;12-3</a>),
+      interleave them, and then reassemble them on the other end.
 
-        <figure id="http2-multiplexing">
-          <img src="/assets/diagrams/47ba5b32e42cf5a06c3741d29ef9b94a.svg" alt=
-          "Figure 12-3. HTTP/2 request and response multiplexing within a shared connection">
+      <figure id="http2-multiplexing">
+        <img src="/assets/diagrams/47ba5b32e42cf5a06c3741d29ef9b94a.svg" alt=
+        "Figure 12-3. HTTP/2 request and response multiplexing within a shared connection">
 
-          <figcaption>
-            <span class="label">Figure 12-3.</span> HTTP/2 request and response
-            multiplexing within a shared connection
-          </figcaption>
-        </figure>
+        <figcaption>
+          <span class="label">Figure 12-3.</span> HTTP/2 request and response
+          multiplexing within a shared connection
+        </figcaption>
+      </figure>
 
-        <p>The snapshot in <a data-type="xref" href=
-        "#http2-multiplexing">Figure&nbsp;12-3</a> captures multiple streams in
-        flight within the same connection: the client is transmitting a
-        <code>DATA</code> frame (stream 5) to the server, while the server is
-        transmitting an interleaved sequence of frames to the client for
-        streams 1 and 3. As a result, there are three parallel streams in
-        flight!
+      <p>The snapshot in <a data-type="xref" href=
+      "#http2-multiplexing">Figure&nbsp;12-3</a> captures multiple streams in
+      flight within the same connection: the client is transmitting a
+      <code>DATA</code> frame (stream 5) to the server, while the server is
+      transmitting an interleaved sequence of frames to the client for streams
+      1 and 3. As a result, there are three parallel streams in flight!
 
-        <p>The ability to break down an HTTP message into independent frames,
-        interleave them, and then reassemble them on the other end is the
-        single most important enhancement of HTTP/2. In fact, it introduces a
-        ripple effect of numerous performance benefits across the entire stack
-        of all web technologies, enabling us to:
+      <p>The ability to break down an HTTP message into independent frames,
+      interleave them, and then reassemble them on the other end is the single
+      most important enhancement of HTTP/2. In fact, it introduces a ripple
+      effect of numerous performance benefits across the entire stack of all
+      web technologies, enabling us to:
+
+      <ul>
+        <li>
+          <p>Interleave multiple requests in parallel without blocking on any
+          one
+
+        <li>
+          <p>Interleave multiple responses in parallel without blocking on any
+          one
+
+        <li>
+          <p>Use a single connection to deliver multiple requests and responses
+          in parallel
+
+        <li>
+          <p>Remove unnecessary HTTP/1.x workarounds (see <a data-type="xref"
+          href=
+          "/optimizing-application-delivery/#optimizing-for-http1x">Optimizing
+          for HTTP/1.x</a>), such as concatenated files, image sprites, and
+          domain sharding
+
+        <li>
+          <p>Deliver lower page load times by eliminating unnecessary latency
+          and improving utilization of available network capacity
+
+        <li>
+          <p><em>And much more…</em>
+        </ul>
+
+      <p>The new binary framing layer in HTTP/2 resolves the head-of-line
+      blocking problem found in HTTP/1.x and eliminates the need for multiple
+      connections to enable parallel processing and delivery of requests and
+      responses. As a result, this makes our applications faster, simpler, and
+      cheaper to deploy.
+    </section>
+
+    <section>
+      <h2 id="stream-prioritization"><a href="#stream-prioritization" class=
+      "anchor">§</a>Stream Prioritization</h2>
+
+      <p>Once an HTTP message can be split into many individual frames, and we
+      allow for frames from multiple streams to be multiplexed, the order in
+      which the frames are interleaved and delivered both by the client and
+      server becomes a critical performance consideration. To facilitate this,
+      the HTTP/2 standard allows each stream to have an associated weight and
+      dependency:
+
+      <ul>
+        <li>
+          <p>Each stream may be assigned an integer weight between 1 and 256
+
+        <li>
+          <p>Each stream may be given an explicit dependency on another stream
+        </ul>
+
+      <p>The combination of stream dependencies and weights allows the client
+      to construct and communicate a "prioritization tree" (<a data-type="xref"
+      href="#http2-stream-prioritization">Figure&nbsp;12-4</a>) that expresses
+      how it would prefer to receive the responses. In turn, the server can use
+      this information to prioritize stream processing by controlling the
+      allocation of CPU, memory, and other resources, and once the response
+      data is available, allocation of bandwidth to ensure optimal delivery of
+      high-priority responses to the client.
+
+      <figure id="http2-stream-prioritization">
+        <img src="/assets/diagrams/fa9ac7cba0327c032c5e1b57325496a4.svg" alt=
+        "Figure 12-4. HTTP/2 stream dependencies and weights">
+
+        <figcaption>
+          <span class="label">Figure 12-4.</span> HTTP/2 stream dependencies
+          and weights
+        </figcaption>
+      </figure>
+
+      <p>A stream dependency within HTTP/2 is declared by referencing the
+      unique identifier of another stream as its parent; if omitted the stream
+      is said to be dependent on the "root stream". Declaring a stream
+      dependency indicates that, if possible, the parent stream should be
+      allocated resources ahead of its dependencies—e.g., please process and
+      deliver response D before response C.
+
+      <p>Streams that share the same parent (i.e., sibling streams) should be
+      allocated resources in proportion to their weight. For example, if stream
+      A has a weight of 12 and its one sibling B has a weight of 4, then to
+      determine the proportion of the resources that each of these streams
+      should receive:
+
+      <ol>
+        <li>
+          <p>Sum all the weights: <img src=
+          "/assets/equations/48a4d1e31c7d915006252e18a7be0e23.svg" class=
+          "equation">
+
+        <li>
+          <p>Divide each stream weight by the total weight: <img src=
+          "/assets/equations/b9a23519240d24d73ae91d1ea28faa27.svg" class=
+          "equation">, <img src=
+          "/assets/equations/ccbf5c975dcc68991d8844e31267d59d.svg" class=
+          "equation">
+        </ol>
+
+      <p>Thus, stream A should receive three-quarters and stream B should
+      receive one-quarter of available resources; stream B should receive
+      one-third of the resources allocated to stream A. Let’s work through a
+      few more hands-on examples in <a data-type="xref" href=
+      "#http2-stream-prioritization">Figure&nbsp;12-4</a>. From left to right:
+
+      <ol>
+        <li>
+          <p>Neither stream A nor B specify a parent dependency and are said to
+          be dependent on the implicit "root stream"; A has a weight of 12, and
+          B has a weight of 4. Thus, based on proportional weights: stream B
+          should receive one-third of the resources allocated to stream A.
+
+        <li>
+          <p>D is dependent on the root stream; C is dependent on D. Thus, D
+          should receive full allocation of resources ahead of C. The weights
+          are inconsequential because C’s dependency communicates a stronger
+          preference.
+
+        <li>
+          <p>D should receive full allocation of resources ahead of C; C should
+          receive full allocation of resources ahead of A and B; stream B
+          should receive one-third of the resources allocated to stream A.
+
+        <li>
+          <p>D should receive full allocation of resources ahead of E and C; E
+          and C should receive equal allocation ahead of A and B; A and B
+          should receive proportional allocation based on their weights.
+        </ol>
+
+      <p>As the above examples illustrate, the combination of stream
+      dependencies and weights provides an expressive language for resource
+      prioritization, which is a critical feature for improving browsing
+      performance where we have many resource types with different dependencies
+      and weights. Even better, the HTTP/2 protocol also allows the client to
+      update these preferences at any point, which enables further
+      optimizations in the browser—e.g., we can change dependencies and
+      reallocate weights in response to user interaction and other signals.
+
+      <div data-type="note" id="id-DZuEh5hA">
+        <p>Stream dependencies and weights express a <em>transport
+        preference</em>, not a requirement, and as such do not guarantee a
+        particular processing or transmission order. That is, the client cannot
+        force the server to process the stream in particular order using stream
+        prioritization. While this may seem counterintuitive, it is in fact the
+        desired behavior: we do not want to block the server from making
+        progress on a lower priority resource if a higher priority resource is
+        blocked.
+      </div>
+
+      <aside>
+        <h4 id="browser-request-prioritization-and-http2"><a href=
+        "#browser-request-prioritization-and-http2" class="anchor">§</a>Browser
+        Request Prioritization and HTTP/2</h4>
+
+        <p>Not all resources have equal priority when rendering a page in the
+        browser: the HTML document itself is critical to construct the DOM; the
+        CSS is required to construct the CSSOM; both DOM and CSSOM construction
+        can be blocked on JavaScript resources (see <a data-type="xref" href=
+        "/primer-on-web-performance/#dom-cssom-and-javascript">DOM, CSSOM, and
+        JavaScript</a>); and remaining resources, such as images, are often
+        fetched with lower priority.
+
+        <p>To accelerate the load time of the page, all modern browsers
+        prioritize requests based on type of asset, their location on the page,
+        and even learned priority from previous visits—e.g., if the rendering
+        was blocked on a certain asset in a previous visit, then the same asset
+        may be prioritized higher in the future.
+
+        <p>With HTTP/1.x, the browser has limited ability to leverage above
+        priority data: the protocol does not support multiplexing, and there is
+        no way to communicate request priority to the server. Instead, it must
+        rely on the use of parallel connections, which enables limited
+        parallelism of up to six requests per origin. As a result, requests are
+        queued on the client until a connection is available, which adds
+        unnecessary network latency. In theory, <a data-type="xref" href=
+        "/http1x/#http-pipelining">HTTP Pipelining</a> tried to partially
+        address this problem, but in practice it has failed to gain adoption.
+
+        <p>HTTP/2 resolves these inefficiencies: request queuing and
+        head-of-line blocking is eliminated because the browser can dispatch
+        all requests the moment they are discovered, and the browser can
+        communicate its stream prioritization preference via stream
+        dependencies and weights, allowing the server to further optimize
+        response delivery.
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="one-connection-per-origin"><a href="#one-connection-per-origin"
+      class="anchor">§</a>One Connection Per Origin</h2>
+
+      <p>With the new binary framing mechanism in place, HTTP/2 no longer needs
+      multiple TCP connections to multiplex streams in parallel; each stream is
+      split into many frames, which can be interleaved and prioritized. As a
+      result, all HTTP/2 connections are persistent, and only one connection
+      per origin is required, which offers numerous performance benefits.
+
+      <blockquote>
+        <p>For both SPDY and HTTP/2 the killer feature is arbitrary
+        multiplexing on a single well congestion controlled channel. It amazes
+        me how important this is and how well it works. One great metric around
+        that which I enjoy is the fraction of connections created that carry
+        just a single HTTP transaction (and thus make that transaction bear all
+        the overhead). For HTTP/1 74% of our active connections carry just a
+        single transaction—persistent connections just aren’t as helpful as we
+        all want. But in HTTP/2 that number plummets to 25%. That’s a huge win
+        for overhead reduction.
+
+        <p data-type="attribution">HTTP/2 is Live in Firefox, <cite>Patrick
+        McManus</cite>
+      </blockquote>
+
+      <p>Most HTTP transfers are short and bursty, whereas TCP is optimized for
+      long-lived, bulk data transfers. By reusing the same connection HTTP/2 is
+      able to both make more efficient use of each TCP connection, and also
+      significantly reduce the overall protocol overhead. Further, the use of
+      fewer connections reduces the memory and processing footprint along the
+      full connection path (i.e., client, intermediaries, and origin servers),
+      which reduces the overall operational costs and improves network
+      utilization and capacity. As a result, the move to HTTP/2 should not only
+      reduce the network latency, but also help improve throughput and reduce
+      the operational costs.
+
+      <div data-type="note" id="id-9zuACNSJ">
+        <p>Reduced number of connections is a particularly important feature
+        for improving performance of HTTPS deployments: this translates to
+        fewer expensive TLS handshakes, better session reuse, and an overall
+        reduction in required client and server resources.
+      </div>
+
+      <aside>
+        <h4 id="packet-loss-high-rtt-links-and-http2-performance"><a href=
+        "#packet-loss-high-rtt-links-and-http2-performance" class=
+        "anchor">§</a>Packet Loss, High-RTT Links, and HTTP/2 Performance</h4>
+
+        <p>Wait, I hear you say, we listed the benefits of using one TCP
+        connection per origin but aren’t there some potential downsides? Yes,
+        there are.
 
         <ul>
           <li>
-            <p>Interleave multiple requests in parallel without blocking on any
-            one
+            <p>We have eliminated head-of-line blocking from HTTP, but there is
+            still head-of-line blocking at the TCP level (see <a data-type=
+            "xref" href=
+            "/building-blocks-of-tcp/#head-of-line-blocking">Head-of-Line
+            Blocking</a>).
 
           <li>
-            <p>Interleave multiple responses in parallel without blocking on
-            any one
+            <p>Effects of bandwidth-delay product may limit connection
+            throughput if TCP window scaling is disabled.
 
           <li>
-            <p>Use a single connection to deliver multiple requests and
-            responses in parallel
-
-          <li>
-            <p>Remove unnecessary HTTP/1.x workarounds (see <a data-type="xref"
-            href=
-            "/optimizing-application-delivery/#optimizing-for-http1x">Optimizing
-            for HTTP/1.x</a>), such as concatenated files, image sprites, and
-            domain sharding
-
-          <li>
-            <p>Deliver lower page load times by eliminating unnecessary latency
-            and improving utilization of available network capacity
-
-          <li>
-            <p><em>And much more…</em>
+            <p>When packet loss occurs, the TCP congestion window size is
+            reduced (see <a data-type="xref" href=
+            "/building-blocks-of-tcp/#congestion-avoidance">Congestion
+            Avoidance</a>), which reduces the maximum throughput of the entire
+            connection.
           </ul>
 
-        <p>The new binary framing layer in HTTP/2 resolves the head-of-line
-        blocking problem found in HTTP/1.x and eliminates the need for multiple
-        connections to enable parallel processing and delivery of requests and
-        responses. As a result, this makes our applications faster, simpler,
-        and cheaper to deploy.
-      </section>
-
-      <section>
-        <h3 id="stream-prioritization"><a href="#stream-prioritization" class=
-        "anchor">§</a>Stream Prioritization</h3>
-
-        <p>Once an HTTP message can be split into many individual frames, and
-        we allow for frames from multiple streams to be multiplexed, the order
-        in which the frames are interleaved and delivered both by the client
-        and server becomes a critical performance consideration. To facilitate
-        this, the HTTP/2 standard allows each stream to have an associated
-        weight and dependency:
+        <p>Each of the items in this list may adversely affect both the
+        throughput and latency performance of an HTTP/2 connection. However,
+        despite these limitations, the move to multiple connections would
+        result in its own performance tradeoffs:
 
         <ul>
           <li>
-            <p>Each stream may be assigned an integer weight between 1 and 256
+            <p>Less effective header compression due to distinct compression
+            contexts
 
           <li>
-            <p>Each stream may be given an explicit dependency on another
-            stream
+            <p>Less effective request prioritization due to distinct TCP
+            streams
+
+          <li>
+            <p>Less effective utilization of each TCP stream and higher
+            likelihood of congestion due to more competing flows
+
+          <li>
+            <p>Increased resource overhead due to more TCP flows
           </ul>
 
-        <p>The combination of stream dependencies and weights allows the client
-        to construct and communicate a "prioritization tree" (<a data-type=
-        "xref" href="#http2-stream-prioritization">Figure&nbsp;12-4</a>) that
-        expresses how it would prefer to receive the responses. In turn, the
-        server can use this information to prioritize stream processing by
-        controlling the allocation of CPU, memory, and other resources, and
-        once the response data is available, allocation of bandwidth to ensure
-        optimal delivery of high-priority responses to the client.
-
-        <figure id="http2-stream-prioritization">
-          <img src="/assets/diagrams/fa9ac7cba0327c032c5e1b57325496a4.svg" alt=
-          "Figure 12-4. HTTP/2 stream dependencies and weights">
-
-          <figcaption>
-            <span class="label">Figure 12-4.</span> HTTP/2 stream dependencies
-            and weights
-          </figcaption>
-        </figure>
-
-        <p>A stream dependency within HTTP/2 is declared by referencing the
-        unique identifier of another stream as its parent; if omitted the
-        stream is said to be dependent on the "root stream". Declaring a stream
-        dependency indicates that, if possible, the parent stream should be
-        allocated resources ahead of its dependencies—e.g., please process and
-        deliver response D before response C.
-
-        <p>Streams that share the same parent (i.e., sibling streams) should be
-        allocated resources in proportion to their weight. For example, if
-        stream A has a weight of 12 and its one sibling B has a weight of 4,
-        then to determine the proportion of the resources that each of these
-        streams should receive:
-
-        <ol>
-          <li>
-            <p>Sum all the weights: <img src=
-            "/assets/equations/48a4d1e31c7d915006252e18a7be0e23.svg" class=
-            "equation">
-
-          <li>
-            <p>Divide each stream weight by the total weight: <img src=
-            "/assets/equations/b9a23519240d24d73ae91d1ea28faa27.svg" class=
-            "equation">, <img src=
-            "/assets/equations/ccbf5c975dcc68991d8844e31267d59d.svg" class=
-            "equation">
-          </ol>
-
-        <p>Thus, stream A should receive three-quarters and stream B should
-        receive one-quarter of available resources; stream B should receive
-        one-third of the resources allocated to stream A. Let’s work through a
-        few more hands-on examples in <a data-type="xref" href=
-        "#http2-stream-prioritization">Figure&nbsp;12-4</a>. From left to
-        right:
-
-        <ol>
-          <li>
-            <p>Neither stream A nor B specify a parent dependency and are said
-            to be dependent on the implicit "root stream"; A has a weight of
-            12, and B has a weight of 4. Thus, based on proportional weights:
-            stream B should receive one-third of the resources allocated to
-            stream A.
-
-          <li>
-            <p>D is dependent on the root stream; C is dependent on D. Thus, D
-            should receive full allocation of resources ahead of C. The weights
-            are inconsequential because C’s dependency communicates a stronger
-            preference.
-
-          <li>
-            <p>D should receive full allocation of resources ahead of C; C
-            should receive full allocation of resources ahead of A and B;
-            stream B should receive one-third of the resources allocated to
-            stream A.
-
-          <li>
-            <p>D should receive full allocation of resources ahead of E and C;
-            E and C should receive equal allocation ahead of A and B; A and B
-            should receive proportional allocation based on their weights.
-          </ol>
-
-        <p>As the above examples illustrate, the combination of stream
-        dependencies and weights provides an expressive language for resource
-        prioritization, which is a critical feature for improving browsing
-        performance where we have many resource types with different
-        dependencies and weights. Even better, the HTTP/2 protocol also allows
-        the client to update these preferences at any point, which enables
-        further optimizations in the browser—e.g., we can change dependencies
-        and reallocate weights in response to user interaction and other
-        signals.
-
-        <div data-type="note" id="id-OauMhzuoTD">
-          <p>Stream dependencies and weights express a <em>transport
-          preference</em>, not a requirement, and as such do not guarantee a
-          particular processing or transmission order. That is, the client
-          cannot force the server to process the stream in particular order
-          using stream prioritization. While this may seem counterintuitive, it
-          is in fact the desired behavior: we do not want to block the server
-          from making progress on a lower priority resource if a higher
-          priority resource is blocked.
-        </div>
-
-        <aside>
-          <h4 id="browser-request-prioritization-and-http2"><a href=
-          "#browser-request-prioritization-and-http2" class=
-          "anchor">§</a>Browser Request Prioritization and HTTP/2</h4>
-
-          <p>Not all resources have equal priority when rendering a page in the
-          browser: the HTML document itself is critical to construct the DOM;
-          the CSS is required to construct the CSSOM; both DOM and CSSOM
-          construction can be blocked on JavaScript resources (see
-          <a data-type="xref" href=
-          "/primer-on-web-performance/#dom-cssom-and-javascript">DOM, CSSOM,
-          and JavaScript</a>); and remaining resources, such as images, are
-          often fetched with lower priority.
-
-          <p>To accelerate the load time of the page, all modern browsers
-          prioritize requests based on type of asset, their location on the
-          page, and even learned priority from previous visits—e.g., if the
-          rendering was blocked on a certain asset in a previous visit, then
-          the same asset may be prioritized higher in the future.
-
-          <p>With HTTP/1.x, the browser has limited ability to leverage above
-          priority data: the protocol does not support multiplexing, and there
-          is no way to communicate request priority to the server. Instead, it
-          must rely on the use of parallel connections, which enables limited
-          parallelism of up to six requests per origin. As a result, requests
-          are queued on the client until a connection is available, which adds
-          unnecessary network latency. In theory, <a data-type="xref" href=
-          "/http1x/#http-pipelining">HTTP Pipelining</a> tried to partially
-          address this problem, but in practice it has failed to gain adoption.
-
-          <p>HTTP/2 resolves these inefficiencies: request queuing and
-          head-of-line blocking is eliminated because the browser can dispatch
-          all requests the moment they are discovered, and the browser can
-          communicate its stream prioritization preference via stream
-          dependencies and weights, allowing the server to further optimize
-          response delivery.
-        </aside>
-      </section>
-
-      <section>
-        <h3 id="one-connection-per-origin"><a href="#one-connection-per-origin"
-        class="anchor">§</a>One Connection Per Origin</h3>
-
-        <p>With the new binary framing mechanism in place, HTTP/2 no longer
-        needs multiple TCP connections to multiplex streams in parallel; each
-        stream is split into many frames, which can be interleaved and
-        prioritized. As a result, all HTTP/2 connections are persistent, and
-        only one connection per origin is required, which offers numerous
-        performance benefits.
+        <p>The above pros and cons are not an exhaustive list, and it is always
+        possible to construct specific scenarios where either one or more
+        connections may prove to be beneficial. However, the experimental
+        evidence of deploying HTTP/2 in the wild showed that a single
+        connection is the preferred deployment strategy:
 
         <blockquote>
-          <p>For both SPDY and HTTP/2 the killer feature is arbitrary
-          multiplexing on a single well congestion controlled channel. It
-          amazes me how important this is and how well it works. One great
-          metric around that which I enjoy is the fraction of connections
-          created that carry just a single HTTP transaction (and thus make that
-          transaction bear all the overhead). For HTTP/1 74% of our active
-          connections carry just a single transaction—persistent connections
-          just aren’t as helpful as we all want. But in HTTP/2 that number
-          plummets to 25%. That’s a huge win for overhead reduction.
+          <p>In tests so far, the negative effects of head-of-line blocking
+          (especially in the presence of packet loss) is outweighed by the
+          benefits of compression and prioritization.
 
-          <p data-type="attribution">HTTP/2 is Live in Firefox, <cite>Patrick
-          McManus</cite>
+          <p data-type="attribution">Hypertext Transfer Protocol version 2,
+          Draft 2
         </blockquote>
 
-        <p>Most HTTP transfers are short and bursty, whereas TCP is optimized
-        for long-lived, bulk data transfers. By reusing the same connection
-        HTTP/2 is able to both make more efficient use of each TCP connection,
-        and also significantly reduce the overall protocol overhead. Further,
-        the use of fewer connections reduces the memory and processing
-        footprint along the full connection path (i.e., client, intermediaries,
-        and origin servers), which reduces the overall operational costs and
-        improves network utilization and capacity. As a result, the move to
-        HTTP/2 should not only reduce the network latency, but also help
-        improve throughput and reduce the operational costs.
-
-        <div data-type="note" id="id-zBuKC8HjTz">
-          <p>Reduced number of connections is a particularly important feature
-          for improving performance of HTTPS deployments: this translates to
-          fewer expensive TLS handshakes, better session reuse, and an overall
-          reduction in required client and server resources.
-        </div>
-
-        <aside>
-          <h4 id="packet-loss-high-rtt-links-and-http2-performance"><a href=
-          "#packet-loss-high-rtt-links-and-http2-performance" class=
-          "anchor">§</a>Packet Loss, High-RTT Links, and HTTP/2
-          Performance</h4>
-
-          <p>Wait, I hear you say, we listed the benefits of using one TCP
-          connection per origin but aren’t there some potential downsides? Yes,
-          there are.
-
-          <ul>
-            <li>
-              <p>We have eliminated head-of-line blocking from HTTP, but there
-              is still head-of-line blocking at the TCP level (see
-              <a data-type="xref" href=
-              "/building-blocks-of-tcp/#head-of-line-blocking">Head-of-Line
-              Blocking</a>).
-
-            <li>
-              <p>Effects of bandwidth-delay product may limit connection
-              throughput if TCP window scaling is disabled.
-
-            <li>
-              <p>When packet loss occurs, the TCP congestion window size is
-              reduced (see <a data-type="xref" href=
-              "/building-blocks-of-tcp/#congestion-avoidance">Congestion
-              Avoidance</a>), which reduces the maximum throughput of the
-              entire connection.
-            </ul>
-
-          <p>Each of the items in this list may adversely affect both the
-          throughput and latency performance of an HTTP/2 connection. However,
-          despite these limitations, the move to multiple connections would
-          result in its own performance tradeoffs:
-
-          <ul>
-            <li>
-              <p>Less effective header compression due to distinct compression
-              contexts
-
-            <li>
-              <p>Less effective request prioritization due to distinct TCP
-              streams
-
-            <li>
-              <p>Less effective utilization of each TCP stream and higher
-              likelihood of congestion due to more competing flows
-
-            <li>
-              <p>Increased resource overhead due to more TCP flows
-            </ul>
-
-          <p>The above pros and cons are not an exhaustive list, and it is
-          always possible to construct specific scenarios where either one or
-          more connections may prove to be beneficial. However, the
-          experimental evidence of deploying HTTP/2 in the wild showed that a
-          single connection is the preferred deployment strategy:
-
-          <blockquote>
-            <p>In tests so far, the negative effects of head-of-line blocking
-            (especially in the presence of packet loss) is outweighed by the
-            benefits of compression and prioritization.
-
-            <p data-type="attribution">Hypertext Transfer Protocol version 2,
-            Draft 2
-          </blockquote>
-
-          <p>As with all performance optimization processes, the moment you
-          remove one performance bottleneck, you unlock the next one. In the
-          case of HTTP/2, TCP may be it. Which is why, once again, a well-tuned
-          TCP stack on the server is such a critical optimization criteria for
-          HTTP/2.
-
-          <p>There is ongoing research to address these concerns and to improve
-          TCP performance in general: TCP Fast Open, Proportional Rate
-          Reduction, increased initial congestion window, and more. Having said
-          that, it is important to acknowledge that HTTP/2, like its
-          predecessors, does not mandate the use of TCP. Other transports, such
-          as UDP, are not outside the realm of possibility as we look into the
-          future.
-        </aside>
-      </section>
-
-      <section>
-        <h3 id="flow-control"><a href="#flow-control" class="anchor">§</a>Flow
-        Control</h3>
-
-        <p>Flow control is a mechanism to prevent the sender from overwhelming
-        the receiver with data it may not want or be able to process: the
-        receiver may be busy, under heavy load, or may only be willing to
-        allocate a fixed amount of resources for a particular stream. For
-        example, the client may have requested a large video stream with high
-        priority, but the user has paused the video and the client now wants to
-        pause or throttle its delivery from the server to avoid fetching and
-        buffering unnecessary data. Alternatively, a proxy server may have a
-        fast downstream and slow upstream connections and similarly wants to
-        regulate how quickly the downstream delivers data to match the speed of
-        upstream to control its resource usage; and so on.
-
-        <p>Do the above requirements remind you of TCP flow control? They
-        should, as the problem is effectively identical—see <a data-type="xref"
-        href="/building-blocks-of-tcp/#flow-control">Flow Control</a>. However,
-        because the HTTP/2 streams are multiplexed within a single TCP
-        connection, TCP flow control is both not granular enough, and does not
-        provide the necessary application-level APIs to regulate the delivery
-        of individual streams. To address this, HTTP/2 provides a set of simple
-        building blocks that allow the client and server to implement their own
-        stream- and connection-level flow control:
-
-        <ul>
-          <li>
-            <p>Flow control is directional. Each receiver may choose to set any
-            window size that it desires for each stream and the entire
-            connection.
-
-          <li>
-            <p>Flow control is credit-based. Each receiver advertises its
-            initial connection and stream flow control window (in bytes), which
-            is reduced whenever the sender emits a <code>DATA</code> frame and
-            incremented via a <code>WINDOW_UPDATE</code> frame sent by the
-            receiver.
-
-          <li>
-            <p>Flow control cannot be disabled. When the HTTP/2 connection is
-            established the client and server exchange <code>SETTINGS</code>
-            frames, which set the flow control window sizes in both directions.
-            The default value of the flow control window is set to 65,535
-            bytes, but the receiver can set a large maximum window size
-            (<img src="/assets/equations/8953da8062cd144827586471ce5f3cde.svg"
-            class="equation"> bytes) and maintain it by sending a
-            <code>WINDOW_UPDATE</code> frame whenever any data is received.
-
-          <li>
-            <p>Flow control is hop-by-hop, not end-to-end. That is, an
-            intermediary can use it to control resource use and implement
-            resource allocation mechanisms based on own criteria and
-            heuristics.
-          </ul>
-
-        <p>HTTP/2 does not specify any particular algorithm for implementing
-        flow control. Instead, it provides the simple building blocks and
-        defers the implementation to the client and server, which can use it to
-        implement custom strategies to regulate resource use and allocation, as
-        well as implement new delivery capabilities that may help improve both
-        the real and perceived performance (see <a data-type="xref" href=
-        "/primer-on-web-performance/#speed-performance-and-human-perception">Speed,
-        Performance, and Human Perception</a>) of our web applications.
-
-        <p>For example, application-layer flow control allows the browser to
-        fetch only a part of a particular resource, put the fetch on hold by
-        reducing the stream flow control window down to zero, and then resume
-        it later—e.g., fetch a preview or first scan of an image, display it
-        and allow other high priority fetches to proceed, and resume the fetch
-        once more critical resources have finished loading.
-      </section>
-
-      <section>
-        <h3 id="server-push"><a href="#server-push" class="anchor">§</a>Server
-        Push</h3>
-
-        <p>Another powerful new feature of HTTP/2 is the ability of the server
-        to send multiple responses for a single client request. That is, in
-        addition to the response to the original request, the server can
-        <em>push</em> additional resources to the client (<a data-type="xref"
-        href="#server-push">Figure&nbsp;12-5</a>), without the client having to
-        request each one explicitly!
-
-        <figure id="server-push">
-          <img src="/assets/diagrams/d759887277b266a42c526643285dd244.svg" alt=
-          "Figure 12-5. Server initiates new streams (promises) for push resources">
-
-          <figcaption>
-            <span class="label">Figure 12-5.</span> Server initiates new
-            streams (promises) for push resources
-          </figcaption>
-        </figure>
-
-        <div data-type="note" id="id-DZuXFdSBTR">
-          <p>HTTP/2 breaks away from the strict request-response semantics and
-          enables one-to-many and server-initiated push workflows that open up
-          a world of new interaction possibilities both within and outside the
-          browser. This is an enabling feature that will have important
-          long-term consequences both for how we think about the protocol, and
-          where and how it is used.
-        </div>
-
-        <p>Why would we need such a mechanism in a browser? A typical web
-        application consists of dozens of resources, all of which are
-        discovered by the client by examining the document provided by the
-        server. As a result, why not eliminate the extra latency and let the
-        server push the associated resources ahead of time? The server already
-        knows which resources the client will require; that’s server push.
-
-        <p>In fact, if you have ever inlined a CSS, JavaScript, or any other
-        asset via a data URI (see <a data-type="xref" href=
-        "/http1x/#resource-inlining">Resource Inlining</a>), then you already
-        have hands-on experience with server push! By manually inlining the
-        resource into the document, we are, in effect, pushing that resource to
-        the client, without waiting for the client to request it. With HTTP/2
-        we can achieve the same results, but with additional performance
-        benefits:
-
-        <ul>
-          <li>
-            <p>Pushed resources can be cached by the client
-
-          <li>
-            <p>Pushed resources can be reused across different pages
-
-          <li>
-            <p>Pushed resources can be multiplexed alongside other resources
-
-          <li>
-            <p>Pushed resources can be prioritized by the server
-
-          <li>
-            <p>Pushed resources can be declined by the client
-          </ul>
-
-        <p>Each pushed resource is a stream that, unlike an inlined resource,
-        allows it to be individually multiplexed, prioritized, and processed by
-        the client. The only security restriction, as enforced by the browser,
-        is that pushed resources must obey the same-origin policy: the server
-        must be authoritative for the provided content.
-
-        <aside>
-          <h4 id="push-promise-101"><a href="#push-promise-101" class=
-          "anchor">§</a>PUSH_PROMISE 101</h4>
-
-          <p>All server push streams are initiated via
-          <code>PUSH_PROMISE</code> frames, which signal the server’s intent to
-          push the described resources to the client and need to be delivered
-          ahead of the response data that requests the pushed resources. This
-          delivery order is critical: the client needs to know which resources
-          the server intends to push to avoid creating own and duplicate
-          requests for these resources. The simplest strategy to satisfy this
-          requirement is to send all <code>PUSH_PROMISE</code> frames, which
-          contain just the HTTP headers of the promised resource, ahead of the
-          parent’s response (i.e., <code>DATA</code> frames).
-
-          <p>Once the client receives a <code>PUSH_PROMISE</code> frame it has
-          the option to decline the stream (via a <code>RST_STREAM</code>
-          frame) if it wants to (e.g., the resource is already in cache), which
-          is an important improvement over HTTP/1.x. By contrast, the use of
-          resource inlining, which is a popular "optimization" for HTTP/1.x, is
-          equivalent to a "forced push": the client cannot opt-out, cancel it,
-          or process the inlined resource individually.
-
-          <p>With HTTP/2 the client remains in full control of how server push
-          is used. The client can limit the number of concurrently pushed
-          streams; adjust the initial flow control window to control how much
-          data is pushed when the stream is first opened; disable server push
-          entirely. These preferences are communicated via the
-          <code>SETTINGS</code> frames at the beginning of the HTTP/2
-          connection and may be updated at any time.
-        </aside>
-      </section>
-
-      <section>
-        <h3 id="header-compression"><a href="#header-compression" class=
-        "anchor">§</a>Header Compression</h3>
-
-        <p>Each HTTP transfer carries a set of headers that describe the
-        transferred resource and its properties. In HTTP/1.x, this metadata is
-        always sent as plain text and adds anywhere from 500–800 bytes of
-        overhead per transfer, and sometimes kilobytes more if HTTP cookies are
-        being used; see <a data-type="xref" href=
-        "/http1x/#measuring-and-controlling-protocol-overhead">Measuring and
-        Controlling Protocol Overhead</a>. To reduce this overhead and improve
-        performance, HTTP/2 compresses request and response header metadata
-        using the HPACK compression format that uses two simple but powerful
-        techniques:
-
-        <ol>
-          <li>
-            <p>It allows the transmitted header fields to be encoded via a
-            static Huffman code, which reduces their individual transfer size.
-
-          <li>
-            <p>It requires that both the client and server maintain and update
-            an indexed list of previously seen header fields (i.e., establishes
-            a shared compression context), which is then used as a reference to
-            efficiently encode previously transmitted values.
-          </ol>
-
-        <p>Huffman coding allows the individual values to be compressed when
-        transferred, and the indexed list of previously transferred values
-        allows us to encode duplicate values (<a data-type="xref" href=
-        "#hpack">Figure&nbsp;12-6</a>) by transferring index values that can be
-        used to efficiently look up and reconstruct the full header keys and
-        values.
-
-        <figure id="hpack">
-          <img src="/assets/diagrams/feb142f82737d148ed5bcefd91915276.svg" alt=
-          "Figure 12-6. HPACK: Header Compression for HTTP/2">
-
-          <figcaption>
-            <span class="label">Figure 12-6.</span> HPACK: Header Compression
-            for HTTP/2
-          </figcaption>
-        </figure>
-
-        <p>As one further optimization, the HPACK compression context consists
-        of a static and dynamic tables: the static table is defined in the
-        specification and provides a list of common HTTP header fields that all
-        connections are likely to use (e.g., valid header names); the dynamic
-        table is initially empty and is updated based on exchanged values
-        within a particular connection. As a result, the size of each request
-        is reduced by using static Huffman coding for values that haven’t been
-        seen before, and substitution of indexes for values that are already
-        present in the static or dynamic tables on each side.
-
-        <div data-type="note" id="id-Wju0sPijTR">
-          <p>The definitions of the request and response header fields in
-          HTTP/2 remain unchanged, with a few minor exceptions: all header
-          field names are lowercase, and the request line is now split into
-          individual <code>:method</code>, <code>:scheme</code>,
-          <code>:authority</code>, and <code>:path</code> pseudo-header fields.
-        </div>
-
-        <aside>
-          <h4 id="security-and-performance-of-hpack"><a href=
-          "#security-and-performance-of-hpack" class="anchor">§</a>Security and
-          Performance of HPACK</h4>
-
-          <p>Early versions of HTTP/2 and SPDY used zlib, with a custom
-          dictionary, to compress all HTTP headers, which delivered 85%–88%
-          reduction in the size of the transferred header data, and a
-          significant improvement in page load time latency:
-
-          <blockquote>
-            <p>On the lower-bandwidth DSL link, in which the upload link is
-            only 375 Kbps, request header compression in particular, led to
-            significant page load time improvements for certain sites (i.e.,
-            those that issued large number of resource requests). We found a
-            reduction of 45–1142 ms in page load time simply due to header
-            compression.
-
-            <p data-type="attribution">SPDY whitepaper,
-            <cite>chromium.org</cite>
-          </blockquote>
-
-          <p>However, in the summer of 2012, a "CRIME" security attack was
-          published against TLS and SPDY compression algorithms, which could
-          result in session hijacking. As a result, the zlib compression
-          algorithm was replaced by HPACK, which was specifically designed to:
-          address the discovered security issues, be efficient and simple to
-          implement correctly, and of course, enable good compression of HTTP
-          header metadata.
-
-          <p>For full details of the HPACK compression algorithm, see <a href=
-          "https://tools.ietf.org/html/draft-ietf-httpbis-header-compression"><em class="hyperlink">
-          https://tools.ietf.org/html/draft-ietf-httpbis-header-compression</em></a>.
-        </aside>
-      </section>
-
-      <section>
-        <h3 id="upgrading-to-http2"><a href="#upgrading-to-http2" class=
-        "anchor">§</a>Upgrading to HTTP/2</h3>
-
-        <p>The switch to HTTP/2 cannot happen overnight: millions of servers
-        must be updated to use the new binary framing, and billions of clients
-        must similarly update their networking libraries, browsers, and other
-        applications.
-
-        <p>The good news is, all modern browsers have committed to supporting
-        HTTP/2, and most modern browsers use efficient background update
-        mechanisms, which have already enabled HTTP/2 support with minimal
-        intervention for a large proportion of existing users. That said, some
-        users will be stuck on legacy browsers, and servers and intermediaries
-        will also have to be updated to support HTTP/2, which is a much longer
-        (and labor- and capital-intensive) process.
-
-        <p>HTTP/1.x will be around for at least another decade, and most
-        servers and clients will have to support both HTTP/1.x and HTTP/2
-        standards. As a result, an HTTP/2 client and server must be able to
-        discover and negotiate which protocol will be used prior to exchanging
-        application data. To address this, the HTTP/2 protocol defines the
-        following mechanisms:
-
-        <ol>
-          <li>
-            <p>Negotiating HTTP/2 via a secure connection with TLS and ALPN
-
-          <li>
-            <p>Upgrading a plaintext connection to HTTP/2 without prior
-            knowledge
-
-          <li>
-            <p>Initiating a plaintext HTTP/2 connection with prior knowledge
-          </ol>
-
-        <p>The HTTP/2 standard does not require use of TLS, but in practice it
-        is the most reliable way to deploy a new protocol in the presence of
-        large number of existing intermediaries; see <a data-type="xref" href=
-        "/transport-layer-security-tls/#proxies-intermediaries-tls-and-new-protocols-on-the-web">
-        Proxies, Intermediaries, TLS, and New Protocols on the Web</a>. As a
-        result, the use of TLS and ALPN is the recommended mechanism to deploy
-        and negotiate HTTP/2: the client and server negotiate the desired
-        protocol as part of the TLS handshake without adding any extra latency
-        or roundtrips; see <a data-type="xref" href=
-        "/transport-layer-security-tls/#tls-handshake">TLS Handshake</a> and
-        <a data-type="xref" href=
-        "/transport-layer-security-tls/#application-layer-protocol-negotiation-alpn">
-        Application Layer Protocol Negotiation (ALPN)</a>. Further, as an
-        additional constraint, while all popular browsers have committed to
-        supporting HTTP/2 over TLS, some have also indicated that they will
-        <em>only</em> enable HTTP/2 over TLS—e.g., Firefox and Google Chrome.
-        As a result, TLS with ALPN negotiation is a de facto requirement for
-        enabling HTTP/2 in the browser.
-
-        <p>Establishing an HTTP/2 connection over a regular, non-encrypted
-        channel is still possible, albeit perhaps not with a popular browser,
-        and with some additional complexity. Because both HTTP/1.x and HTTP/2
-        run on the same port (80), in absence of any other information about
-        server support for HTTP/2, the client has to use the <em>HTTP
-        Upgrade</em> mechanism to negotiate the appropriate protocol:
-
-        <div data-type="example" id="-JVu4TQIbTZ">
-          <pre data-type="programlisting">
+        <p>As with all performance optimization processes, the moment you
+        remove one performance bottleneck, you unlock the next one. In the case
+        of HTTP/2, TCP may be it. Which is why, once again, a well-tuned TCP
+        stack on the server is such a critical optimization criteria for
+        HTTP/2.
+
+        <p>There is ongoing research to address these concerns and to improve
+        TCP performance in general: TCP Fast Open, Proportional Rate Reduction,
+        increased initial congestion window, and more. Having said that, it is
+        important to acknowledge that HTTP/2, like its predecessors, does not
+        mandate the use of TCP. Other transports, such as UDP, are not outside
+        the realm of possibility as we look into the future.
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="flow-control"><a href="#flow-control" class="anchor">§</a>Flow
+      Control</h2>
+
+      <p>Flow control is a mechanism to prevent the sender from overwhelming
+      the receiver with data it may not want or be able to process: the
+      receiver may be busy, under heavy load, or may only be willing to
+      allocate a fixed amount of resources for a particular stream. For
+      example, the client may have requested a large video stream with high
+      priority, but the user has paused the video and the client now wants to
+      pause or throttle its delivery from the server to avoid fetching and
+      buffering unnecessary data. Alternatively, a proxy server may have a fast
+      downstream and slow upstream connections and similarly wants to regulate
+      how quickly the downstream delivers data to match the speed of upstream
+      to control its resource usage; and so on.
+
+      <p>Do the above requirements remind you of TCP flow control? They should,
+      as the problem is effectively identical—see <a data-type="xref" href=
+      "/building-blocks-of-tcp/#flow-control">Flow Control</a>. However,
+      because the HTTP/2 streams are multiplexed within a single TCP
+      connection, TCP flow control is both not granular enough, and does not
+      provide the necessary application-level APIs to regulate the delivery of
+      individual streams. To address this, HTTP/2 provides a set of simple
+      building blocks that allow the client and server to implement their own
+      stream- and connection-level flow control:
+
+      <ul>
+        <li>
+          <p>Flow control is directional. Each receiver may choose to set any
+          window size that it desires for each stream and the entire
+          connection.
+
+        <li>
+          <p>Flow control is credit-based. Each receiver advertises its initial
+          connection and stream flow control window (in bytes), which is
+          reduced whenever the sender emits a <code>DATA</code> frame and
+          incremented via a <code>WINDOW_UPDATE</code> frame sent by the
+          receiver.
+
+        <li>
+          <p>Flow control cannot be disabled. When the HTTP/2 connection is
+          established the client and server exchange <code>SETTINGS</code>
+          frames, which set the flow control window sizes in both directions.
+          The default value of the flow control window is set to 65,535 bytes,
+          but the receiver can set a large maximum window size (<img src=
+          "/assets/equations/8953da8062cd144827586471ce5f3cde.svg" class=
+          "equation"> bytes) and maintain it by sending a
+          <code>WINDOW_UPDATE</code> frame whenever any data is received.
+
+        <li>
+          <p>Flow control is hop-by-hop, not end-to-end. That is, an
+          intermediary can use it to control resource use and implement
+          resource allocation mechanisms based on own criteria and heuristics.
+        </ul>
+
+      <p>HTTP/2 does not specify any particular algorithm for implementing flow
+      control. Instead, it provides the simple building blocks and defers the
+      implementation to the client and server, which can use it to implement
+      custom strategies to regulate resource use and allocation, as well as
+      implement new delivery capabilities that may help improve both the real
+      and perceived performance (see <a data-type="xref" href=
+      "/primer-on-web-performance/#speed-performance-and-human-perception">Speed,
+      Performance, and Human Perception</a>) of our web applications.
+
+      <p>For example, application-layer flow control allows the browser to
+      fetch only a part of a particular resource, put the fetch on hold by
+      reducing the stream flow control window down to zero, and then resume it
+      later—e.g., fetch a preview or first scan of an image, display it and
+      allow other high priority fetches to proceed, and resume the fetch once
+      more critical resources have finished loading.
+    </section>
+
+    <section>
+      <h2 id="server-push"><a href="#server-push" class="anchor">§</a>Server
+      Push</h2>
+
+      <p>Another powerful new feature of HTTP/2 is the ability of the server to
+      send multiple responses for a single client request. That is, in addition
+      to the response to the original request, the server can <em>push</em>
+      additional resources to the client (<a data-type="xref" href=
+      "#server-push">Figure&nbsp;12-5</a>), without the client having to
+      request each one explicitly!
+
+      <figure id="server-push">
+        <img src="/assets/diagrams/d759887277b266a42c526643285dd244.svg" alt=
+        "Figure 12-5. Server initiates new streams (promises) for push resources">
+
+        <figcaption>
+          <span class="label">Figure 12-5.</span> Server initiates new streams
+          (promises) for push resources
+        </figcaption>
+      </figure>
+
+      <div data-type="note" id="id-bgugFJIM">
+        <p>HTTP/2 breaks away from the strict request-response semantics and
+        enables one-to-many and server-initiated push workflows that open up a
+        world of new interaction possibilities both within and outside the
+        browser. This is an enabling feature that will have important long-term
+        consequences both for how we think about the protocol, and where and
+        how it is used.
+      </div>
+
+      <p>Why would we need such a mechanism in a browser? A typical web
+      application consists of dozens of resources, all of which are discovered
+      by the client by examining the document provided by the server. As a
+      result, why not eliminate the extra latency and let the server push the
+      associated resources ahead of time? The server already knows which
+      resources the client will require; that’s server push.
+
+      <p>In fact, if you have ever inlined a CSS, JavaScript, or any other
+      asset via a data URI (see <a data-type="xref" href=
+      "/http1x/#resource-inlining">Resource Inlining</a>), then you already
+      have hands-on experience with server push! By manually inlining the
+      resource into the document, we are, in effect, pushing that resource to
+      the client, without waiting for the client to request it. With HTTP/2 we
+      can achieve the same results, but with additional performance benefits:
+
+      <ul>
+        <li>
+          <p>Pushed resources can be cached by the client
+
+        <li>
+          <p>Pushed resources can be reused across different pages
+
+        <li>
+          <p>Pushed resources can be multiplexed alongside other resources
+
+        <li>
+          <p>Pushed resources can be prioritized by the server
+
+        <li>
+          <p>Pushed resources can be declined by the client
+        </ul>
+
+      <p>Each pushed resource is a stream that, unlike an inlined resource,
+      allows it to be individually multiplexed, prioritized, and processed by
+      the client. The only security restriction, as enforced by the browser, is
+      that pushed resources must obey the same-origin policy: the server must
+      be authoritative for the provided content.
+
+      <aside>
+        <h4 id="push-promise-101"><a href="#push-promise-101" class=
+        "anchor">§</a>PUSH_PROMISE 101</h4>
+
+        <p>All server push streams are initiated via <code>PUSH_PROMISE</code>
+        frames, which signal the server’s intent to push the described
+        resources to the client and need to be delivered ahead of the response
+        data that requests the pushed resources. This delivery order is
+        critical: the client needs to know which resources the server intends
+        to push to avoid creating own and duplicate requests for these
+        resources. The simplest strategy to satisfy this requirement is to send
+        all <code>PUSH_PROMISE</code> frames, which contain just the HTTP
+        headers of the promised resource, ahead of the parent’s response (i.e.,
+        <code>DATA</code> frames).
+
+        <p>Once the client receives a <code>PUSH_PROMISE</code> frame it has
+        the option to decline the stream (via a <code>RST_STREAM</code> frame)
+        if it wants to (e.g., the resource is already in cache), which is an
+        important improvement over HTTP/1.x. By contrast, the use of resource
+        inlining, which is a popular "optimization" for HTTP/1.x, is equivalent
+        to a "forced push": the client cannot opt-out, cancel it, or process
+        the inlined resource individually.
+
+        <p>With HTTP/2 the client remains in full control of how server push is
+        used. The client can limit the number of concurrently pushed streams;
+        adjust the initial flow control window to control how much data is
+        pushed when the stream is first opened; disable server push entirely.
+        These preferences are communicated via the <code>SETTINGS</code> frames
+        at the beginning of the HTTP/2 connection and may be updated at any
+        time.
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="header-compression"><a href="#header-compression" class=
+      "anchor">§</a>Header Compression</h2>
+
+      <p>Each HTTP transfer carries a set of headers that describe the
+      transferred resource and its properties. In HTTP/1.x, this metadata is
+      always sent as plain text and adds anywhere from 500–800 bytes of
+      overhead per transfer, and sometimes kilobytes more if HTTP cookies are
+      being used; see <a data-type="xref" href=
+      "/http1x/#measuring-and-controlling-protocol-overhead">Measuring and
+      Controlling Protocol Overhead</a>. To reduce this overhead and improve
+      performance, HTTP/2 compresses request and response header metadata using
+      the HPACK compression format that uses two simple but powerful
+      techniques:
+
+      <ol>
+        <li>
+          <p>It allows the transmitted header fields to be encoded via a static
+          Huffman code, which reduces their individual transfer size.
+
+        <li>
+          <p>It requires that both the client and server maintain and update an
+          indexed list of previously seen header fields (i.e., establishes a
+          shared compression context), which is then used as a reference to
+          efficiently encode previously transmitted values.
+        </ol>
+
+      <p>Huffman coding allows the individual values to be compressed when
+      transferred, and the indexed list of previously transferred values allows
+      us to encode duplicate values (<a data-type="xref" href=
+      "#hpack">Figure&nbsp;12-6</a>) by transferring index values that can be
+      used to efficiently look up and reconstruct the full header keys and
+      values.
+
+      <figure id="hpack">
+        <img src="/assets/diagrams/feb142f82737d148ed5bcefd91915276.svg" alt=
+        "Figure 12-6. HPACK: Header Compression for HTTP/2">
+
+        <figcaption>
+          <span class="label">Figure 12-6.</span> HPACK: Header Compression for
+          HTTP/2
+        </figcaption>
+      </figure>
+
+      <p>As one further optimization, the HPACK compression context consists of
+      a static and dynamic tables: the static table is defined in the
+      specification and provides a list of common HTTP header fields that all
+      connections are likely to use (e.g., valid header names); the dynamic
+      table is initially empty and is updated based on exchanged values within
+      a particular connection. As a result, the size of each request is reduced
+      by using static Huffman coding for values that haven’t been seen before,
+      and substitution of indexes for values that are already present in the
+      static or dynamic tables on each side.
+
+      <div data-type="note" id="id-zBu6sJt6">
+        <p>The definitions of the request and response header fields in HTTP/2
+        remain unchanged, with a few minor exceptions: all header field names
+        are lowercase, and the request line is now split into individual
+        <code>:method</code>, <code>:scheme</code>, <code>:authority</code>,
+        and <code>:path</code> pseudo-header fields.
+      </div>
+
+      <aside>
+        <h4 id="security-and-performance-of-hpack"><a href=
+        "#security-and-performance-of-hpack" class="anchor">§</a>Security and
+        Performance of HPACK</h4>
+
+        <p>Early versions of HTTP/2 and SPDY used zlib, with a custom
+        dictionary, to compress all HTTP headers, which delivered 85%–88%
+        reduction in the size of the transferred header data, and a significant
+        improvement in page load time latency:
+
+        <blockquote>
+          <p>On the lower-bandwidth DSL link, in which the upload link is only
+          375 Kbps, request header compression in particular, led to
+          significant page load time improvements for certain sites (i.e.,
+          those that issued large number of resource requests). We found a
+          reduction of 45–1142 ms in page load time simply due to header
+          compression.
+
+          <p data-type="attribution">SPDY whitepaper, <cite>chromium.org</cite>
+        </blockquote>
+
+        <p>However, in the summer of 2012, a "CRIME" security attack was
+        published against TLS and SPDY compression algorithms, which could
+        result in session hijacking. As a result, the zlib compression
+        algorithm was replaced by HPACK, which was specifically designed to:
+        address the discovered security issues, be efficient and simple to
+        implement correctly, and of course, enable good compression of HTTP
+        header metadata.
+
+        <p>For full details of the HPACK compression algorithm, see <a href=
+        "https://tools.ietf.org/html/draft-ietf-httpbis-header-compression"><em class="hyperlink">
+        https://tools.ietf.org/html/draft-ietf-httpbis-header-compression</em></a>.
+      </aside>
+    </section>
+
+    <section>
+      <h2 id="upgrading-to-http2"><a href="#upgrading-to-http2" class=
+      "anchor">§</a>Upgrading to HTTP/2</h2>
+
+      <p>The switch to HTTP/2 cannot happen overnight: millions of servers must
+      be updated to use the new binary framing, and billions of clients must
+      similarly update their networking libraries, browsers, and other
+      applications.
+
+      <p>The good news is, all modern browsers have committed to supporting
+      HTTP/2, and most modern browsers use efficient background update
+      mechanisms, which have already enabled HTTP/2 support with minimal
+      intervention for a large proportion of existing users. That said, some
+      users will be stuck on legacy browsers, and servers and intermediaries
+      will also have to be updated to support HTTP/2, which is a much longer
+      (and labor- and capital-intensive) process.
+
+      <p>HTTP/1.x will be around for at least another decade, and most servers
+      and clients will have to support both HTTP/1.x and HTTP/2 standards. As a
+      result, an HTTP/2 client and server must be able to discover and
+      negotiate which protocol will be used prior to exchanging application
+      data. To address this, the HTTP/2 protocol defines the following
+      mechanisms:
+
+      <ol>
+        <li>
+          <p>Negotiating HTTP/2 via a secure connection with TLS and ALPN
+
+        <li>
+          <p>Upgrading a plaintext connection to HTTP/2 without prior knowledge
+
+        <li>
+          <p>Initiating a plaintext HTTP/2 connection with prior knowledge
+        </ol>
+
+      <p>The HTTP/2 standard does not require use of TLS, but in practice it is
+      the most reliable way to deploy a new protocol in the presence of large
+      number of existing intermediaries; see <a data-type="xref" href=
+      "/transport-layer-security-tls/#proxies-intermediaries-tls-and-new-protocols-on-the-web">
+      Proxies, Intermediaries, TLS, and New Protocols on the Web</a>. As a
+      result, the use of TLS and ALPN is the recommended mechanism to deploy
+      and negotiate HTTP/2: the client and server negotiate the desired
+      protocol as part of the TLS handshake without adding any extra latency or
+      roundtrips; see <a data-type="xref" href=
+      "/transport-layer-security-tls/#tls-handshake">TLS Handshake</a> and
+      <a data-type="xref" href=
+      "/transport-layer-security-tls/#application-layer-protocol-negotiation-alpn">
+      Application Layer Protocol Negotiation (ALPN)</a>. Further, as an
+      additional constraint, while all popular browsers have committed to
+      supporting HTTP/2 over TLS, some have also indicated that they will
+      <em>only</em> enable HTTP/2 over TLS—e.g., Firefox and Google Chrome. As
+      a result, TLS with ALPN negotiation is a de facto requirement for
+      enabling HTTP/2 in the browser.
+
+      <p>Establishing an HTTP/2 connection over a regular, non-encrypted
+      channel is still possible, albeit perhaps not with a popular browser, and
+      with some additional complexity. Because both HTTP/1.x and HTTP/2 run on
+      the same port (80), in absence of any other information about server
+      support for HTTP/2, the client has to use the <em>HTTP Upgrade</em>
+      mechanism to negotiate the appropriate protocol:
+
+      <div data-type="example" id="-yvumTLfZ">
+        <pre data-type="programlisting">
 GET /page HTTP/1.1
 Host: server.example.com
 Connection: Upgrade, HTTP2-Settings
@@ -1180,55 +1163,52 @@ Upgrade: h2c
 (... HTTP/2 response ...)
 </pre>
 
-          <ol class="notation">
-            <li>
-              <a class="co" id="upgrade" href="#upgrade-co"></a>
+        <ol class="notation">
+          <li>
+            <a class="co" id="upgrade" href="#upgrade-co"></a>
 
-              <p>Initial HTTP/1.1 request with HTTP/2 upgrade header
+            <p>Initial HTTP/1.1 request with HTTP/2 upgrade header
 
-            <li>
-              <a class="co" id="upgradesettings" href=
-              "#upgradesettings-co"></a>
+          <li>
+            <a class="co" id="upgradesettings" href="#upgradesettings-co"></a>
 
-              <p>Base64 URL encoding of HTTP/2 SETTINGS payload
+            <p>Base64 URL encoding of HTTP/2 SETTINGS payload
 
-            <li>
-              <a class="co" id="http1" href="#http1-co"></a>
+          <li>
+            <a class="co" id="http1" href="#http1-co"></a>
 
-              <p>Server declines upgrade, returns response via HTTP/1.1
+            <p>Server declines upgrade, returns response via HTTP/1.1
 
-            <li>
-              <a class="co" id="http2" href="#http2-co"></a>
+          <li>
+            <a class="co" id="http2" href="#http2-co"></a>
 
-              <p>Server accepts HTTP/2 upgrade, switches to new framing
-            </ol>
-        </div>
+            <p>Server accepts HTTP/2 upgrade, switches to new framing
+          </ol>
+      </div>
 
-        <p>Using the preceding <code>Upgrade</code> flow, if the server does
-        not support HTTP/2, then it can immediately respond to the request with
-        HTTP/1.1 response. Alternatively, it can confirm the HTTP/2 upgrade by
-        returning the <code>101 Switching Protocols</code> response in HTTP/1.1
-        format and then immediately switch to HTTP/2 and return the response
-        using the new binary framing protocol. In either case, no extra
-        roundtrips are incurred.
+      <p>Using the preceding <code>Upgrade</code> flow, if the server does not
+      support HTTP/2, then it can immediately respond to the request with
+      HTTP/1.1 response. Alternatively, it can confirm the HTTP/2 upgrade by
+      returning the <code>101 Switching Protocols</code> response in HTTP/1.1
+      format and then immediately switch to HTTP/2 and return the response
+      using the new binary framing protocol. In either case, no extra
+      roundtrips are incurred.
 
-        <p>Finally, if the client chooses to, it may also remember or obtain
-        the information about HTTP/2 support through some other means—e.g., DNS
-        record, manual configuration, and so on—instead of having to rely on
-        the <code>Upgrade</code> workflow. Armed with this knowledge, it may
-        choose to send HTTP/2 frames right from the start, over an unencrypted
-        channel, and hope for the best. In the worst case, the connection will
-        fail, and the client will fall back to <code>Upgrade</code> workflow or
-        switch to a TLS tunnel with ALPN negotiation.
+      <p>Finally, if the client chooses to, it may also remember or obtain the
+      information about HTTP/2 support through some other means—e.g., DNS
+      record, manual configuration, and so on—instead of having to rely on the
+      <code>Upgrade</code> workflow. Armed with this knowledge, it may choose
+      to send HTTP/2 frames right from the start, over an unencrypted channel,
+      and hope for the best. In the worst case, the connection will fail, and
+      the client will fall back to <code>Upgrade</code> workflow or switch to a
+      TLS tunnel with ALPN negotiation.
 
-        <div data-type="note" id="id-LNu3HRIaT4">
-          <p>Secure communication between client and server, server to server,
-          and all other permutations, is a security best practice: all
-          in-transit data should be encrypted, authenticated, and checked
-          against tampering. In short, use TLS with ALPN negotiation to deploy
-          HTTP/2.
-        </div>
-      </section>
+      <div data-type="note" id="id-WjudH8fb">
+        <p>Secure communication between client and server, server to server,
+        and all other permutations, is a security best practice: all in-transit
+        data should be encrypted, authenticated, and checked against tampering.
+        In short, use TLS with ALPN negotiation to deploy HTTP/2.
+      </div>
     </section>
 
     <section>
@@ -1251,7 +1231,7 @@ Upgrade: h2c
       identifier.
 
       <figure id="http2-frame-header">
-        <img src="/assets/diagrams/f1216ccf1232f4754039ca2a3ad79051.svg" alt=
+        <img src="/assets/diagrams/2a9b83c6b43e961a41a847c3227dcad2.svg" alt=
         "Figure 12-7. Common 9-byte frame header">
 
         <figcaption>
@@ -1281,7 +1261,7 @@ Upgrade: h2c
           stream.
         </ul>
 
-      <div data-type="note" id="id-2juNU1cA">
+      <div data-type="note" id="id-DZuOUMFA">
         <p>Technically, the <code>length</code> field allows payloads of up to
         <img src="/assets/equations/063b4830d0fbf479c5c074b042643a89.svg"
         class="equation"> bytes (~16MB) per frame. However, the HTTP/2 standard
@@ -1360,7 +1340,7 @@ Upgrade: h2c
           <p>Used to continue a sequence of header block fragments
         </dl>
 
-      <div data-type="note" id="id-8xurHJcw">
+      <div data-type="note" id="id-Oau3H6FQ">
         <p>You will need some tooling to inspect the low-level HTTP/2 frame
         exchange. Your favorite hex viewer is, of course, an option. Or, for a
         more human-friendly representation, you can use a tool like Wireshark,
@@ -1414,7 +1394,7 @@ Upgrade: h2c
         above.
 
         <figure id="http2-headers-frame">
-          <img src="/assets/diagrams/54e835753b05381b2ffe51b93cb89212.svg" alt=
+          <img src="/assets/diagrams/61dc2bae615536155a5af7203ad191fd.png" alt=
           "Figure 12-8. Decoded HEADERS frame in Wireshark">
 
           <figcaption>
@@ -1423,7 +1403,7 @@ Upgrade: h2c
           </figcaption>
         </figure>
 
-        <div data-type="note" id="id-g5uVFNIlc4">
+        <div data-type="note" id="id-MRu3FJI3FO">
           <p>Wireshark decodes and displays the frame fields in the same order
           as encoded on the wire—e.g., compare the fields in the common frame
           header to the frame layout in <a data-type="xref" href=
@@ -1473,7 +1453,7 @@ Upgrade: h2c
         the frame.
 
         <figure id="http2-data">
-          <img src="/assets/diagrams/dc2547cda7928b175686c0cb28c638b1.svg" alt=
+          <img src="/assets/diagrams/8199bc14fc3e692d5ea83792822d5def.png" alt=
           "Figure 12-9. DATA frame">
 
           <figcaption>
@@ -1481,7 +1461,7 @@ Upgrade: h2c
           </figcaption>
         </figure>
 
-        <div data-type="note" id="id-WjuXFDtdcR">
+        <div data-type="note" id="id-XEu3FNt9F4">
           <p>The "End Stream" flag is set to "false" in <a data-type="xref"
           href="#http2-data">Figure&nbsp;12-9</a>, indicating that the client
           has not finished transmitting the application payload; more
