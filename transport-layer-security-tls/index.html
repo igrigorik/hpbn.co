@@ -10,10 +10,8 @@ Browser Networking (O'Reilly)</title>
 <meta name="description" content=
 "What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
 
-<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
-</script>
-<script async src="https://www.google-analytics.com/analytics.js">
-</script>
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js"></script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
 <link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
 <link href=
 "https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
@@ -78,7 +76,7 @@ rel="stylesheet">
               <a id="feedback" target="_blank" href=
               "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BTransport%20Layer%20Security%20(TLS)%5D:%20...">
               Submit Feedback</a>
-            </ul>
+          </ul>
         </div>
         <label for="check" class="closemenu">&nbsp;</label>
       </div>
@@ -180,7 +178,7 @@ rel="stylesheet">
 
         <dd>
           <p>A mechanism to detect message tampering and forgery.
-        </dl>
+      </dl>
 
       <p>In order to establish a cryptographically secure data channel, the
       connection peers must agree on which ciphersuites will be used and the
@@ -296,7 +294,7 @@ rel="stylesheet">
           turn, requires HTTPS. The security and integrity guarantees provided
           by HTTPS are critical components for delivering a secure user
           permission workflow and protecting their preferences.
-        </dl>
+      </dl>
 
       <p>To further the point, both the Internet Engineering Task Force (IETF)
       and the Internet Architecture Board (IAB) have issued guidance to
@@ -311,7 +309,7 @@ rel="stylesheet">
         <li>
           <p>IAB: <a href="https://hpbn.co/iab-https">Statement on Internet
           Confidentiality</a>
-        </ul>
+      </ul>
 
       <p>As our dependency on the Internet has grown, so have the risks and the
       stakes for everyone that is relying on it. As a result, it is our
@@ -429,7 +427,7 @@ rel="stylesheet">
           <p>The client decrypts the message with the negotiated symmetric key,
           verifies the MAC, and if all is well, then the tunnel is established
           and application data can now be sent.
-        </dl>
+      </dl>
 
       <p>As the above exchange illustrates, new TLS connections require two
       roundtrips for a "full handshake"—that’s the bad news. However, in
@@ -454,7 +452,7 @@ rel="stylesheet">
           reusing the previously negotiated parameters for the secure session;
           see <a data-type="xref" href="#tls-session-resumption">TLS Session
           Resumption</a>.
-        </ul>
+      </ul>
 
       <p>The combination of both of the above optimizations allows us to
       deliver a consistent 1-RTT TLS handshake for new and returning visitors,
@@ -555,7 +553,7 @@ rel="stylesheet">
 
             <li>
               <p><code>$&gt; openssl speed aes</code>
-            </ul>
+          </ul>
 
           <p>Note that the units between the two tests are not directly
           comparable: the Elliptic Curve Diffie-Hellman (ECDH) test provides a
@@ -626,7 +624,7 @@ rel="stylesheet">
             <p>The server inspects the <code>ProtocolNameList</code> field and
             returns a <code>ProtocolName</code> field indicating the selected
             protocol as part of the <code>ServerHello</code> message.
-          </ul>
+        </ul>
 
         <p>The server may respond with only a single protocol name, and if it
         does not support any that the client requests, then it may choose to
@@ -844,7 +842,7 @@ rel="stylesheet">
         <li>
           <p>Bob uses Alice’s public key to verify the provided message
           signature.
-        </ul>
+      </ul>
 
       <p>Trust is a key component of the preceding exchange. Specifically,
       public key encryption allows us to use the public key of the sender to
@@ -908,7 +906,7 @@ rel="stylesheet">
           <p>Every operating system and most browsers ship with a list of
           well-known certificate authorities. Thus, you also trust the vendors
           of this software to provide and maintain a list of trusted parties.
-        </dl>
+      </dl>
 
       <p>In practice, it would be impractical to store and manually verify each
       and every key for every website (although you can, if you are so
@@ -958,7 +956,7 @@ rel="stylesheet">
         <li>
           <p>StartCom Certification Authority is a recognized root certificate
           authority.
-        </ul>
+      </ul>
 
       <p>The "trust anchor" for the entire chain is the root certificate
       authority, which in the case just shown, is the StartCom Certification
@@ -1053,7 +1051,7 @@ rel="stylesheet">
             cases the browser behavior is undefined. Most browsers treat such
             cases as "soft fail", allowing the verification to proceed—yes,
             yikes.
-          </ul>
+        </ul>
       </section>
 
       <section>
@@ -1093,7 +1091,7 @@ rel="stylesheet">
             <p>The browser behavior is, once again, undefined and typically
             results in a "soft fail" if the OCSP fetch fails due to a network
             timeout or other errors.
-          </ul>
+        </ul>
 
         <div data-type="note" id="id-qQsxINIPig">
           <p>As a real-world data point, Firefox telemetry shows that OCSP
@@ -1126,7 +1124,7 @@ rel="stylesheet">
             response as part of the TLS handshake, allowing the client to
             validate both the certificate and the attached OCSP revocation
             record signed by the CA.
-          </ul>
+        </ul>
 
         <p>This role reversal is secure, because the stapled record is signed
         by the CA and can be verified by the client, and offers a number of
@@ -1143,7 +1141,7 @@ rel="stylesheet">
             <p>The client may "hard-fail" revocation handling if the server
             opts-in (by advertising the OSCP "Must-Staple" flag) and the
             verification fails.
-          </ul>
+        </ul>
 
         <p>In short, to get both the best security and performance guarantees,
         make sure to configure and test OCSP stapling on your servers.
@@ -1185,7 +1183,7 @@ rel="stylesheet">
 
         <li>
           <p>Data within each record is encrypted using the negotiated cipher.
-        </ul>
+      </ul>
 
       <p>Once these steps are complete, the encrypted data is passed down to
       the TCP layer for transport. On the receiving end, the same workflow, but
@@ -1210,7 +1208,7 @@ rel="stylesheet">
         <li>
           <p>To decrypt and verify the record, the entire record must be
           available.
-        </ul>
+      </ul>
 
       <p>Picking the right record size for your application, if you have the
       ability to do so, can be an important optimization. Small records incur a
@@ -1466,7 +1464,7 @@ rel="stylesheet">
           <li>
             <p>Check and monitor your TLS session cache statistics for best
             performance.
-          </ul>
+        </ul>
 
         <p>In practice, and for best results, you should configure both session
         caching and session ticket mechanisms. These mechanisms work together
@@ -1543,7 +1541,7 @@ rel="stylesheet">
               <p>Internet Explorer uses a combination of a blacklist of known
               sites that break when TLS False Start is enabled, and a timeout
               to repeat the handshake if the TLS False Start handshake failed.
-            </ul>
+          </ul>
 
           <p>To enable TLS False Start across all browsers the server should
           advertise a list of supported protocols via the ALPN extension—e.g.,
@@ -1612,7 +1610,7 @@ rel="stylesheet">
             transferring a large stream (e.g., streaming video), the size of
             the TLS record can be increased to span multiple TCP packets (up to
             16KB) to reduce framing and CPU overhead on the client and server.
-          </ul>
+        </ul>
 
         <div data-type="note" id="id-34sLhRuWHJ">
           <p>If the TCP connection has been idle, and even if Slow-Start
@@ -1643,7 +1641,7 @@ rel="stylesheet">
 
           <li>
             <p>Allocate 40 bytes for TCP options overhead (timestamps, SACKs).
-          </ul>
+        </ul>
 
         <p>Assuming a common 1,500-byte starting MTU, this leaves 1,420 bytes
         for a TLS record delivered over IPv4, and 1,400 bytes for IPv6. To be
@@ -1766,7 +1764,7 @@ rel="stylesheet">
             other certificates in the chain—reduce the length of your
             certificate chain. In the future, OCSP Multi-Stapling should
             address this particular problem.
-          </ul>
+        </ul>
 
         <p>Most popular servers support OCSP stapling. Check the relevant
         documentation for support and configuration instructions. Similarly, if
@@ -1808,7 +1806,7 @@ rel="stylesheet">
           <li>
             <p><em>includeSubdomains</em> indicates that the policy should
             apply to all subdomains of the current origin.
-          </ul>
+        </ul>
 
         <p>HSTS converts the origin to an HTTPS-only destination and helps
         protect the application from a variety of passive and active network
@@ -1885,7 +1883,7 @@ rel="stylesheet">
             certificate of its CA, which tells the browser that, for this
             particular origin, it should only trust certificates signed by that
             particular certificate authority.
-          </ul>
+        </ul>
 
         <p>Picking the right strategy for which certificates to pin, which and
         how many backups to provide, duration, and other criteria for deploying
@@ -1922,7 +1920,7 @@ rel="stylesheet">
             delivered over HTTP) will be fetched, but will allow the attacker
             to observe and infer user activity, and degrade performance by
             requiring additional connections and handshakes.
-          </ul>
+        </ul>
 
         <p>Audit your content and update your resources and links, including
         third-party content, to use HTTPS. The <a href=
@@ -1952,7 +1950,7 @@ Content-Security-Policy-Report-Only: default-src https:;
 
               <p>Tells the browser to report any non-HTTPS violations to
               designated endpoint.
-            </ol>
+          </ol>
         </div>
 
         <div data-type="note" id="id-DZsnfViVH0">
@@ -2021,7 +2019,7 @@ Content-Security-Policy-Report-Only: default-src https:;
           <li>
             <p>Enable HTTP/2; see <a data-type="xref" href=
             "/http2/">HTTP/2</a>.
-          </ul>
+        </ul>
       </section>
     </section>
 
@@ -2120,7 +2118,7 @@ href="#resume"></a>
             <a class="co" id="resume" href="#resume-co"></a>
 
             <p>Issued session identifier for stateful TLS resume.
-          </ol>
+        </ol>
       </div>
 
       <p>In the preceding example, we connect to <a href=

@@ -10,10 +10,8 @@ Networking (O'Reilly)</title>
 <meta name="description" content=
 "What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
 
-<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
-</script>
-<script async src="https://www.google-analytics.com/analytics.js">
-</script>
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js"></script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
 <link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
 <link href=
 "https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
@@ -78,7 +76,7 @@ rel="stylesheet">
               <a id="feedback" target="_blank" href=
               "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BOptimizing%20Application%20Delivery%5D:%20...">
               Submit Feedback</a>
-            </ul>
+          </ul>
         </div>
         <label for="check" class="closemenu">&nbsp;</label>
       </div>
@@ -146,7 +144,7 @@ rel="stylesheet">
           <p><a data-type="xref" href=
           "/primer-on-web-performance/#latency-as-a-performance-bottleneck">Latency
           as a Performance Bottleneck</a>
-        </ul>
+      </ul>
 
       <p>As a result, while we cannot make the bits travel any faster, it is
       crucial that we apply all the possible optimizations at the transport and
@@ -172,7 +170,7 @@ rel="stylesheet">
         <li>
           <p><a data-type="xref" href=
           "/optimizing-for-mobile-networks/">Optimizing for Mobile Networks</a>
-        </ul>
+      </ul>
 
       <p>Moving up the stack from the physical layer, we must ensure that each
       and every server is configured to use the latest TCP and TLS best
@@ -189,7 +187,7 @@ rel="stylesheet">
           <p><a data-type="xref" href=
           "/transport-layer-security-tls/#optimizing-for-tls">Optimizing for
           TLS</a>
-        </ul>
+      </ul>
 
       <p>Finally, we arrive at the application layer. By all accounts and
       measures, HTTP is an incredibly successful protocol. After all, it is the
@@ -207,7 +205,7 @@ rel="stylesheet">
         <li>
           <p>We must be vigilant about applying the evergeen performance best
           practices.
-        </ul>
+      </ul>
 
       <div data-type="note" id="id-5guOHeUd">
         <p>The secret to a successful web performance strategy is simple:
@@ -269,7 +267,7 @@ rel="stylesheet">
         <dd>
           <p>No request is faster than a request not made. Be vigilant about
           auditing and removing unnecessary resources.
-        </dl>
+      </dl>
 
       <p>By this point, all of these recommendations should require no
       explanation: latency is the bottleneck, and the fastest byte is a byte
@@ -311,7 +309,7 @@ rel="stylesheet">
           resources, split delivery across domains, and more. By contrast,
           HTTP/2 performs best when a single connection is used, and HTTP/1.x
           specific optimizations are removed.
-        </dl>
+      </dl>
 
       <p>Each of these warrants closer examination. Let’s dive in.
 
@@ -334,7 +332,7 @@ rel="stylesheet">
           <li>
             <p><code>Last-Modified</code> and <code>ETag</code> headers provide
             validation mechanisms.
-          </ul>
+        </ul>
 
         <p>Whenever possible, you should specify an explicit cache lifetime for
         each resource, which allows the client to use a local copy, instead of
@@ -416,7 +414,7 @@ rel="stylesheet">
           <li>
             <p>Images can be compressed with different lossy and lossless
             formats.
-          </ul>
+        </ul>
 
         <p>Images account for over half of the transferred bytes of an average
         page, which makes them a high-value optimization target: the simple
@@ -472,7 +470,7 @@ rel="stylesheet">
             <p>In HTTP/2, headers are compressed with HPACK, but at a minimum
             the cookie value is transferred on the first request, which will
             affect the performance of your initial page load.
-          </ul>
+        </ul>
 
         <p>Cookie size should be monitored judiciously: transfer the minimum
         amount of required data, such as a secure session token, and leverage a
@@ -515,7 +513,7 @@ rel="stylesheet">
           <li>
             <p>Allocate sufficient server resources to process requests in
             parallel.
-          </ul>
+        </ul>
 
         <p>Without connection keepalive, a new TCP connection is required for
         each HTTP request, which incurs significant overhead due to the TCP
@@ -548,7 +546,7 @@ rel="stylesheet">
           <li>
             <p>Underprovisioned servers, forcing slow execution and other
             processing delays.
-          </ul>
+        </ul>
 
         <aside>
           <h4 id="optimizing-resource-loading-in-the-browser"><a href=
@@ -568,7 +566,7 @@ rel="stylesheet">
 
             <li>
               <p>We can hinder by hiding resources from the browser.
-            </ul>
+          </ul>
 
           <p>Modern browsers are designed to scan the contents of HTML and CSS
           files as efficiently and as soon as possible. However, the document
@@ -640,7 +638,7 @@ rel="stylesheet">
           <p>Consider embedding small resources directly into the parent
           document to minimize the number of requests; see <a data-type="xref"
           href="/http1x/#resource-inlining">Resource Inlining</a>.
-        </dl>
+      </dl>
 
       <p>Pipelining has limited support, and each of the remaining
       optimizations comes with its set of benefits and trade-offs. In fact, it
@@ -708,7 +706,7 @@ rel="stylesheet">
 
           <li>
             <p>The origins resolve to the same server IP address.
-          </ul>
+        </ul>
 
         <p>For example, if <code>example.com</code> provides a wildcard TLS
         certificate that is valid for all of its subdomains (i.e.,
@@ -779,7 +777,7 @@ rel="stylesheet">
           <li>
             <p>Bundled resources may provide better compression if the
             resources contain similar content.
-          </ul>
+        </ul>
 
         <p>In practice, while HTTP/1.x provides the mechanisms for granular
         cache management of each resource, the limited parallelism forced us to
@@ -807,7 +805,7 @@ rel="stylesheet">
             <p>Each resource request carries some overhead, both when reading
             from cache (I/O requests), and from the network (I/O requests,
             on-the-wire metadata, and server processing).
-          </ul>
+        </ul>
 
         <p>There is no single optimal strategy for all applications: delivering
         a single large bundle is unlikely to yield best results, and issuing
@@ -884,7 +882,7 @@ rel="stylesheet">
             cached and reused across multiple pages and navigations! Leverage
             this to avoid having to duplicate the same content across different
             pages and navigations.
-          </ul>
+        </ul>
 
         <p>Note that even the most naive server push strategy that opts to push
         assets regardless of their caching policy is, in effect, equivalent to
@@ -974,7 +972,7 @@ rel="stylesheet">
             <li>
               <p>Are there cases where different priority streams should be
               interleaved?
-            </ul>
+          </ul>
 
           <p>If the server disregards all priority information, then it runs
           the risk of causing unnecessary processing delays for the

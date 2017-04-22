@@ -10,10 +10,8 @@
 <meta name="description" content=
 "What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
 
-<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
-</script>
-<script async src="https://www.google-analytics.com/analytics.js">
-</script>
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js"></script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
 <link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
 <link href=
 "https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
@@ -78,7 +76,7 @@ rel="stylesheet">
               <a id="feedback" target="_blank" href=
               "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BWebRTC%5D:%20...">
               Submit Feedback</a>
-            </ul>
+          </ul>
         </div>
         <label for="check" class="closemenu">&nbsp;</label>
       </div>
@@ -118,7 +116,7 @@ rel="stylesheet">
         <li>
           <p><code>RTCDataChannel</code>: communication of arbitrary
           application data
-        </ul>
+      </ul>
 
       <p>All it takes is a dozen lines of JavaScript code, and any web
       application can enable a rich teleconferencing experience with
@@ -178,7 +176,7 @@ rel="stylesheet">
           Working Group responsible for defining the protocols, data formats,
           security, and all other necessary aspects to enable peer-to-peer
           communication in the browser.
-        </ul>
+      </ul>
 
       <p>WebRTC is not a blank-slate standard. While its primary purpose is to
       enable real-time communication between browsers, it is also designed such
@@ -291,7 +289,7 @@ rel="stylesheet">
             <p>The output of a MediaStream can be sent to one or more
             destinations: a local video or audio element, JavaScript code for
             post-processing, or a remote peer.
-          </ul>
+        </ul>
 
         <p>A MediaStream object represents a real-time media stream and allows
         the application code to acquire data, manipulate individual tracks, and
@@ -376,7 +374,7 @@ id="gum-co" href="#gum"></a>
               <a class="co" id="gumcb" href="#gumcb-co"></a>
 
               <p>Callback function to process acquired MediaStream
-            </ol>
+          </ol>
         </div>
 
         <p>This example illustrates one of the more elaborate scenarios: we are
@@ -403,7 +401,7 @@ id="gum-co" href="#gum"></a>
           <li>
             <p>CSS3 and WebGL APIs can apply a variety of 2D/3D effects on the
             output stream.
-          </ul>
+        </ul>
 
         <p>To make a long story short, <code>getUserMedia()</code> is a simple
         API to acquire audio and video streams from the underlying platform.
@@ -451,8 +449,8 @@ id="gum-co" href="#gum"></a>
 
                 <li>
                   <p>180p at 30 FPS: 0.1~0.5 Mbps
-                </ul>
-            </ul>
+              </ul>
+          </ul>
 
           <p>As a result, a single-party HD call can require up to 2.5+ Mbps of
           network bandwidth. Add a few more peers, and the quality must drop to
@@ -511,7 +509,7 @@ id="gum-co" href="#gum"></a>
 
         <dd>
           <p>No built-in client or network feedback mechanisms.
-        </dl>
+      </dl>
 
       <div data-type="note" id="id-pPCmuRCL">
         <p>Before we go any further, you may want to revisit <a data-type=
@@ -558,7 +556,7 @@ id="gum-co" href="#gum"></a>
 
             <li>
               <p>TURN: Traversal Using Relays around NAT (RFC 5766)
-            </ul>
+          </ul>
 
         <li>
           <p>SDP: Session Description Protocol (RFC 4566)
@@ -571,7 +569,7 @@ id="gum-co" href="#gum"></a>
 
         <li>
           <p>SRTP: Secure Real-Time Transport Protocol (RFC 3711)
-        </ul>
+      </ul>
 
       <p>ICE, STUN, and TURN are necessary to establish and maintain a
       peer-to-peer connection over UDP. DTLS is used to secure all data
@@ -636,7 +634,7 @@ id="gum-co" href="#gum"></a>
             <p>RTCPeerConnection provides necessary APIs to generate the
             connection offer, accept the answer, allows us to query the
             connection for its current state, and more.
-          </ul>
+        </ul>
 
         <p>In short, RTCPeerConnection encapsulates all the connection setup,
         management, and state within a single interface. However, before we
@@ -660,7 +658,7 @@ id="gum-co" href="#gum"></a>
 
             <li>
               <p>In-order or out-of-order delivery of sent messages
-            </ul>
+          </ul>
 
           <p>Unreliable, out-of-order delivery is equivalent to raw UDP
           semantics. The message may make it, or it may not, and order is not
@@ -732,7 +730,7 @@ id="gum-co" href="#gum"></a>
           <p>We must exchange the necessary information about the parameters of
           the different media and data streams—protocols, encodings used, and
           so on.
-        </ol>
+      </ol>
 
       <p>The good news is that WebRTC solves one of the problems on our behalf:
       the built-in ICE protocol performs the necessary routing and connectivity
@@ -786,7 +784,7 @@ id="gum-co" href="#gum"></a>
           <dd>
             <p>Signaling protocol used for setup of telephone calls in many
             public switched telephone networks around the globe.
-          </dl>
+        </dl>
 
         <div data-type="note" id="id-b4C6uXTzcj">
           <p>A "signaling channel" can be as simple as a shout across the
@@ -938,7 +936,7 @@ function logError() { ... }
               <a class="co" id="sdpscsend" href="#sdpscsend-co"></a>
 
               <p>Send generated SDP offer to remote peer via signaling channel
-            </ol>
+          </ol>
         </div>
 
         <div data-type="note" id="id-LWC7hNC3c3">
@@ -990,7 +988,7 @@ a=fmtp:111 minptime=10
               <a class="co" id="opus" href="#opus-co"></a>
 
               <p>Opus codec and basic configuration
-            </ol>
+          </ol>
         </div>
 
         <p>SDP is a simple text-based protocol (RFC 4568) for describing the
@@ -1046,7 +1044,7 @@ a=fmtp:111 minptime=10
           <li>
             <p>Once Bob’s SDP answer is received by Amy, she sets his answer as
             the "remote description" of her original session.
-          </ol>
+        </ol>
 
         <p>With that, once the SDP session descriptions have been exchanged via
         the signaling channel, both parties have now negotiated the type of
@@ -1109,7 +1107,7 @@ a=fmtp:111 minptime=10
 
           <li>
             <p>ICE agent is responsible for sending connection keepalives.
-          </ul>
+        </ul>
 
         <p>Once a session description (local or remote) is set, local ICE agent
         automatically begins the process of discovering all the possible
@@ -1127,7 +1125,7 @@ a=fmtp:111 minptime=10
             <p>If configured, ICE agent appends the TURN server as a last
             resort candidate. If the peer-to-peer connection fails, the data
             will be relayed through the specified intermediary.
-          </ol>
+        </ol>
 
         <div data-type="note" id="id-OyC8TkcacZ">
           <p>If you have ever had to answer the "What is my public IP address?"
@@ -1225,7 +1223,7 @@ id="icepublic-co" href="#icepublic"></a>
 
               <p>Public ICE candidate (50.76.44.100:69834) returned by the STUN
               server
-            </ol>
+          </ol>
         </div>
 
         <div data-type="note" id="id-dOC0UpcOcb">
@@ -1311,7 +1309,7 @@ id="icepublic-co" href="#icepublic"></a>
           <li>
             <p>ICE connectivity checks are run as soon as the new candidate
             description is available.
-          </ul>
+        </ul>
 
         <p>In short, instead of waiting for the ICE gathering process to
         complete, we rely on the signaling channel to deliver incremental
@@ -1371,7 +1369,7 @@ signalingChannel.onmessage = function(msg) {
               "#addicecandidate-co"></a>
 
               <p>Register remote ICE candidate and begin connectivity checks
-            </ol>
+          </ol>
         </div>
 
         <p>Trickle ICE generates more traffic over the signaling channel, but
@@ -1440,7 +1438,7 @@ pc.oniceconnectionstatechange = function(evt) { <a class="counter" id=
               <a class="co" id="icestates" href="#icecstates-co"></a>
 
               <p>Subscribe to ICE connection state events
-            </ol>
+          </ol>
         </div>
 
         <p>The <code>iceGatheringState</code> attribute, as its name implies,
@@ -1462,7 +1460,7 @@ pc.oniceconnectionstatechange = function(evt) { <a class="counter" id=
 
           <dd>
             <p>The ICE agent has completed the gathering process.
-          </dl>
+        </dl>
 
         <p>On the other hand, the <code>iceConnectionState</code> attribute
         reports the status of the peer-to-peer connection (<a data-type="xref"
@@ -1516,7 +1514,7 @@ pc.oniceconnectionstatechange = function(evt) { <a class="counter" id=
           <dd>
             <p>The ICE agent has shut down and is no longer responding to STUN
             requests.
-          </dl>
+        </dl>
 
         <figure id="iceconnectionstate">
           <img src="/assets/diagrams/4b4766fd02af08ca2894b4cce8b44d85.svg" alt=
@@ -1714,7 +1712,7 @@ id="igum-co" href="#igum"></a>
                 <a class="co" id="irvd" href="#irvd-co"></a>
 
                 <p>Output remote video stream to video element (remote view)
-              </ol>
+            </ol>
           </div>
 
           <p>The entire process can be a bit daunting on the first pass, but
@@ -1816,7 +1814,7 @@ id="igum-co" href="#igum"></a>
 
                 <p>Generate SDP answer describing peer connection and send to
                 peer
-              </ol>
+            </ol>
           </div>
 
           <p>Not surprisingly, the code looks very similar. The only major
@@ -1933,7 +1931,7 @@ id="igum-co" href="#igum"></a>
         <li>
           <p>Stream Control Transport Protocol (SCTP) is used to transport
           application data.
-        </ul>
+      </ul>
 
       <section>
         <h3 id="secure-communication-with-dtls"><a href=
@@ -1966,7 +1964,7 @@ id="igum-co" href="#igum"></a>
           <li>
             <p>TLS integrity checks may fail if records are processed out of
             order.
-          </ol>
+        </ol>
 
         <div data-type="note" id="id-7KCLHNHmUb">
           <p>Refer to <a data-type="xref" href=
@@ -2041,7 +2039,7 @@ id="igum-co" href="#igum"></a>
 
           <li>
             <p>A block cipher must be used for encrypting record data.
-          </ul>
+        </ul>
 
         <p>A regular TLS record can be up to 16 KB in size. TCP handles the
         fragmentation and reassembly, but UDP provides no such services. As a
@@ -2076,7 +2074,7 @@ id="igum-co" href="#igum"></a>
               when the SDP message is received, the opposing peer can contact
               the specified identity provider to verify the received
               certificate.
-            </ul>
+          </ul>
 
           <p>The latter "identity provider" mechanism is still under active
           discussion and development in the W3C WebRTC working group. Consult
@@ -2133,7 +2131,7 @@ id="igum-co" href="#igum"></a>
             its own variant of adaptive streaming (see <a data-type="xref"
             href="/wifi/#adaptive-bitrate-streaming">Adaptive Bitrate
             Streaming</a>).
-          </ul>
+        </ul>
 
         <p>The WebRTC network engine cannot guarantee that an HD video stream
         provided by the application will be delivered at its highest quality:
@@ -2168,7 +2166,7 @@ id="igum-co" href="#igum"></a>
           <dd>
             <p>Secure profile of the control protocol for delivery of sender
             and receiver statistics and control information for an SRTP flow.
-          </dl>
+        </dl>
 
         <div data-type="note" id="id-Z9CyCZuoUd">
           <p>Real-Time Transport Protocol (RTP) is defined by RFC 3550.
@@ -2219,7 +2217,7 @@ id="igum-co" href="#igum"></a>
             <p>Each SRTP packet carries an encrypted media payload and an
             authentication tag, which verifies the integrity of the delivered
             packet.
-          </ul>
+        </ul>
 
         <p>The SRTP packet provides all the essential information required by
         the media engine for real-time playback of the stream. However, the
@@ -2280,7 +2278,7 @@ id="igum-co" href="#igum"></a>
               congestion-control algorithms, which leverage the SRTCP feedback
               to optimize the delivery of audio and video streams generated by
               WebRTC applications.
-            </ul>
+          </ul>
 
           <p>In short, there is a lot more to it than simply firing off UDP
           packets with digitized audio and video data! Thankfully, the WebRTC
@@ -2324,7 +2322,7 @@ id="igum-co" href="#igum"></a>
               <li>
                 <p>Each channel may have a priority level defined by the
                 application.
-              </ul>
+            </ul>
 
           <li>
             <p>Transport must provide a message-oriented API.
@@ -2333,7 +2331,7 @@ id="igum-co" href="#igum"></a>
               <li>
                 <p>Each application message may be fragmented and reassembled
                 by the transport.
-              </ul>
+            </ul>
 
           <li>
             <p>Transport must implement flow and congestion control mechanisms.
@@ -2341,7 +2339,7 @@ id="igum-co" href="#igum"></a>
           <li>
             <p>Transport must provide confidentiality and integrity of
             transferred data.
-          </ul>
+        </ul>
 
         <p>The good news is that the use of DTLS already satisfies the last
         criteria: all application data is encrypted within the payload of the
@@ -2408,7 +2406,7 @@ id="igum-co" href="#igum"></a>
                 <td>no
 
                 <td>yes
-              </table>
+          </table>
 
           <figcaption>
             <span class="label">Table 18-1.</span> Comparing TCP vs. UDP vs.
@@ -2451,7 +2449,7 @@ id="igum-co" href="#igum"></a>
 
           <dd>
             <p>The smallest unit of communication within an SCTP packet.
-          </dl>
+        </dl>
 
         <p>A single SCTP association between two endpoints may carry multiple
         independent streams, each of which communicates by transferring
@@ -2522,7 +2520,7 @@ id="igum-co" href="#igum"></a>
             <p><em>Payload protocol identifier (PPID)</em> is a custom field
             filled in by the application to communicate additional metadata
             about the transferred chunk.
-          </ul>
+        </ul>
 
         <div data-type="note" id="id-dOC4SAIyUb">
           <p>DataChannel uses the PPID field in the SCTP header to communicate
@@ -2551,7 +2549,7 @@ id="igum-co" href="#igum"></a>
             <p>SCTP supports stream multiplexing: each stream has a unique
             stream identifier, which is used to associate each data chunk with
             one of the active streams.
-          </ul>
+        </ul>
 
         <ul>
           <li>
@@ -2560,7 +2558,7 @@ id="igum-co" href="#igum"></a>
             Optionally, if the unordered bit is set, then SCTP continues to use
             the sequence number to handle message fragmentation, but can
             deliver individual messages out of order.
-          </ul>
+        </ul>
 
         <div data-type="note" id="id-86CZH8I5UN">
           <p>In total, SCTP adds 28 bytes of overhead to each data chunk: 12
@@ -2603,7 +2601,7 @@ id="igum-co" href="#igum"></a>
             streams; there are no fields within the protocol to carry the
             priority. As a result, this functionality has to be implemented
             higher in the stack.
-          </ol>
+        </ol>
 
         <p>In short, SCTP provides similar services as TCP, but because it is
         tunneled over UDP and is implemented by the WebRTC client, it offers a
@@ -2721,7 +2719,7 @@ pc.ondatachannel = handleChannel; <a class="counter" id="handleremote-co" href=
             <a class="co" id="handleremote" href="#handleremote-co"></a>
 
             <p>Register callbacks on DataChannel initiated by remote peer
-          </ol>
+        </ol>
       </div>
 
       <p>The DataChannel API intentionally mirrors that of WebSocket: each
@@ -2751,7 +2749,7 @@ pc.ondatachannel = handleChannel; <a class="counter" id="handleremote-co" href=
           <p>Unlike WebSocket, which runs on top of reliable and in-order TCP
           transport, each DataChannel can be configured with custom delivery
           and reliability semantics.
-        </ul>
+      </ul>
 
       <aside>
         <h4 id="datachannel-vs-websocket-apis"><a href=
@@ -2830,7 +2828,7 @@ pc.ondatachannel = handleChannel; <a class="counter" id="handleremote-co" href=
                 <td>no (extension)
 
                 <td>no
-              </table>
+          </table>
 
           <figcaption>
             <span class="label">Table 18-2.</span> WebSocket vs. DataChannel
@@ -2852,7 +2850,7 @@ pc.ondatachannel = handleChannel; <a class="counter" id="handleremote-co" href=
           <li>
             <p>SCTP provides multiplexing, flow and congestion control, and
             other features.
-          </ul>
+        </ul>
 
         <p>DataChannel can be configured to deliver the same reliability and
         in-order message guarantees as WebSocket. Although, more importantly,
@@ -2906,7 +2904,7 @@ a=fmtp:5000 protocol=webrtc-datachannel; streams=10 <a class="counter" id=
               <a class="co" id="sctpstreams" href="#sctpstreams-co"></a>
 
               <p>DataChannel protocol over SCTP with up to 10 parallel streams
-            </ol>
+          </ol>
         </div>
 
         <p>As previously, the RTCPeerConnection object handles all the
@@ -2953,7 +2951,7 @@ pc.createOffer(function(offer) { ... }, null, mediaConstraints); <a class=
               <a class="co" id="dcoffer" href="#dcoffer-co"></a>
 
               <p>Generate data-only offer
-            </ol>
+          </ol>
         </div>
 
         <p>With the SCTP parameters negotiated between the peers, we are almost
@@ -3047,7 +3045,7 @@ signalingChannel.onmessage = function(msg) {
                 <a class="co" id="dcnewchan" href="#dcnewchan-co"></a>
 
                 <p>Initialize new DataChannel using received parameters
-              </ol>
+            </ol>
           </div>
 
           <p>In practice, there are no additional performance benefits to using
@@ -3079,7 +3077,7 @@ signalingChannel.onmessage = function(msg) {
           <li>
             <p>DataChannel can provide reliable or partially reliable delivery
             of messages.
-          </ul>
+        </ul>
 
         <p>Configuring the channel to use in-order and reliable delivery is, of
         course, equivalent to TCP: the same delivery guarantees as a regular
@@ -3099,7 +3097,7 @@ signalingChannel.onmessage = function(msg) {
           <dd>
             <p>Messages will not be retransmitted after a specified lifetime
             (in milliseconds) by the application.
-          </dl>
+        </dl>
 
         <p>Both strategies are implemented by the WebRTC client, which means
         that all the application has to do is decide on the appropriate
@@ -3173,7 +3171,7 @@ signalingChannel.onmessage = function(msg) {
                 <td>partial
 
                 <td>timeout (ms)
-              </table>
+          </table>
 
           <figcaption>
             <span class="label">Table 18-3.</span> DataChannel reliability and
@@ -3269,7 +3267,7 @@ if (dc.reliable) {
 
               <p>Initialize DataChannel with specified order and reliability
               configuration
-            </ol>
+          </ol>
         </div>
 
         <div data-type="note" id="id-3MCQcATqf6">
@@ -3311,14 +3309,14 @@ if (dc.reliable) {
               <li>
                 <p>The channel is configured with maxRetransmits set to 0, aka
                 plain UDP.
-              </ul>
+            </ul>
 
           <li>
             <p>The packet loss between the peers is ~1%.
 
           <li>
             <p>One of the peers is trying to send a large, 120 KB message.
-          </ul>
+        </ul>
 
         <p>WebRTC clients set the maximum transmission unit for an SCTP packet
         to 1,280 bytes, which is the minimum and recommended MTU for an IPv6
@@ -3350,7 +3348,7 @@ if (dc.reliable) {
             <p>If a message cannot fit into a single packet, then a retransmit
             strategy should be used to improve the odds of delivering the
             message.
-          </ul>
+        </ul>
 
         <p>Packet-loss rates and latency between the peers are unpredictable
         and vary based on current network weather. As a result, there is no one
@@ -3411,7 +3409,7 @@ if (dc.reliable) {
             <p>An HD stream requires, at a minimum, a 3.5G+ connection; see
             <a data-type="xref" href=
             "/mobile-networks/#cellular-performance">Table&nbsp;7-2</a>.
-          </ul>
+        </ul>
 
         <p>The good news is that the average bandwidth capacity is continuing
         to grow around the world: users are switching to broadband, and 3.5G+
@@ -3452,7 +3450,7 @@ if (dc.reliable) {
             <p>Bandwidth and latency are always changing regardless of the type
             of connectivity—wired or wireless—or the generation of the network,
             and the application must be able to adapt to these conditions.
-          </ul>
+        </ul>
 
         <p>The good news is that the WebRTC audio and video engines work
         together with the underlying network transport to probe the available
@@ -3593,7 +3591,7 @@ if (dc.reliable) {
             can switch to DataChannel for signaling. This can help offload the
             amount of signaling traffic that must be handled by the central
             server and also reduce latency for signaling communication.
-          </ul>
+        </ul>
 
         <p>Due to the prevalence of NATs and firewalls, most WebRTC
         applications will require a STUN server to perform the necessary IP
@@ -3614,7 +3612,7 @@ if (dc.reliable) {
             STUN server must respond to, well, STUN requests. You will need a
             public server or will have to provision your own; <em>stund</em> is
             a popular open source implementation.
-          </ul>
+        </ul>
 
         <p>Even with STUN in place, 8%–10% of peer-to-peer connections will
         likely fail due to the peculiarities of their network policies. For
@@ -3632,7 +3630,7 @@ if (dc.reliable) {
             to saturate the capacity of any service. As a result, TURN is
             always used as a last resort and requires careful capacity planning
             by the application.
-          </ul>
+        </ul>
 
         <p>Multiparty services may require centralized infrastructure to help
         optimize the delivery of many streams and provide additional services
@@ -3703,7 +3701,7 @@ if (dc.reliable) {
             <li>
               <p>Consider using signaling over DataChannel once connection is
               established.
-            </ul>
+          </ul>
 
         <dt>Firewall and NAT traversal
 
@@ -3722,7 +3720,7 @@ if (dc.reliable) {
 
             <li>
               <p>Anticipate and provision sufficient capacity for TURN relays.
-            </ul>
+          </ul>
 
         <dt>Data distribution
 
@@ -3735,7 +3733,7 @@ if (dc.reliable) {
             <li>
               <p>Consider optimizing the received data on the intermediary
               prior to forwarding it to the other peers.
-            </ul>
+          </ul>
 
         <dt>Data efficiency
 
@@ -3754,7 +3752,7 @@ if (dc.reliable) {
             <li>
               <p>Monitor the amount of buffered data on the DataChannel and
               adapt to changes in the conditions of the network link.
-            </ul>
+          </ul>
 
         <dt>Delivery and reliability
 
@@ -3776,8 +3774,8 @@ if (dc.reliable) {
               partially reliable delivery. The "right" settings depend on
               message size, type of application data, and latency between the
               peers.
-            </ul>
-        </dl>
+          </ul>
+      </dl>
     </section>
   </article>
 

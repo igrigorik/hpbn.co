@@ -10,10 +10,8 @@
 <meta name="description" content=
 "What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
 
-<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
-</script>
-<script async src="https://www.google-analytics.com/analytics.js">
-</script>
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js"></script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
 <link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
 <link href=
 "https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
@@ -78,7 +76,7 @@ rel="stylesheet">
               <a id="feedback" target="_blank" href=
               "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BPrimer%20on%20Web%20Performance%5D:%20...">
               Submit Feedback</a>
-            </ul>
+          </ul>
         </div>
         <label for="check" class="closemenu">&nbsp;</label>
       </div>
@@ -116,7 +114,7 @@ rel="stylesheet">
 
         <li>
           <p>Browser constraints and optimizations
-        </ul>
+      </ul>
 
       <p>Optimizing the interaction among all the different layers is not
       unlike solving a family of equations, each dependent on the others, but
@@ -176,7 +174,7 @@ rel="stylesheet">
           way for the first full-fledged browser applications, such as Outlook
           Web Access (originator of XMLHTTP support in IE5), ushering in a new
           era of complex dependency graphs of scripts, stylesheets, and markup.
-        </dl>
+      </dl>
 
       <p>An HTTP 0.9 session consisted of a single document request, which was
       perfectly sufficient for delivery of hypertext: single document, one TCP
@@ -228,7 +226,7 @@ rel="stylesheet">
 
         <li>
           <p>What are the engagement and conversion rates for each user?
-        </ul>
+      </ul>
 
       <p>The success of your performance and optimization strategy is directly
       correlated to your ability to define and iterate on application-specific
@@ -318,8 +316,8 @@ rel="stylesheet">
 
             <li>
               <p>Other: 5 requests, 195 KB
-            </ul>
-        </ul>
+          </ul>
+      </ul>
 
       <p>By the time you read this, the preceding numbers have already changed
       and have grown even larger (<a data-type="xref" href=
@@ -400,7 +398,7 @@ rel="stylesheet">
                 <td>10,000+ ms
 
                 <td>Task is abandoned
-              </table>
+          </table>
 
           <figcaption>
             <span class="label">Table 10-1.</span> Time and user perception
@@ -692,7 +690,7 @@ rel="stylesheet">
 
           <li>
             <p>Loading and rendering the Yahoo! homepage is latency limited.
-          </ul>
+        </ul>
 
         <p>Depending on the quality and the encoding of the video you are
         trying to stream, you may need anywhere from a few hundred Kbps to
@@ -869,7 +867,7 @@ rel="stylesheet">
         <li>
           <p>Connectivity: continuously changing bandwidth and latency of real
           connections.
-        </ul>
+      </ul>
 
       <p>The combination of these and similar factors means that in addition to
       synthetic testing, we must augment our performance strategy with
@@ -996,7 +994,7 @@ function logPerformance() {
             <a class="co" id="navtiming" href="#navtiming-co"></a>
 
             <p>Log Navigation Timing object for current page.
-          </ol>
+        </ol>
       </div>
 
       <p>The combination of Navigation, Resource, and User timing APIs provides
@@ -1051,7 +1049,7 @@ function logPerformance() {
           perform speculative optimizations in an attempt to predict the likely
           user actions by pre-resolving DNS names, pre-connecting to likely
           hostnames, and so on.
-        </dl>
+      </dl>
 
       <p>The good news is all of these optimizations are done automatically on
       our behalf and often lead to hundreds of milliseconds of saved network
@@ -1092,7 +1090,7 @@ function logPerformance() {
           <p>Some browsers allow you to hint the likely next destination and
           can pre-render the entire page in a hidden tab, such that it can be
           instantly swapped in when the user initiates the navigation.
-        </dl>
+      </dl>
 
       <div data-type="note" id="id-J9uVTBua">
         <p>For a deep dive into how these and other networking optimizations
@@ -1123,7 +1121,7 @@ function logPerformance() {
         <li>
           <p>The HTML document is parsed incrementally by the parser; hence the
           document should be periodically flushed for best performance.
-        </ul>
+      </ul>
 
       <p>Further, aside from optimizing the structure of the page, we can also
       embed additional hints into the document itself to tip off the browser
@@ -1162,7 +1160,7 @@ id="subresource-co" href="#subresource"></a>
 
             <p>Prerender specified page in anticipation of next user
             destination.
-          </ol>
+        </ol>
       </div>
 
       <p>Each of these is a hint for a speculative optimization. The browser
@@ -1231,7 +1229,7 @@ id="subresource-co" href="#subresource"></a>
               <td>10+
 
               <td>11+
-            </table>
+        </table>
 
         <figcaption>
           <span class="label">Table 10-2.</span> Speculative browser

@@ -10,10 +10,8 @@ Networking (O'Reilly)</title>
 <meta name="description" content=
 "What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
 
-<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
-</script>
-<script async src="https://www.google-analytics.com/analytics.js">
-</script>
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js"></script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
 <link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
 <link href=
 "https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
@@ -40,7 +38,7 @@ rel="stylesheet">
 <meta property="og:site_name" content="High Performance Browser Networking">
 <meta property="fb:admins" content="688996186">
 <script type="application/ld+json">
-{"@context":"http://schema.org/","@type":"Article","headline":"Networking 101: Building Blocks of TCP - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2016-01-22T23:22:21Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+{"@context":"http://schema.org/","@type":"Article","headline":"Networking 101: Building Blocks of TCP - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2017-04-22T02:43:59Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
 </script>
 
 <body data-type="book">
@@ -78,7 +76,7 @@ rel="stylesheet">
               <a id="feedback" target="_blank" href=
               "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BBuilding%20Blocks%20of%20TCP%5D:%20...">
               Submit Feedback</a>
-            </ul>
+          </ul>
         </div>
         <label for="check" class="closemenu">&nbsp;</label>
       </div>
@@ -111,7 +109,7 @@ rel="stylesheet">
 
         <li>
           <p>RFC 793 — Transmission Control Protocol
-        </ul>
+      </ul>
 
       <p>Since then, there have been a number of enhancements proposed and made
       to TCP, but the core operation has not changed significantly. TCP quickly
@@ -195,7 +193,7 @@ rel="stylesheet">
           <p>Client increments both <code>x</code> and <code>y</code> by one
           and completes the handshake by dispatching the last ACK packet in the
           handshake.
-        </dl>
+      </dl>
 
       <figure id="handshake">
         <img src="/assets/diagrams/eefa1170a673da0140efe1ece7a2884b.svg" alt=
@@ -393,7 +391,7 @@ rel="stylesheet">
 
             <li>
               <p><code>$&gt; sysctl -w net.ipv4.tcp_window_scaling=1</code>
-            </ul>
+          </ul>
         </aside>
       </section>
 
@@ -451,7 +449,7 @@ rel="stylesheet">
           <dd>
             <p>Sender-side limit on the amount of data the sender can have in
             flight before receiving an acknowledgment (ACK) from the client.
-          </dl>
+        </dl>
 
         <p>The cwnd variable is not advertised or exchanged between the sender
         and receiver — in this case, it will be a private variable maintained
@@ -523,7 +521,7 @@ rel="stylesheet">
 
           <li>
             <p>Roundtrip time: 56 ms (London to New York)
-          </ul>
+        </ul>
 
         <p>Despite the 64 KB receive window size, the throughput of a new TCP
         connection is initially limited by the size of the congestion window.
@@ -605,7 +603,7 @@ rel="stylesheet">
             <li>
               <p><code>$&gt; sysctl -w
               net.ipv4.tcp_slow_start_after_idle=0</code>
-            </ul>
+          </ul>
         </aside>
 
         <p>To illustrate the impact of the three-way handshake and the
@@ -636,7 +634,7 @@ rel="stylesheet">
           <li>
             <p>No packet loss, ACK per packet, GET request fits into single
             segment
-          </ul>
+        </ul>
 
         <figure id="aimd-nyc-london">
           <img src="/assets/diagrams/030c9cc04270134bf2ca3f324980d2bc.svg" alt=
@@ -702,7 +700,7 @@ rel="stylesheet">
 
           <dd>
             <p>Client receives 15 TCP segments, ACKs each one.
-          </dl>
+        </dl>
 
         <p>264 ms to transfer a 64 KB file on a new TCP connection with 56 ms
         roundtrip time between the client and server! By comparison, let’s now
@@ -742,7 +740,7 @@ rel="stylesheet">
 
           <dd>
             <p>Client receives all 45 segments, ACKs each one.
-          </dl>
+        </dl>
 
         <p>The same request made on the same connection, but without the cost
         of the three-way handshake and the penalty of the slow-start phase, now
@@ -878,7 +876,7 @@ rel="stylesheet">
           <p>Product of data link’s capacity and its end-to-end delay. The
           result is the maximum amount of unacknowledged data that can be in
           flight at any point in time.
-        </dl>
+      </dl>
 
       <p>If either the sender or receiver are frequently forced to stop and
       wait for ACKs for previous packets, then this would create gaps in the
@@ -1086,7 +1084,7 @@ rel="stylesheet">
 
         <li>
           <p>TCP throughput is regulated by current congestion window size.
-        </ul>
+      </ul>
 
       <p>As a result, the rate with which a TCP connection can transfer data in
       modern high-speed networks is often limited by the roundtrip time between
@@ -1161,7 +1159,7 @@ rel="stylesheet">
             certain situations. TFO is a new optimization, which requires
             support both on client and server; investigate if your application
             can make use of it.
-          </dl>
+        </dl>
 
         <p>The combination of the preceding settings and the latest kernel will
         enable the best performance — lower latency and higher throughput — for
@@ -1202,7 +1200,7 @@ rel="stylesheet">
 
           <li>
             <p>TCP connection reuse is critical to improve performance.
-          </ul>
+        </ul>
 
         <p>Eliminating unnecessary data transfers is, of course, the single
         best optimization — e.g., eliminating unnecessary resources or ensuring
@@ -1254,7 +1252,7 @@ rel="stylesheet">
           <li>
             <p>Investigate <a href="https://hpbn.co/http-tcp">"TCP Tuning for
             HTTP"</a> recommendations.
-          </ul>
+        </ul>
       </section>
     </section>
   </article>

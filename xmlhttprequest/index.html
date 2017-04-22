@@ -10,10 +10,8 @@ Networking (O'Reilly)</title>
 <meta name="description" content=
 "What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
 
-<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
-</script>
-<script async src="https://www.google-analytics.com/analytics.js">
-</script>
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js"></script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
 <link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
 <link href=
 "https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
@@ -78,7 +76,7 @@ rel="stylesheet">
               <a id="feedback" target="_blank" href=
               "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BXMLHttpRequest%5D:%20...">
               Submit Feedback</a>
-            </ul>
+          </ul>
         </div>
         <label for="check" class="closemenu">&nbsp;</label>
       </div>
@@ -142,7 +140,7 @@ rel="stylesheet">
 
         <li>
           <p><em>And more…</em>
-        </ul>
+      </ul>
 
       <p>Free from worrying about all the low-level details, our applications
       can focus on the business logic of initiating requests, managing their
@@ -224,7 +222,7 @@ rel="stylesheet">
 
         <li>
           <p>Support for safe cross-origin requests
-        </ul>
+      </ul>
 
       <p>In 2011, "XMLHttpRequest Level 2" specification was merged with the
       original XMLHttpRequest working draft. Hence, while you will often find
@@ -268,7 +266,7 @@ rel="stylesheet">
 
         <li>
           <p>Cookie, Sec-*, Proxy-*, and a dozen others…
-        </ul>
+      </ul>
 
       <p>The browser will refuse to override any of the unsafe headers, which
       guarantees that the application cannot impersonate a fake user-agent,
@@ -331,7 +329,7 @@ cors_xhr.send();
             <a class="co" id="xhrcorsreq" href="#xhrcorsreq-co"></a>
 
             <p>Cross-origin XHR request
-          </ol>
+        </ol>
       </div>
 
       <p>CORS requests use the same XHR API, with the only difference that the
@@ -375,7 +373,7 @@ href="#acao"></a>
             <a class="co" id="acao" href="#acao-co"></a>
 
             <p>Opt-in header is set by the server.
-          </ol>
+        </ol>
       </div>
 
       <p>In the preceding example, <em>thirdparty.com</em> decided to opt into
@@ -407,7 +405,7 @@ href="#acao"></a>
           <p>The client is limited to issuing "simple cross-origin requests,"
           which restricts both the allowed methods (GET, POST, HEAD) and access
           to HTTP headers that can be sent and read by the XHR.
-        </ul>
+      </ul>
 
       <p>To enable cookies and HTTP authentication, the client must set an
       extra property (<code>withCredentials</code>) on the XHR object when
@@ -457,7 +455,7 @@ Access-Control-Allow-Headers: My-Custom-Header
             <a class="co" id="corsreq" href="#corsreq-co"></a>
 
             <p>Actual CORS request
-          </ol>
+        </ol>
       </div>
 
       <p>The official W3C CORS specification defines when and where a preflight
@@ -510,7 +508,7 @@ Access-Control-Allow-Headers: My-Custom-Header
 
         <dd>
           <p>A simple text string
-        </dl>
+      </dl>
 
       <p>Either the browser can rely on the HTTP content-type negotiation to
       infer the appropriate data type (e.g., decode an
@@ -555,7 +553,7 @@ xhr.send();
             <a class="co" id="cleanup" href="#cleanup-co"></a>
 
             <p>Release the object URI once image is loaded
-          </ol>
+        </ol>
       </div>
 
       <p>Note that we are transferring an image asset in its native format,
@@ -635,7 +633,7 @@ xhr.send(uInt8Array.buffer); <a class="counter" id="bytes-co" href=
             <a class="co" id="bytes" href="#bytes-co"></a>
 
             <p>Upload chunk of bytes to the server
-          </ol>
+        </ol>
       </div>
 
       <p>The XHR <em>send()</em> method accepts one of <code>DOMString</code>,
@@ -699,7 +697,7 @@ while(start &lt; SIZE) { <a class="counter" id="iterate-co" href=
             <a class="co" id="slice" href="#slice-co"></a>
 
             <p>Upload 1 MB slice of data via XHR
-          </ol>
+        </ol>
       </div>
 
       <p>XHR does not support request streaming, which means that we must
@@ -782,7 +780,7 @@ while(start &lt; SIZE) { <a class="counter" id="iterate-co" href=
               <td>Transfer has finished
 
               <td>once
-            </table>
+        </table>
 
         <figcaption>
           <span class="label">Table 15-1.</span> XHR progress events
@@ -851,7 +849,7 @@ xhr.send();
             <a class="co" id="download" href="#download-co"></a>
 
             <p>Register callback for download progress events
-          </ol>
+        </ol>
       </div>
 
       <p>Either the <em>load</em> or <em>error</em> event will fire once to
@@ -891,7 +889,7 @@ xhr.send();
         <li>
           <p>The <em>response</em>, <em>responseText</em>, and
           <em>responseXML</em> attributes are not designed for streaming.
-        </ul>
+      </ul>
 
       <p>Streaming has never been an official use case within the official XHR
       specification. As a result, short of manually splitting an upload into
@@ -957,7 +955,7 @@ xhr.send();
             <a class="co" id="offset" href="#offset-co"></a>
 
             <p>Update processed byte offset
-          </ol>
+        </ol>
       </div>
 
       <p>This example will work in most modern browsers. However, performance
@@ -992,7 +990,7 @@ xhr.send();
           <p>Browsers differ in which content-types they allow to be read
           incrementally—e.g., some allow "text/html," while others will only
           work with "application/x-javascript."
-        </ul>
+      </ul>
 
       <p>In short, currently, XHR streaming is neither efficient nor
       convenient, and to make matters worse, the lack of a common specification
@@ -1023,7 +1021,7 @@ xhr.send();
 
           <li>
             <p>Internet Explorer supports <code>ms-stream</code>.
-          </ul>
+        </ul>
 
         <p>By setting the <code>responseType</code> attribute on the XHR object
         to one of the preceding types, both browsers will avoid buffering the
@@ -1103,7 +1101,7 @@ id="xhrpoll-co" href="#xhrpoll"></a>
               <a class="co" id="xhrpoll" href="#xhrpoll-co"></a>
 
               <p>Issue an XHR request every 60 seconds
-            </ol>
+          </ol>
         </div>
 
         <ul>
@@ -1126,7 +1124,7 @@ id="xhrpoll-co" href="#xhrpoll"></a>
             "/optimizing-for-mobile-networks/#eliminate-periodic-and-inefficient-data-transfers">
             Eliminate Periodic and Inefficient Data Transfers</a>. Waking up
             the radio consumes a lot of battery power!
-          </ul>
+        </ul>
 
         <p>What is the optimal polling interval? There isn’t one. The frequency
         depends on the requirements of the application, and there is an
@@ -1161,7 +1159,7 @@ id="xhrpoll-co" href="#xhrpoll"></a>
             <li>
               <p>The server responds with a list of new messages or an empty
               list (no updates).
-            </ul>
+          </ul>
 
           <dl>
             <dt>What is the average message latency delay?
@@ -1200,7 +1198,7 @@ id="xhrpoll-co" href="#xhrpoll"></a>
               1.13 Mbps of ingress throughput on the server! And that’s a
               constant rate without actually delivering any new messages to any
               of the clients.
-            </dl>
+          </dl>
 
           <p>Is the 30-second delay too high? We can decrease the polling
           interval, but in doing so, we would incur higher throughput and
@@ -1280,7 +1278,7 @@ checkUpdates('/updates'); <a class="counter" id="xhrlpoll-co" href=
               <a class="co" id="xhrlpoll" href="#xhrlpoll-co"></a>
 
               <p>Issue initial long-poll XHR request
-            </ol>
+          </ol>
         </div>
 
         <p>With that, is long-polling always a better choice than periodic
@@ -1371,7 +1369,7 @@ checkUpdates('/updates'); <a class="counter" id="xhrlpoll-co" href=
 
         <li>
           <p>Browser handles authentication, redirects, and more…
-        </ul>
+      </ul>
 
       <p>As such, XHR is a versatile and a high-performance transport for any
       transfers that follow the HTTP request-response cycle. Need to fetch a

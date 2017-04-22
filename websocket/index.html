@@ -10,10 +10,8 @@ Networking (O'Reilly)</title>
 <meta name="description" content=
 "What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
 
-<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
-</script>
-<script async src="https://www.google-analytics.com/analytics.js">
-</script>
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js"></script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
 <link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
 <link href=
 "https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
@@ -78,7 +76,7 @@ rel="stylesheet">
               <a id="feedback" target="_blank" href=
               "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BWebSocket%5D:%20...">
               Submit Feedback</a>
-            </ul>
+          </ul>
         </div>
         <label for="check" class="closemenu">&nbsp;</label>
       </div>
@@ -111,7 +109,7 @@ rel="stylesheet">
 
         <li>
           <p>Subprotocol negotiation and extensibility
-        </ul>
+      </ul>
 
       <p>WebSocket is one of the most versatile and flexible transports
       available in the browser. The simple and minimal API enables us to layer
@@ -207,7 +205,7 @@ ws.onmessage = function(msg) { <a class="counter" id="wsmsg-co" href=
             <a class="co" id="wstype" href="#wstype-co"></a>
 
             <p>Invoke binary or text processing logic for the received message
-          </ol>
+        </ol>
       </div>
 
       <p>The API speaks for itself. In fact, it should look very similar to the
@@ -326,7 +324,7 @@ ws.onmessage = function(msg) {
 
               <p>Force an ArrayBuffer conversion when a binary message is
               received
-            </ol>
+          </ol>
         </div>
 
         <blockquote>
@@ -483,7 +481,7 @@ ws.onopen = function () {
               <a class="co" id="wsblob" href="#wsblob-co"></a>
 
               <p>Send the Blob contents as binary payload
-            </ol>
+          </ol>
         </div>
 
         <p>The WebSocket API accepts a DOMString object, which is encoded as
@@ -531,7 +529,7 @@ ws.onopen = function () {
               <a class="co" id="send" href="#send-co"></a>
 
               <p>Send the next update if the buffer is empty
-            </ol>
+          </ol>
         </div>
 
         <p>The preceding example attempts to send application updates to the
@@ -591,7 +589,7 @@ ws.onopen = function () {
             payload and metadata information—e.g., a text message can
             communicate an equivalent of HTTP headers, followed by a binary
             message with the application payload.
-          </ul>
+        </ul>
 
         <p>This list is just a small sample of possible strategies. The
         flexibility and low overhead of a WebSocket message come at the cost of
@@ -632,7 +630,7 @@ ws.onopen = function () {
               <a class="co" id="proto" href="#proto-co"></a>
 
               <p>Check the subprotocol chosen by the server
-            </ol>
+          </ol>
         </div>
 
         <p>As the preceding example illustrates, the WebSocket constructor
@@ -722,7 +720,7 @@ ws.onopen = function () {
           <dd>
             <p>A complete sequence of frames that map to a logical application
             message.
-          </dl>
+        </dl>
 
         <p>The decision to fragment an application message into multiple frames
         is made by the underlying implementation of the client and server
@@ -761,7 +759,7 @@ ws.onopen = function () {
               <li>
                 <p>If 127, then the following 8 bytes represent a 64-bit
                 unsigned integer indicating the frame length.
-              </ul>
+            </ul>
 
           <li>
             <p>Masking key contains a 32-bit value used to mask the payload.
@@ -770,7 +768,7 @@ ws.onopen = function () {
             <p>Payload contains the application data and custom extension data
             if the client and server negotiated an extension when the
             connection was established.
-          </ul>
+        </ul>
 
         <div data-type="note" id="id-6RCDtVH0SZ">
           <p>The payload of all client-initiated frames is <em>masked</em>
@@ -876,7 +874,7 @@ ws.onopen = function () {
           <dd>
             <p>A framework for creating WebSocket extensions that add
             compression functionality to the WebSocket Protocol.
-          </dl>
+        </dl>
 
         <p>As we noted earlier, each WebSocket connection requires a dedicated
         TCP connection, which is inefficient. Multiplexing extension addresses
@@ -980,7 +978,7 @@ ws.onopen = function () {
             <p>Used to negotiate WebSocket extensions to be used for this
             connection: client advertises supported extensions, and the server
             confirms one or more extensions by returning the same header.
-          </dl>
+        </dl>
 
         <p>With that, we now have all the necessary pieces to perform an HTTP
         Upgrade and negotiate a new WebSocket connection between the client and
@@ -1028,7 +1026,7 @@ id="wsextensions-co" href="#wsextensions"></a>
               <a class="co" id="wsextensions" href="#wsextensions-co"></a>
 
               <p>Optional list of protocol extensions supported by the client
-            </ol>
+          </ol>
         </div>
 
         <p>Just like any other client-initiated connection in the browser,
@@ -1082,7 +1080,7 @@ Sec-WebSocket-Extensions: x-custom-extension <a class="counter" id=
               <a class="co" id="wsextensionsc" href="#wsextensionsc-co"></a>
 
               <p>List of WebSocket extensions selected by the server
-            </ol>
+          </ol>
         </div>
 
         <div data-type="note" id="id-daCpTGt1SY">
@@ -1125,7 +1123,7 @@ Sec-WebSocket-Extensions: x-custom-extension <a class="counter" id=
             <p>Server may confirm one or more selected extensions via
             <code>Sec-WebSocket-Extensions</code>. If no extensions are
             provided, then the connection proceeds without them.
-          </ul>
+        </ul>
 
         <p>Finally, once the preceding handshake is complete, and if the
         handshake is successful, the connection can now be used as a two-way
@@ -1238,7 +1236,7 @@ Sec-WebSocket-Extensions: x-custom-extension <a class="counter" id=
             server uses the event source protocol to stream updates to the
             client. The client can’t send any data to the server after the
             initial handshake.
-          </ul>
+        </ul>
 
         <aside>
           <h4 id="propagation-and-queuing-latency"><a href=
@@ -1300,7 +1298,7 @@ Sec-WebSocket-Extensions: x-custom-extension <a class="counter" id=
             "/http2/#header-compression">Header Compression</a>. In fact, if
             the headers do not change between requests, the overhead can be as
             low as 8 bytes!
-          </ul>
+        </ul>
 
         <div data-type="note" id="id-xzCRFXsZT4">
           <p>Keep in mind that these overhead numbers do not include the
@@ -1423,7 +1421,7 @@ Sec-WebSocket-Extensions: x-custom-extension <a class="counter" id=
 
           <li>
             <p>Routers, firewalls, and proxies within the client’s network
-          </ul>
+        </ul>
 
         <p>We have no control over the policy of the client’s network. In fact,
         some networks may block WebSocket traffic entirely, which is why you
@@ -1474,7 +1472,7 @@ location /websocket {
               <a class="co" id="stimeout" href="#stimeout-co"></a>
 
               <p>Set 60-minute timeout between writes
-            </ol>
+          </ol>
         </div>
 
         <p>Similarly, it is not uncommon to have a load balancer, such as
@@ -1496,7 +1494,7 @@ defaults http
               <a class="co" id="tunnel" href="#tunnel-co"></a>
 
               <p>60-minute inactivity timeout for tunnels
-            </ol>
+          </ol>
         </div>
 
         <p>The gotcha with the preceding example is the extra "tunnel" timeout.
@@ -1560,7 +1558,7 @@ defaults http
 
         <li>
           <p>Leverage other transports where applicable.
-        </ul>
+      </ul>
 
       <p>Last, but definitely not least, optimize for mobile! Real-time push
       can be a costly performance anti-pattern on mobile handsets, where
@@ -1588,7 +1586,7 @@ defaults http
           <p><a data-type="xref" href=
           "/optimizing-for-mobile-networks/#eliminate-unnecessary-application-keepalives">
           Eliminate Unnecessary Application Keepalives</a>
-        </ul>
+      </ul>
     </section>
   </article>
 

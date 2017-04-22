@@ -10,10 +10,8 @@ Networking (O'Reilly)</title>
 <meta name="description" content=
 "What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
 
-<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
-</script>
-<script async src="https://www.google-analytics.com/analytics.js">
-</script>
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js"></script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
 <link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
 <link href=
 "https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
@@ -78,7 +76,7 @@ rel="stylesheet">
               <a id="feedback" target="_blank" href=
               "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BBuilding%20Blocks%20of%20UDP%5D:%20...">
               Submit Feedback</a>
-            </ul>
+          </ul>
         </div>
         <label for="check" class="closemenu">&nbsp;</label>
       </div>
@@ -111,7 +109,7 @@ rel="stylesheet">
           information to be routed from the source to the destination nodes
           without reliance on earlier exchanges between the nodes and the
           transporting network.
-        </dl>
+      </dl>
 
       <p>The words datagram and packet are often used interchangeably, but
       there are some nuances. While the term "packet" applies to any formatted
@@ -219,7 +217,7 @@ rel="stylesheet">
 
         <dd>
           <p>No built-in client or network feedback mechanisms
-        </dl>
+      </dl>
 
       <p>TCP is a byte-stream oriented protocol capable of transmitting
       application messages spread across multiple packets without any explicit
@@ -316,7 +314,7 @@ rel="stylesheet">
                 <td>192.168.0.0–192.168.255.255
 
                 <td>65,536
-              </table>
+          </table>
 
           <figcaption>
             <span class="label">Table 3-1.</span> Reserved IP ranges
@@ -490,7 +488,7 @@ rel="stylesheet">
           <li>
             <p>The STUN protocol defines a simple mechanism for keepalive pings
             to keep the NAT routing entries from timing out.
-          </ul>
+        </ul>
 
         <p>With this mechanism in place, whenever two peers want to talk to
         each other over UDP, they will first send binding requests to their
@@ -530,7 +528,7 @@ rel="stylesheet">
             <p>Once the negotiation is complete, both peers communicate by
             sending their data to the TURN server, which then relays it to the
             other peer.
-          </ul>
+        </ul>
 
         <p>Of course, the obvious downside in this exchange is that it is no
         longer peer-to-peer! TURN is the most reliable way to provide
@@ -557,7 +555,7 @@ rel="stylesheet">
 
             <li>
               <p>8% of the time the connection requires a relay (TURN).
-            </ul>
+          </ul>
 
           <p>Unfortunately, even with STUN, a significant fraction of users are
           unable to establish a direct P2P tunnel. To provide a reliable
@@ -656,7 +654,7 @@ rel="stylesheet">
         <li>
           <p>Application <em>may</em> use keepalives when needed (minimum
           interval 15 seconds).
-        </ul>
+      </ul>
 
       <p>Designing a new transport protocol requires a lot of careful thought,
       planning, and research—do your due diligence. Where possible, leverage an

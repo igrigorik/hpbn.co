@@ -9,10 +9,8 @@
 <meta name="description" content=
 "What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
 
-<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
-</script>
-<script async src="https://www.google-analytics.com/analytics.js">
-</script>
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js"></script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
 <link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
 <link href=
 "https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
@@ -77,7 +75,7 @@ rel="stylesheet">
               <a id="feedback" target="_blank" href=
               "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BHTTP/1.X%5D:%20...">
               Submit Feedback</a>
-            </ul>
+          </ul>
         </div>
         <label for="check" class="closemenu">&nbsp;</label>
       </div>
@@ -115,7 +113,7 @@ rel="stylesheet">
 
         <li>
           <p>Improved and much better-specified caching mechanisms
-        </ul>
+      </ul>
 
       <p>This list is incomplete, and a full discussion of the technical
       details of each and every HTTP/1.1 enhancement deserves a separate book.
@@ -171,7 +169,7 @@ rel="stylesheet">
           <p>HTTP redirects can be extremely costly, especially when they
           redirect the client to a different hostname, which results in
           additional DNS lookup, TCP connection latency, and so on.
-        </dl>
+      </dl>
 
       <p>Each of the preceding recommendations has stood the test of time and
       is as true today as when the book was first published in 2007. That is no
@@ -303,7 +301,7 @@ rel="stylesheet">
         <li>
           <p>With keepalive, the first request incurs two roundtrips, and all
           following requests incur just one roundtrip of latency.
-        </ul>
+      </ul>
 
       <p>The total latency savings for <em>N</em> requests is <em>(N–1)</em> ×
       <em>RTT</em> when connection keepalive is enabled. Finally, recall that
@@ -452,7 +450,7 @@ rel="stylesheet">
         <li>
           <p>Once HTML response is sent, CSS response is flushed from the
           server buffers.
-        </ul>
+      </ul>
 
       <p>Even though the client issued both requests in parallel, and the CSS
       resource is available first, the server must wait to send the full HTML
@@ -500,7 +498,7 @@ rel="stylesheet">
         <li>
           <p>Some intermediaries do not support pipelining and may abort the
           connection, while others may serialize all requests.
-        </ul>
+      </ul>
 
       <p>Due to these and similar complications, and lack of guidance in the
       HTTP/1.1 standard for these cases, HTTP pipelining adoption has remained
@@ -543,7 +541,7 @@ rel="stylesheet">
 
           <li>
             <p>Your application must protect itself from broken intermediaries.
-          </ul>
+        </ul>
 
         <p>In practice, the best way to deploy HTTP pipelining is to create a
         secure (HTTPS) tunnel between the client and server. That’s the most
@@ -579,7 +577,7 @@ rel="stylesheet">
         <li>
           <p>The cumulative number of packets that can be sent in the first
           roundtrip (TCP cwnd) is increased by a factor of six.
-        </ul>
+      </ul>
 
       <p>The maximum request parallelism, in absence of pipelining, is the same
       as the number of open connections. Further, the TCP congestion window is
@@ -603,7 +601,7 @@ rel="stylesheet">
         <li>
           <p>Limited application parallelism even in light of parallel TCP
           streams
-        </ul>
+      </ul>
 
       <p>In practice, the CPU and memory costs are nontrivial, resulting in
       much higher per-client overhead on both client and server—higher
@@ -625,7 +623,7 @@ rel="stylesheet">
           (see <a data-type="xref" href=
           "/building-blocks-of-tcp/#bandwidth-delay-product">Bandwidth-Delay
           Product</a>)
-        </ol>
+      </ol>
 
       <p>Both TCP considerations (window scaling and cwnd) are best addressed
       by a simple upgrade to the latest OS kernel release; see <a data-type=
@@ -752,7 +750,7 @@ rel="stylesheet">
         <li>
           <p>Domain sharding can hurt performance due to additional DNS lookups
           and TCP slow-start.
-        </ul>
+      </ul>
 
       <p>Domain sharding is a legitimate but also an imperfect optimization.
       Always begin with the minimum number of shards (none), and then carefully
@@ -845,7 +843,7 @@ Cache-Control: max-age=0, no-cache
             <a class="co" id="resp" href="#resp-co"></a>
 
             <p>204 response from the server: 134 bytes
-          </ol>
+        </ol>
       </div>
 
       <p>In the preceding example, our brief 15-character JSON message is
@@ -886,7 +884,7 @@ Cache-Control: max-age=0, no-cache
 
         <dd>
           <p>Multiple images are combined into a larger, composite image.
-        </dl>
+      </dl>
 
       <p>In the case of JavaScript and CSS, we can safely concatenate multiple
       files without affecting the behavior and the execution of the code as
@@ -912,7 +910,7 @@ Cache-Control: max-age=0, no-cache
           multiple responses is streamed back to back, eliminating extra
           network latency. Hence, we have simply moved the pipelining logic one
           layer higher and into our application.
-        </dl>
+      </dl>
 
       <p>Both concatenation and spriting techniques are examples of
       content-aware application layer optimizations, which can yield
@@ -947,7 +945,7 @@ Cache-Control: max-age=0, no-cache
           <p>Both JavaScript and CSS are parsed and executed only when the
           transfer is finished, potentially delaying the execution speed of
           your application.
-        </ul>
+      </ul>
 
       <p>In practice, most web applications are not single pages but
       collections of different views, each with different resource requirements
@@ -1047,7 +1045,7 @@ Cache-Control: max-age=0, no-cache
 
         <li>
           <p>Will the time to first render suffer from delayed execution?
-        </ul>
+      </ul>
 
       <p>Finding the right balance among all of these criteria is an imperfect
       science.
@@ -1075,7 +1073,7 @@ Cache-Control: max-age=0, no-cache
             <p>Custom out-of-band update mechanism, in which the client
             downloads the new JavaScript in the background and the update is
             applied on page refresh
-          </ul>
+        </ul>
 
         <p>The size of the Gmail userbase turns a simple JavaScript update into
         a self-inflicted DoS attack, as all open browsers update their scripts.
@@ -1163,7 +1161,7 @@ Cache-Control: max-age=0, no-cache
         <li>
           <p>Minimize the protocol overhead by reducing the size of HTTP
           cookies.
-        </ul>
+      </ul>
     </section>
   </article>
 

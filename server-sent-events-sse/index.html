@@ -10,10 +10,8 @@ Browser Networking (O'Reilly)</title>
 <meta name="description" content=
 "What every web developer must know about mobile networks, protocols, and APIs provided by browser to deliver the best user experience.">
 
-<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js">
-</script>
-<script async src="https://www.google-analytics.com/analytics.js">
-</script>
+<script async src="/assets/5e7a4451127bdccbb9346f1c8744c0d9.js"></script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
 <link rel="preconnect" href="//fonts.gstatic.com" crossorigin="anonymous">
 <link href=
 "https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600"
@@ -78,7 +76,7 @@ rel="stylesheet">
               <a id="feedback" target="_blank" href=
               "https://github.com/igrigorik/hpbn.co/issues/new?title=%5BServer-Sent%20Events%20(SSE)%5D:%20...">
               Submit Feedback</a>
-            </ul>
+          </ul>
         </div>
         <label for="check" class="closemenu">&nbsp;</label>
       </div>
@@ -116,7 +114,7 @@ rel="stylesheet">
 
         <li>
           <p>Client message notifications as DOM events
-        </ul>
+      </ul>
 
       <p>Under the hood, SSE provides an efficient, cross-browser
       implementation of XHR streaming; the actual delivery of the messages is
@@ -192,7 +190,7 @@ source.onmessage = function (event) {  <a class="counter" id="esm-co" href=
             <a class="co" id="esclose" href="#esclose-co"></a>
 
             <p>Close SSE connection if server sends a "CLOSE" message ID
-          </ol>
+        </ol>
       </div>
 
       <div data-type="note" id="id-roCVIXSk">
@@ -276,7 +274,7 @@ source.onmessage = function (event) {  <a class="counter" id="esm-co" href=
           <li>
             <p>XHR streaming support is limited and buffers all the data in
             memory.
-          </ul>
+        </ul>
 
         <p>Without native support for efficient XHR streaming of event stream
         data, the polyfill library can fallback to polling, long-polling, or
@@ -376,7 +374,7 @@ data: Last message, id "43"
             <a class="co" id="esid2" href="#esid2-co"></a>
 
             <p>Simple text event with optional ID
-          </ol>
+        </ol>
       </div>
 
       <p>The event-stream protocol is trivial to understand and implement:
@@ -392,7 +390,7 @@ data: Last message, id "43"
 
         <li>
           <p>Event boundaries are marked by newlines.
-        </ul>
+      </ul>
 
       <p>On the receiving end, the EventSource interface parses the incoming
       stream by looking for newline separators, extracts the payload from data
@@ -499,7 +497,7 @@ data: dolor sit amet
             <a class="co" id="esid44" href="#esid44-co"></a>
 
             <p>Simple text event, ID: 44
-          </ol>
+        </ol>
       </div>
 
       <p>The client application does not need to provide any extra logic to
@@ -521,7 +519,7 @@ data: dolor sit amet
           seen ID when reconnecting. Also, the server needs to implement some
           form of a local cache to recover and retransmit missed messages to
           the client.
-        </ul>
+      </ul>
 
       <p>The exact implementation details of how far back the messages are
       persisted are, of course, specific to the requirements of the
