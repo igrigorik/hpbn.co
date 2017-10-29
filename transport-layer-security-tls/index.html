@@ -38,7 +38,7 @@ rel="stylesheet">
 <meta property="og:site_name" content="High Performance Browser Networking">
 <meta property="fb:admins" content="688996186">
 <script type="application/ld+json">
-{"@context":"http://schema.org/","@type":"Article","headline":"Networking 101: Transport Layer Security (TLS) - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2016-06-03T23:22:28Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+{"@context":"http://schema.org/","@type":"Article","headline":"Networking 101: Transport Layer Security (TLS) - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2017-10-29T22:15:56Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
 </script>
 
 <body data-type="book">
@@ -2036,7 +2036,7 @@ Content-Security-Policy-Report-Only: default-src https:;
 
       <div data-type="example" id="-ResGUqU7">
         <pre data-type="programlisting">
-  <strong>$&gt; openssl s_client -state -CAfile startssl.ca.crt -connect igvita.com:443</strong>
+  <strong>$&gt; openssl s_client -state -CAfile root.ca.crt -connect igvita.com:443</strong>
 
   CONNECTED(00000003)
   SSL_connect:before/connect initialization
@@ -2125,11 +2125,11 @@ href="#resume"></a>
       "http://igvita.com">igvita.com</a> on the default TLS port (443), and
       perform the TLS handshake. Because the <code>s_client</code> makes no
       assumptions about known root certificates, we manually specify the path
-      to the root certificate of StartSSL Certificate Authority—this is
-      important. Your browser already has StartSSL’s root certificate and is
-      thus able to verify the chain, but <code>s_client</code> makes no such
-      assumptions. Try omitting the root certificate, and you will see a
-      verification error in the log.
+      to the root certificate which, at the time of writing, is the StartSSL
+      Certificate Authority for the example domain. Your browser already has
+      common root certificates and is thus able to verify the chain, but
+      <code>s_client</code> makes no such assumptions. Try omitting the root
+      certificate, and you will see a verification error in the log.
 
       <p>Inspecting the certificate chain shows that the server sent two
       certificates, which added up to 3,571 bytes. Also, we can see the
