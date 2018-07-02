@@ -1,10 +1,7 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Networking 101: Primer on Latency and Bandwidth - High Performance
 Browser Networking (O'Reilly)</title>
 <meta name="description" content=
@@ -38,7 +35,7 @@ rel="stylesheet">
 <meta property="og:site_name" content="High Performance Browser Networking">
 <meta property="fb:admins" content="688996186">
 <script type="application/ld+json">
-{"@context":"http://schema.org/","@type":"Article","headline":"Networking 101: Primer on Latency and Bandwidth - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2017-11-08T23:12:39Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+{"@context":"http://schema.org/","@type":"Article","headline":"Networking 101: Primer on Latency and Bandwidth - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2017-11-09T02:12:39Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
 </script>
 
 <body data-type="book">
@@ -48,11 +45,9 @@ rel="stylesheet">
         <input type="checkbox" class="check" id="check"> <label for="check"
         class="icon"><svg viewbox="0 0 18 18">
         <title>Menu</title>
-
         <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
         </path></svg></label> <a href="/">High Performance Browser
         Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
-
         <div class="drawer menu">
           <div class="title">
             Primer on Latency and Bandwidth
@@ -134,7 +129,6 @@ rel="stylesheet">
       <figure id="bw-latency-fig">
         <img src="/assets/diagrams/3394fb4dab93efdd5e49475316c9496f.svg" alt=
         "Figure 1-1. Latency and bandwidth">
-
         <figcaption>
           <span class="label">Figure 1-1.</span> Latency and bandwidth
         </figcaption>
@@ -309,58 +303,38 @@ rel="stylesheet">
           <thead>
             <tr>
               <th>Route
-
               <th>Distance
-
               <th>Time, light in vacuum
-
               <th>Time, light in fiber
-
               <th>Round-trip time (RTT) in fiber
 
           <tbody>
             <tr>
               <td>New York to San Francisco
-
               <td>4,148 km
-
               <td>14 ms
-
               <td><strong>21 ms</strong>
-
               <td>42 ms
 
             <tr>
               <td>New York to London
-
               <td>5,585 km
-
               <td>19 ms
-
               <td><strong>28 ms</strong>
-
               <td>56 ms
 
             <tr>
               <td>New York to Sydney
-
               <td>15,993 km
-
               <td>53 ms
-
               <td><strong>80 ms</strong>
-
               <td>160 ms
 
             <tr>
               <td>Equatorial circumference
-
               <td>40,075 km
-
               <td>133.7 ms
-
               <td><strong>200 ms</strong>
-
               <td>200 ms
         </table>
 
@@ -462,16 +436,13 @@ id="router-co" href="#router"></a>
   11  x.1e100.net (74.125.224.102)  18.467 ms  17.839 ms  17.958 ms <a class=
 "counter" id="google-co" href="#google"></a>
 </pre>
-
         <ol class="notation">
           <li>
             <a class="co" id="router" href="#router-co"></a>
-
             <p>1st hop: local wireless router
 
           <li>
             <a class="co" id="google" href="#google-co"></a>
-
             <p>11th hop: Google server
         </ol>
       </div>
@@ -574,84 +545,57 @@ id="router-co" href="#router"></a>
           <thead>
             <tr>
               <th>Rank
-
               <th>Country
-
               <th>Average Mbps
-
               <th>Year-over-year change
 
           <tbody>
             <tr>
               <td>-
-
               <td>Global
-
               <td><strong>5.1</strong>
-
               <td>14%
 
             <tr>
               <td>1
-
               <td>South Korea
-
               <td><strong>20.5</strong>
-
               <td>-19%
 
             <tr>
               <td>2
-
               <td>Sweden
-
               <td><strong>17.4</strong>
-
               <td>23%
 
             <tr>
               <td>3
-
               <td>Norway
-
               <td><strong>16.4</strong>
-
               <td>44%
 
             <tr>
               <td>4
-
               <td>Switzerland
-
               <td><strong>16.2</strong>
-
               <td>12%
 
             <tr>
               <td>5
-
               <td>Hong Kong
-
               <td><strong>15.8</strong>
-
               <td>-2.7%
 
             <tr>
               <td>…
-
               <td>&nbsp;
-
               <td><strong>&nbsp;</strong>
-
               <td>&nbsp;
 
             <tr>
               <td>21
-
               <td>United States
-
               <td><strong>12.6</strong>
-
               <td>9.4%
         </table>
 
@@ -688,7 +632,6 @@ id="router-co" href="#router"></a>
       <figure id="fig2">
         <img src="/assets/diagrams/13f28d4c3bcea2a8e4420b3278ebffaf.png" alt=
         "Figure 1-2. Upstream and downstream test (speedtest.net)">
-
         <figcaption>
           <span class="label">Figure 1-2.</span> Upstream and downstream test
           (speedtest.net)

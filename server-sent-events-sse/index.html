@@ -1,10 +1,7 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Browser APIs and Protocols: Server-Sent Events (SSE) - High Performance
 Browser Networking (O'Reilly)</title>
 <meta name="description" content=
@@ -38,7 +35,7 @@ rel="stylesheet">
 <meta property="og:site_name" content="High Performance Browser Networking">
 <meta property="fb:admins" content="688996186">
 <script type="application/ld+json">
-{"@context":"http://schema.org/","@type":"Article","headline":"Browser APIs and Protocols: Server-Sent Events (SSE) - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2015-11-30T20:06:25Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+{"@context":"http://schema.org/","@type":"Article","headline":"Browser APIs and Protocols: Server-Sent Events (SSE) - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2015-11-30T23:06:25Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
 </script>
 
 <body data-type="book">
@@ -48,11 +45,9 @@ rel="stylesheet">
         <input type="checkbox" class="check" id="check"> <label for="check"
         class="icon"><svg viewbox="0 0 18 18">
         <title>Menu</title>
-
         <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
         </path></svg></label> <a href="/">High Performance Browser
         Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
-
         <div class="drawer menu">
           <div class="title">
             Server-Sent Events (SSE)
@@ -159,36 +154,29 @@ source.onmessage = function (event) {  <a class="counter" id="esm-co" href=
   }
 }
 </pre>
-
         <ol class="notation">
           <li>
             <a class="co" id="es" href="#es-co"></a>
-
             <p>Open new SSE connection to stream endpoint
 
           <li>
             <a class="co" id="esopen" href="#esopen-co"></a>
-
             <p>Optional callback, invoked when connection is established
 
           <li>
             <a class="co" id="eserror" href="#eserror-co"></a>
-
             <p>Optional callback, invoked if the connection fails
 
           <li>
             <a class="co" id="esfoo" href="#esfoo-co"></a>
-
             <p>Subscribe to event of type "foo"; invoke custom logic
 
           <li>
             <a class="co" id="esm" href="#esm-co"></a>
-
             <p>Subscribe to all events without an explicit type
 
           <li>
             <a class="co" id="esclose" href="#esclose-co"></a>
-
             <p>Close SSE connection if server sends a "CLOSE" message ID
         </ol>
       </div>
@@ -256,7 +244,6 @@ source.onmessage = function (event) {  <a class="counter" id="esm-co" href=
 "nx">EventSource</code><code class="p">(</code><code class=
 "s2">"/event-stream-endpoint"</code><code class="p">);</code>
 <code class="p">...</code></pre>
-
         <p>The benefit of using a polyfill library is that it allows our
         applications to, once again, focus on the application logic, instead of
         worrying about the browser quirks and implementation status. Having
@@ -332,47 +319,38 @@ data: type "bar" and id "42"
 id: 43 <a class="counter" id="esid2-co" href="#esid2"></a>
 data: Last message, id "43"
 </pre>
-
         <ol class="notation">
           <li>
             <a class="co" id="esreq" href="#esreq-co"></a>
-
             <p>Client connection initiated via EventSource interface
 
           <li>
             <a class="co" id="esresp" href="#esresp-co"></a>
-
             <p>Server response with "text/event-stream" content-type
 
           <li>
             <a class="co" id="esretry" href="#esretry-co"></a>
-
             <p>Server sets client reconnect interval (15s) if the connection
             drops
 
           <li>
             <a class="co" id="esstring" href="#esstring-co"></a>
-
             <p>Simple text event with no message type
 
           <li>
             <a class="co" id="esjson" href="#esjson-co"></a>
-
             <p>JSON payload with no message type
 
           <li>
             <a class="co" id="esevent" href="#esevent-co"></a>
-
             <p>Simple text event of type "foo"
 
           <li>
             <a class="co" id="esid" href="#esid-co"></a>
-
             <p>Multiline event with message ID and type
 
           <li>
             <a class="co" id="esid2" href="#esid2-co"></a>
-
             <p>Simple text event with optional ID
         </ol>
       </div>
@@ -471,31 +449,25 @@ Transfer-Encoding: chunked
 id: 44 <a class="counter" id="esid44-co" href="#esid44"></a>
 data: dolor sit amet
 </pre>
-
         <ol class="notation">
           <li>
             <a class="co" id="es1sretry" href="#es1sretry-co"></a>
-
             <p>Server sets the client reconnect interval to 4.5 seconds
 
           <li>
             <a class="co" id="esid43" href="#esid43-co"></a>
-
             <p>Simple text event, ID: 43
 
           <li>
             <a class="co" id="esreqr" href="#esreqr-co"></a>
-
             <p>Automatic client reconnect request with last seen event ID
 
           <li>
             <a class="co" id="esrespr" href="#esrespr-co"></a>
-
             <p>Server response with "text/event-stream" content-type
 
           <li>
             <a class="co" id="esid44" href="#esid44-co"></a>
-
             <p>Simple text event, ID: 44
         </ol>
       </div>

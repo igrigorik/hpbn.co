@@ -1,10 +1,7 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>HTTP: Primer on Web Performance - High Performance Browser Networking
 (O'Reilly)</title>
 <meta name="description" content=
@@ -38,7 +35,7 @@ rel="stylesheet">
 <meta property="og:site_name" content="High Performance Browser Networking">
 <meta property="fb:admins" content="688996186">
 <script type="application/ld+json">
-{"@context":"http://schema.org/","@type":"Article","headline":"HTTP: Primer on Web Performance - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2016-01-22T20:12:26Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+{"@context":"http://schema.org/","@type":"Article","headline":"HTTP: Primer on Web Performance - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2016-01-22T23:12:26Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
 </script>
 
 <body data-type="book">
@@ -48,11 +45,9 @@ rel="stylesheet">
         <input type="checkbox" class="check" id="check"> <label for="check"
         class="icon"><svg viewbox="0 0 18 18">
         <title>Menu</title>
-
         <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
         </path></svg></label> <a href="/">High Performance Browser
         Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
-
         <div class="drawer menu">
           <div class="title">
             Primer on Web Performance
@@ -247,7 +242,6 @@ rel="stylesheet">
         <figure id="doc-render-js">
           <img src="/assets/diagrams/084666d979c7b1507df8c538f5557ac9.svg" alt=
           "Figure 10-1. Browser processing pipeline: HTML, CSS, and JavaScript">
-
           <figcaption>
             <span class="label">Figure 10-1.</span> Browser processing
             pipeline: HTML, CSS, and JavaScript
@@ -331,7 +325,6 @@ rel="stylesheet">
       <figure id="http-archive">
         <img src="/assets/diagrams/0b2435f40a21288f26b55208d5a8c5b1.svg" alt=
         "Figure 10-2. Average transfer size and number of requests (HTTP Archive)">
-
         <figcaption>
           <span class="label">Figure 10-2.</span> Average transfer size and
           number of requests (HTTP Archive)
@@ -370,33 +363,27 @@ rel="stylesheet">
             <thead>
               <tr>
                 <th>Delay
-
                 <th>User perception
 
             <tbody>
               <tr>
                 <td>0–100 ms
-
                 <td>Instant
 
               <tr>
                 <td>100–300 ms
-
                 <td>Small perceptible delay
 
               <tr>
                 <td>300–1000 ms
-
                 <td>Machine is working
 
               <tr>
                 <td>1,000+ ms
-
                 <td>Likely mental context switch
 
               <tr>
                 <td>10,000+ ms
-
                 <td>Task is abandoned
           </table>
 
@@ -499,7 +486,6 @@ rel="stylesheet">
         <figure id="request-components">
           <img src="/assets/diagrams/adaebeaa2cbc89c09666a0171e7344f9.png" alt=
           "Figure 10-3. Components of an HTTP request (WebPageTest)">
-
           <figcaption>
             <span class="label">Figure 10-3.</span> Components of an HTTP
             request (WebPageTest)
@@ -543,7 +529,6 @@ rel="stylesheet">
         <figure id="yahoo-waterfall">
           <img src="/assets/diagrams/f9504a4dede2eb3d3781ec4baab96e93.png" alt=
           "Figure 10-4. Yahoo.com resource waterfall (WebPageTest, March 2013)">
-
           <figcaption>
             <span class="label">Figure 10-4.</span> Yahoo.com resource
             waterfall (WebPageTest, March 2013)
@@ -600,7 +585,6 @@ rel="stylesheet">
         <figure id="yahoo-connection-view">
           <img src="/assets/diagrams/8696009a007572bf2da042cb6cef3ec1.png" alt=
           "Figure 10-5. Yahoo.com connection view (WebPageTest, March 2013)">
-
           <figcaption>
             <span class="label">Figure 10-5.</span> Yahoo.com connection view
             (WebPageTest, March 2013)
@@ -720,7 +704,6 @@ rel="stylesheet">
         <figure id="bandwidth-vs-latency">
           <img src="/assets/diagrams/940cb8cfbb433a04b05e15b4868cb8e3.svg" alt=
           "Figure 10-6. Page load time vs. bandwidth and latency">
-
           <figcaption>
             <span class="label">Figure 10-6.</span> Page load time vs.
             bandwidth and latency
@@ -882,7 +865,6 @@ rel="stylesheet">
       <figure id="navigation-timing">
         <img src="/assets/diagrams/54af0f14aaabe6664274d81d60e38d40.svg" alt=
         "Figure 10-7. User-specific performance timers exposed by Navigation Timing">
-
         <figcaption>
           <span class="label">Figure 10-7.</span> User-specific performance
           timers exposed by Navigation Timing
@@ -924,7 +906,6 @@ rel="stylesheet">
         <figure id="igvita-timing">
           <img src="/assets/diagrams/ea05cfc71c5cd7777026101bface157e.svg" alt=
           "Figure 10-8. Page load time (skewed) and response time (multimodal) distributions for igvita.com">
-
           <figcaption>
             <span class="label">Figure 10-8.</span> Page load time (skewed) and
             response time (multimodal) distributions for igvita.com
@@ -973,26 +954,21 @@ function logPerformance() {
 "#navtiming"></a>
 }
 </pre>
-
         <ol class="notation">
           <li>
             <a class="co" id="mark" href="#mark-co"></a>
-
             <p>Store (mark) timestamp with associated name (startTask1).
 
           <li>
             <a class="co" id="app" href="#app-co"></a>
-
             <p>Execute application code.
 
           <li>
             <a class="co" id="perf" href="#perf-co"></a>
-
             <p>Iterate and log user timing data.
 
           <li>
             <a class="co" id="navtiming" href="#navtiming-co"></a>
-
             <p>Log Navigation Timing object for current page.
         </ol>
       </div>
@@ -1138,26 +1114,21 @@ id="subresource-co" href="#subresource"></a>
 &lt;link rel="prerender"    href="//example.org/next_page.html"&gt; <a class=
 "counter" id="prerender-co" href="#prerender"></a>
 </pre>
-
         <ol class="notation">
           <li>
             <a class="co" id="dns" href="#dns-co"></a>
-
             <p>Pre-resolve specified hostname.
 
           <li>
             <a class="co" id="subresource" href="#subresource-co"></a>
-
             <p>Prefetch critical resource found later on this page.
 
           <li>
             <a class="co" id="prefetch" href="#prefetch-co"></a>
-
             <p>Prefetch resource for this or future navigation.
 
           <li>
             <a class="co" id="prerender" href="#prerender-co"></a>
-
             <p>Prerender specified page in anticipation of next user
             destination.
         </ol>
@@ -1176,58 +1147,38 @@ id="subresource-co" href="#subresource"></a>
           <thead>
             <tr>
               <th>Browser
-
               <th>dns-prefetch
-
               <th>subresource
-
               <th>prefetch
-
               <th>prerender
 
           <tbody>
             <tr>
               <td>Firefox
-
               <td>3.5+
-
               <td>n/a
-
               <td>3.5+
-
               <td>n/a
 
             <tr>
               <td>Chrome
-
               <td>1.0+
-
               <td>1.0+
-
               <td>1.0+
-
               <td>13+
 
             <tr>
               <td>Safari
-
               <td>5.01+
-
               <td>n/a
-
               <td>n/a
-
               <td>n/a
 
             <tr>
               <td>IE
-
               <td>9+ (prefetch)
-
               <td>n/a
-
               <td>10+
-
               <td>11+
         </table>
 

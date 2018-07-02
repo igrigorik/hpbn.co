@@ -1,10 +1,7 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Browser APIs and Protocols: WebRTC - High Performance Browser Networking
 (O'Reilly)</title>
 <meta name="description" content=
@@ -38,7 +35,7 @@ rel="stylesheet">
 <meta property="og:site_name" content="High Performance Browser Networking">
 <meta property="fb:admins" content="688996186">
 <script type="application/ld+json">
-{"@context":"http://schema.org/","@type":"Article","headline":"Browser APIs and Protocols: WebRTC - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2016-05-05T16:31:31Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+{"@context":"http://schema.org/","@type":"Article","headline":"Browser APIs and Protocols: WebRTC - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2016-05-05T19:31:31Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
 </script>
 
 <body data-type="book">
@@ -48,11 +45,9 @@ rel="stylesheet">
         <input type="checkbox" class="check" id="check"> <label for="check"
         class="icon"><svg viewbox="0 0 18 18">
         <title>Menu</title>
-
         <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
         </path></svg></label> <a href="/">High Performance Browser
         Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
-
         <div class="drawer menu">
           <div class="title">
             WebRTC
@@ -217,7 +212,6 @@ rel="stylesheet">
       <figure id="webrtc-audio-video">
         <img src="/assets/diagrams/b8cf759a74914c66cec01d50b18de6e0.svg" alt=
         "Figure 18-1. WebRTC audio and video engines">
-
         <figcaption>
           <span class="label">Figure 18-1.</span> WebRTC audio and video
           engines
@@ -264,7 +258,6 @@ rel="stylesheet">
         <figure id="mediastream">
           <img src="/assets/diagrams/1a86ca9ae4a3c0e208ddf2f7fdc38b95.svg" alt=
           "Figure 18-2. MediaStream carries one or more synchronized tracks">
-
           <figcaption>
             <span class="label">Figure 18-2.</span> MediaStream carries one or
             more synchronized tracks
@@ -338,41 +331,33 @@ id="gum-co" href="#gum"></a>
   function logError(error) { ... }
 &lt;/script&gt;
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="msoutput" href="#msoutput-co"></a>
-
               <p>HTML video output element
 
             <li>
               <a class="co" id="msaudio" href="#msaudio-co"></a>
-
               <p>Request a mandatory audio track
 
             <li>
               <a class="co" id="msvideo" href="#msvideo-co"></a>
-
               <p>Request a mandatory video track
 
             <li>
               <a class="co" id="msvideom" href="#msvideom-co"></a>
-
               <p>List of mandatory constraints for video track
 
             <li>
               <a class="co" id="msvideoo" href="#msvideoo-co"></a>
-
               <p>Array of optional constraints for video track
 
             <li>
               <a class="co" id="gum" href="#gum-co"></a>
-
               <p>Request audio and video streams from the browser
 
             <li>
               <a class="co" id="gumcb" href="#gumcb-co"></a>
-
               <p>Callback function to process acquired MediaStream
           </ol>
         </div>
@@ -540,7 +525,6 @@ id="gum-co" href="#gum"></a>
       <figure id="webrtc-stack">
         <img src="/assets/diagrams/f91164cbbb944d8986c90a1e93afcd82.svg" alt=
         "Figure 18-3. WebRTC protocol stack">
-
         <figcaption>
           <span class="label">Figure 18-3.</span> WebRTC protocol stack
         </figcaption>
@@ -605,7 +589,6 @@ id="gum-co" href="#gum"></a>
         <figure id="rtcpeerconnection">
           <img src="/assets/diagrams/f38aae954de1cde63e2dffddc23a13f3.svg" alt=
           "Figure 18-4. RTCPeerConnection API">
-
           <figcaption>
             <span class="label">Figure 18-4.</span> RTCPeerConnection API
           </figcaption>
@@ -754,7 +737,6 @@ id="gum-co" href="#gum"></a>
         <figure id="signalchannel">
           <img src="/assets/diagrams/06b379fb58cbcab5530946c7059bfdef.svg" alt=
           "Figure 18-5. Shared signaling channel">
-
           <figcaption>
             <span class="label">Figure 18-5.</span> Shared signaling channel
           </figcaption>
@@ -803,7 +785,6 @@ id="gum-co" href="#gum"></a>
         <figure id="rtcgateways">
           <img src="/assets/diagrams/edff4f485cfbaa3b77d359c081016bf5.svg" alt=
           "Figure 18-6. SIP, Jingle, ISUP, and custom signaling gateways">
-
           <figcaption>
             <span class="label">Figure 18-6.</span> SIP, Jingle, ISUP, and
             custom signaling gateways
@@ -900,41 +881,33 @@ href="#sdpscsend"></a>
 
 function logError() { ... }
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="sdpscinit" href="#sdpscinit-co"></a>
-
               <p>Initialize the shared signaling channel
 
             <li>
               <a class="co" id="pconn" href="#pconn-co"></a>
-
               <p>Initialize the RTCPeerConnection object
 
             <li>
               <a class="co" id="sdpgum" href="#sdpgum-co"></a>
-
               <p>Request audio stream from the browser
 
             <li>
               <a class="co" id="sdpaddstream" href="#sdpaddstream-co"></a>
-
               <p>Register local audio stream with RTCPeerConnection object
 
             <li>
               <a class="co" id="sdpoffer" href="#sdpoffer-co"></a>
-
               <p>Create SDP (offer) description of the peer connection
 
             <li>
               <a class="co" id="sdpsld" href="#sdpsld-co"></a>
-
               <p>Apply generated SDP as local description of peer connection
 
             <li>
               <a class="co" id="sdpscsend" href="#sdpscsend-co"></a>
-
               <p>Send generated SDP offer to remote peer via signaling channel
           </ol>
         </div>
@@ -972,21 +945,17 @@ a=rtpmap:111 opus/48000/2 <a class="counter" id="opus-co" href="#opus"></a>
 a=fmtp:111 minptime=10
 (... snip ...)
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="saudio" href="#saudio-co"></a>
-
               <p>Secure audio profile with feedback
 
             <li>
               <a class="co" id="scandidate" href="#scandidate-co"></a>
-
               <p>Candidate IP, port, and protocol for the media stream
 
             <li>
               <a class="co" id="opus" href="#opus-co"></a>
-
               <p>Opus codec and basic configuration
           </ol>
         </div>
@@ -1014,7 +983,6 @@ a=fmtp:111 minptime=10
         <figure id="localremotesdp">
           <img src="/assets/diagrams/69aa329ffbfae6fd0446de77623c93fb.svg" alt=
           "Figure 18-7. Offer/answer SDP exchange between peers">
-
           <figcaption>
             <span class="label">Figure 18-7.</span> Offer/answer SDP exchange
             between peers
@@ -1184,43 +1152,35 @@ id="icelocal-co" href="#icelocal"></a>
 // a=candidate:2565840242 1 udp 1845501695 50.76.44.100 60834 typ srflx ... <a class="counter"
 id="icepublic-co" href="#icepublic"></a>
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="gstun" href="#gstun-co"></a>
-
               <p>STUN server, configured to use Google's public test server
 
             <li>
               <a class="co" id="turn" href="#turn-co"></a>
-
               <p>TURN server for relaying data if peer-to-peer connection fails
 
             <li>
               <a class="co" id="triggerice" href="#triggerice-co"></a>
-
               <p>Apply local session description: initiates ICE gathering
               process
 
             <li>
               <a class="co" id="icecomplete" href="#icecomplete-co"></a>
-
               <p>Subscribe to ICE events and listen for ICE gathering
               completion
 
             <li>
               <a class="co" id="iceoffer" href="#iceoffer-co"></a>
-
               <p>Regenerate the SDP offer (now with discovered ICE candidates)
 
             <li>
               <a class="co" id="icelocal" href="#icelocal-co"></a>
-
               <p>Private ICE candidate (192.168.1.73:60834) for the peer
 
             <li>
               <a class="co" id="icepublic" href="#icepublic-co"></a>
-
               <p>Public ICE candidate (50.76.44.100:69834) returned by the STUN
               server
           </ol>
@@ -1253,7 +1213,6 @@ id="icepublic-co" href="#icepublic"></a>
         <figure id="stunbind">
           <img src="/assets/diagrams/a2813f1c382a12a4b0b0b229ca22ee9f.png" alt=
           "Figure 18-8. WireShark capture of a peer-to-peer STUN binding request and response">
-
           <figcaption>
             <span class="label">Figure 18-8.</span> WireShark capture of a
             peer-to-peer STUN binding request and response
@@ -1350,24 +1309,20 @@ signalingChannel.onmessage = function(msg) {
   }
 }
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="trickleoffer" href="#trickleoffer-co"></a>
-
               <p>Send SDP offer without ICE candidates
 
             <li>
               <a class="co" id="tricklecandidate" href=
               "#tricklecandidate-co"></a>
-
               <p>Send individual ICE candidate as it is discovered by local ICE
               agent
 
             <li>
               <a class="co" id="addicecandidate" href=
               "#addicecandidate-co"></a>
-
               <p>Register remote ICE candidate and begin connectivity checks
           </ol>
         </div>
@@ -1417,26 +1372,21 @@ pc.oniceconnectionstatechange = function(evt) { <a class="counter" id=
   logStatus("ICE connection state change: " + evt.target.iceConnectionState);
 }
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="icegstate" href="#icegstate-co"></a>
-
               <p>Log current ICE gathering state
 
             <li>
               <a class="co" id="icegstates" href="#icegstates-co"></a>
-
               <p>Subscribe to ICE gathering events
 
             <li>
               <a class="co" id="icestate" href="#icecstate-co"></a>
-
               <p>Log current ICE connection state
 
             <li>
               <a class="co" id="icestates" href="#icecstates-co"></a>
-
               <p>Subscribe to ICE connection state events
           </ol>
         </div>
@@ -1519,7 +1469,6 @@ pc.oniceconnectionstatechange = function(evt) { <a class="counter" id=
         <figure id="iceconnectionstate">
           <img src="/assets/diagrams/4b4766fd02af08ca2894b4cce8b44d85.svg" alt=
           "Figure 18-9. ICE agent connectivity states and transitions">
-
           <figcaption>
             <span class="label">Figure 18-9.</span> ICE agent connectivity
             states and transitions
@@ -1560,7 +1509,6 @@ pc.oniceconnectionstatechange = function(evt) { <a class="counter" id=
           <figure id="webrtcinternals">
             <img src="/assets/diagrams/e32a63d9d4c6b1ffcaf49c42078f47cd.png"
             alt="Figure 18-10. chrome://webrtc-internals">
-
             <figcaption>
               <span class="label">Figure 18-10.</span>
               chrome://webrtc-internals
@@ -1655,62 +1603,50 @@ id="igum-co" href="#igum"></a>
   function logError() { ... }
 &lt;/script&gt;
 </pre>
-
             <ol class="notation">
               <li>
                 <a class="co" id="ilvout" href="#ilvout-co"></a>
-
                 <p>Video element for output of local stream
 
               <li>
                 <a class="co" id="irvout" href="#irvout-co"></a>
-
                 <p>Video element for output of remote stream
 
               <li>
                 <a class="co" id="isig" href="#isig-co"></a>
-
                 <p>Initialize shared signaling channel
 
               <li>
                 <a class="co" id="ipc" href="#ipc-co"></a>
-
                 <p>Initialize peer connection object
 
               <li>
                 <a class="co" id="igum" href="#igum-co"></a>
-
                 <p>Acquire local audio and video streams
 
               <li>
                 <a class="co" id="iaddstream" href="#iaddstream-co"></a>
-
                 <p>Register local MediaStream with peer connection
 
               <li>
                 <a class="co" id="ivd" href="#ivd-co"></a>
-
                 <p>Output local video stream to video element (self view)
 
               <li>
                 <a class="co" id="ioffer" href="#ioffer-co"></a>
-
                 <p>Generate SDP offer describing peer connection and send to
                 peer
 
               <li>
                 <a class="co" id="itrickle" href="#itrickle-co"></a>
-
                 <p>Trickle ICE candidates to the peer via the signaling channel
 
               <li>
                 <a class="co" id="irtrickle" href="#irtrickle-co"></a>
-
                 <p>Register remote ICE candidate to begin connectivity checks
 
               <li>
                 <a class="co" id="irvd" href="#irvd-co"></a>
-
                 <p>Output remote video stream to video element (remote view)
             </ol>
           </div>
@@ -1796,22 +1732,18 @@ id="igum-co" href="#igum"></a>
   function logError() { ... }
 &lt;/script&gt;
 </pre>
-
             <ol class="notation">
               <li>
                 <a class="co" id="roffer" href="#roffer-co"></a>
-
                 <p>Listen and process remote offers delivered via signaling
                 channel
 
               <li>
                 <a class="co" id="rice" href="#rice-co"></a>
-
                 <p>Register remote ICE candidate to begin connectivity checks
 
               <li>
                 <a class="co" id="ranswer" href="#ranswer-co"></a>
-
                 <p>Generate SDP answer describing peer connection and send to
                 peer
             </ol>
@@ -1874,7 +1806,6 @@ id="igum-co" href="#igum"></a>
 "s2">"your awesome room name"</code><code class="p">);</code>
   <code class="p">});</code>
 <code class="nt">&lt;/script&gt;</code></pre>
-
             <p>The JavaScript delivers the same videoconferencing experience as
             our earlier example. However, there is no magic; SimpleWebRTC
             simply makes a number of decisions on our behalf. Under the hood it
@@ -1985,7 +1916,6 @@ id="igum-co" href="#igum"></a>
         <figure id="dtls-record">
           <img src="/assets/diagrams/e5cc4abb511e6c74a64dd96d75fa9d07.png" alt=
           "Figure 18-11. DTLS handshake records carry sequence and fragment offsets">
-
           <figcaption>
             <span class="label">Figure 18-11.</span> DTLS handshake records
             carry sequence and fragment offsets
@@ -2010,7 +1940,6 @@ id="igum-co" href="#igum"></a>
         <figure id="dtls-handshake">
           <img src="/assets/diagrams/33926d81cc07b922f40ddab7ab00c538.svg" alt=
           "Figure 18-12. Peer-to-peer handshake over DTLS">
-
           <figcaption>
             <span class="label">Figure 18-12.</span> Peer-to-peer handshake
             over DTLS
@@ -2100,7 +2029,6 @@ id="igum-co" href="#igum"></a>
         <figure id="webrtc-media-flow">
           <img src="/assets/diagrams/b7877f7c09eee79e8dfd7847e0a5930f.svg" alt=
           "Figure 18-13. Audio and video delivery via SRTP over UDP">
-
           <figcaption>
             <span class="label">Figure 18-13.</span> Audio and video delivery
             via SRTP over UDP
@@ -2186,7 +2114,6 @@ id="igum-co" href="#igum"></a>
         <figure id="srtp-packet">
           <img src="/assets/diagrams/e80b19c3f2eb66734051854f9df395bf.svg" alt=
           "Figure 18-14. SRTP header (12 bytes + payload and optional fields)">
-
           <figcaption>
             <span class="label">Figure 18-14.</span> SRTP header (12 bytes +
             payload and optional fields)
@@ -2354,57 +2281,39 @@ id="igum-co" href="#igum"></a>
             <thead>
               <tr>
                 <th>
-
                 <th>TCP
-
                 <th>UDP
-
                 <th>SCTP
 
             <tbody>
               <tr>
                 <td>Reliability
-
                 <td>reliable
-
                 <td>unreliable
-
                 <td>configurable
 
               <tr>
                 <td>Delivery
-
                 <td>ordered
-
                 <td>unordered
-
                 <td>configurable
 
               <tr>
                 <td>Transmission
-
                 <td>byte-oriented
-
                 <td>message-oriented
-
                 <td>message-oriented
 
               <tr>
                 <td>Flow control
-
                 <td>yes
-
                 <td>no
-
                 <td>yes
 
               <tr>
                 <td>Congestion control
-
                 <td>yes
-
                 <td>no
-
                 <td>yes
           </table>
 
@@ -2469,7 +2378,6 @@ id="igum-co" href="#igum"></a>
         <figure id="sctp-packet">
           <img src="/assets/diagrams/e86b7a4f06d7dad1ce67ee4646c3941b.svg" alt=
           "Figure 18-15. SCTP header and data chunk">
-
           <figcaption>
             <span class="label">Figure 18-15.</span> SCTP header and data chunk
           </figcaption>
@@ -2693,31 +2601,25 @@ handleChannel(dc); <a class="counter" id="handlelocal-co" href=
 pc.ondatachannel = handleChannel; <a class="counter" id="handleremote-co" href=
 "#handleremote"></a>
 </pre>
-
         <ol class="notation">
           <li>
             <a class="co" id="handledc" href="#handledc-co"></a>
-
             <p>Register WebSocket-like callbacks on DataChannel object
 
           <li>
             <a class="co" id="ndc" href="#ndc-co"></a>
-
             <p>Initialize new DataChannel with best-effort delivery semantics
 
           <li>
             <a class="co" id="ndcoa" href="#ndcoa-co"></a>
-
             <p>Regular RTCPeerConnection offer/answer code
 
           <li>
             <a class="co" id="handlelocal" href="#handlelocal-co"></a>
-
             <p>Register callbacks on locally initialized DataChannel
 
           <li>
             <a class="co" id="handleremote" href="#handleremote-co"></a>
-
             <p>Register callbacks on DataChannel initiated by remote peer
         </ol>
       </div>
@@ -2767,66 +2669,48 @@ pc.ondatachannel = handleChannel; <a class="counter" id="handleremote-co" href=
             <thead>
               <tr>
                 <th>
-
                 <th>WebSocket
-
                 <th>DataChannel
 
             <tbody>
               <tr>
                 <td>Encryption
-
                 <td>configurable
-
                 <td>always
 
               <tr>
                 <td>Reliability
-
                 <td>reliable
-
                 <td>configurable
 
               <tr>
                 <td>Delivery
-
                 <td>ordered
-
                 <td>configurable
 
               <tr>
                 <td>Multiplexed
-
                 <td>no (extension)
-
                 <td>yes
 
               <tr>
                 <td>Transmission
-
                 <td>message-oriented
-
                 <td>message-oriented
 
               <tr>
                 <td>Binary transfers
-
                 <td>yes
-
                 <td>yes
 
               <tr>
                 <td>UTF-8 transfers
-
                 <td>yes
-
                 <td>yes
 
               <tr>
                 <td>Compression
-
                 <td>no (extension)
-
                 <td>no
           </table>
 
@@ -2888,21 +2772,17 @@ a=fmtp:5000 protocol=webrtc-datachannel; streams=10 <a class="counter" id=
 "sctpstreams-co" href="#sctpstreams"></a>
 (... snip ...)
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="dtlssctp" href="#dtlssctp-co"></a>
-
               <p>Advertise intent to use SCTP over DTLS
 
             <li>
               <a class="co" id="dcice" href="#dcice-co"></a>
-
               <p>0.0.0.0 candidate indicates use of trickle ICE
 
             <li>
               <a class="co" id="sctpstreams" href="#sctpstreams-co"></a>
-
               <p>DataChannel protocol over SCTP with up to 10 parallel streams
           </ol>
         </div>
@@ -2935,21 +2815,17 @@ pc.createOffer(function(offer) { ... }, null, mediaConstraints); <a class=
 
 ...
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="dcchan" href="#dcchan-co"></a>
-
               <p>Register new unreliable DataChannel with RTCPeerConnection
 
             <li>
               <a class="co" id="dcconst" href="#dcconst-co"></a>
-
               <p>Set media constraints to disable audio and video transfers
 
             <li>
               <a class="co" id="dcoffer" href="#dcoffer-co"></a>
-
               <p>Generate data-only offer
           </ol>
         </div>
@@ -2968,7 +2844,6 @@ pc.createOffer(function(offer) { ... }, null, mediaConstraints); <a class=
         <figure id="data-channel-open">
           <img src="/assets/diagrams/7695893485cffda5a58d1500a1dd2d7f.svg" alt=
           "Figure 18-16. DATA_CHANNEL_OPEN message initiates new channel">
-
           <figcaption>
             <span class="label">Figure 18-16.</span> DATA_CHANNEL_OPEN message
             initiates new channel
@@ -3028,22 +2903,18 @@ signalingChannel.onmessage = function(msg) {
   }
 }
 </pre>
-
             <ol class="notation">
               <li>
                 <a class="co" id="dcnewgchan" href="#dcnewgchan-co"></a>
-
                 <p>Send channel configuration via signaling channel to the
                 other peer
 
               <li>
                 <a class="co" id="dcid" href="#dcid-co"></a>
-
                 <p>Unique, application-specified channel ID (integer)
 
               <li>
                 <a class="co" id="dcnewchan" href="#dcnewchan-co"></a>
-
                 <p>Initialize new DataChannel using received parameters
             </ol>
           </div>
@@ -3110,66 +2981,45 @@ signalingChannel.onmessage = function(msg) {
             <thead>
               <tr>
                 <th>
-
                 <th>Ordered
-
                 <th>Reliable
-
                 <th>Partial reliability policy
 
             <tbody>
               <tr>
                 <td>Ordered + reliable
-
                 <td>yes
-
                 <td>yes
-
                 <td>n/a
 
               <tr>
                 <td>Unordered + reliable
-
                 <td>no
-
                 <td>yes
-
                 <td>n/a
 
               <tr>
                 <td>Ordered + partially reliable (retransmit)
-
                 <td>yes
-
                 <td>partial
-
                 <td>retransmission count
 
               <tr>
                 <td>Unordered + partially reliable (retransmit)
-
                 <td>no
-
                 <td>partial
-
                 <td>retransmission count
 
               <tr>
                 <td>Ordered + partially reliable (timed)
-
                 <td>yes
-
                 <td>partial
-
                 <td>timeout (ms)
 
               <tr>
                 <td>Unordered + partially reliable (timed)
-
                 <td>no
-
                 <td>partial
-
                 <td>timeout (ms)
           </table>
 
@@ -3225,46 +3075,37 @@ if (dc.reliable) {
   ...
 }
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="dcdefault" href="#dcdefault-co"></a>
-
               <p>Default to ordered and reliable delivery (TCP)
 
             <li>
               <a class="co" id="dcunordered" href="#dcunordered-co"></a>
-
               <p>Reliable, unordered delivery
 
             <li>
               <a class="co" id="dcoc" href="#dcoc-co"></a>
-
               <p>Ordered, partially reliable with custom retransmit count
 
             <li>
               <a class="co" id="dcuc" href="#dcuc-co"></a>
-
               <p>Unordered, partially reliable with custom retransmit count
 
             <li>
               <a class="co" id="dcot" href="#dcot-co"></a>
-
               <p>Ordered, partially reliable with custom retransmit timeout
 
             <li>
               <a class="co" id="dcut" href="#dcut-co"></a>
-
               <p>Unordered, partially reliable with custom retransmit timeout
 
             <li>
               <a class="co" id="dcudp" href="#dcudp-co"></a>
-
               <p>Unordered, unreliable delivery (UDP)
 
             <li>
               <a class="co" id="dccreate" href="#dccreate-co"></a>
-
               <p>Initialize DataChannel with specified order and reliability
               configuration
           </ol>
@@ -3481,7 +3322,6 @@ if (dc.reliable) {
         <figure id="p2p-architectures">
           <img src="/assets/diagrams/c1a1361326d5c0842b287223f6ab4351.svg" alt=
           "Figure 18-17. Distribution architecture for an N-way call">
-
           <figcaption>
             <span class="label">Figure 18-17.</span> Distribution architecture
             for an N-way call

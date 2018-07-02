@@ -1,10 +1,7 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Browser APIs and Protocols: XMLHttpRequest - High Performance Browser
 Networking (O'Reilly)</title>
 <meta name="description" content=
@@ -38,7 +35,7 @@ rel="stylesheet">
 <meta property="og:site_name" content="High Performance Browser Networking">
 <meta property="fb:admins" content="688996186">
 <script type="application/ld+json">
-{"@context":"http://schema.org/","@type":"Article","headline":"Browser APIs and Protocols: XMLHttpRequest - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2015-11-30T20:06:25Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+{"@context":"http://schema.org/","@type":"Article","headline":"Browser APIs and Protocols: XMLHttpRequest - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2015-11-30T23:06:25Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
 </script>
 
 <body data-type="book">
@@ -48,11 +45,9 @@ rel="stylesheet">
         <input type="checkbox" class="check" id="check"> <label for="check"
         class="icon"><svg viewbox="0 0 18 18">
         <title>Menu</title>
-
         <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
         </path></svg></label> <a href="/">High Performance Browser
         Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
-
         <div class="drawer menu">
           <div class="title">
             XMLHttpRequest
@@ -318,16 +313,13 @@ id="xhrcorsreq-co" href="#xhrcorsreq"></a>
 cors_xhr.onload = function() { ... };
 cors_xhr.send();
 </pre>
-
         <ol class="notation">
           <li>
             <a class="co" id="xhrreq" href="#xhrreq-co"></a>
-
             <p>Same-origin XHR request
 
           <li>
             <a class="co" id="xhrcorsreq" href="#xhrcorsreq-co"></a>
-
             <p>Cross-origin XHR request
         </ol>
       </div>
@@ -362,16 +354,13 @@ Access-Control-Allow-Origin: http://example.com <a class="counter" id="acao-co"
 href="#acao"></a>
 ...
 </pre>
-
         <ol class="notation">
           <li>
             <a class="co" id="origin" href="#origin-co"></a>
-
             <p>Origin header is automatically set by the browser.
 
           <li>
             <a class="co" id="acao" href="#acao-co"></a>
-
             <p>Opt-in header is set by the server.
         </ol>
       </div>
@@ -439,21 +428,17 @@ Access-Control-Allow-Headers: My-Custom-Header
 (actual HTTP request) <a class="counter" id="corsreq-co" href="#corsreq"></a>
 
 </pre>
-
         <ol class="notation">
           <li>
             <a class="co" id="preflight" href="#preflight-co"></a>
-
             <p>Preflight OPTIONS request to verify permissions
 
           <li>
             <a class="co" id="pre-response" href="#pre-response-co"></a>
-
             <p>Successful preflight response from third-party origin
 
           <li>
             <a class="co" id="corsreq" href="#corsreq-co"></a>
-
             <p>Actual CORS request
         </ol>
       </div>
@@ -537,21 +522,17 @@ xhr.onload = function() {
 
 xhr.send();
 </pre>
-
         <ol class="notation">
           <li>
             <a class="co" id="blob" href="#blob-co"></a>
-
             <p>Set return data type to blob
 
           <li>
             <a class="co" id="object" href="#object-co"></a>
-
             <p>Create unique object URI from blob and set as image source
 
           <li>
             <a class="co" id="cleanup" href="#cleanup-co"></a>
-
             <p>Release the object URI once image is loaded
         </ol>
       </div>
@@ -607,31 +588,25 @@ var uInt8Array = new Uint8Array([1, 2, 3]); <a class="counter" id="ab-co" href=
 xhr.send(uInt8Array.buffer); <a class="counter" id="bytes-co" href=
 "#bytes"></a>
 </pre>
-
         <ol class="notation">
           <li>
             <a class="co" id="text" href="#text-co"></a>
-
             <p>Upload a simple text string to the server
 
           <li>
             <a class="co" id="formdata" href="#formdata-co"></a>
-
             <p>Create a dynamic form via FormData API
 
           <li>
             <a class="co" id="form" href="#form-co"></a>
-
             <p>Upload multipart/form-data object to the server
 
           <li>
             <a class="co" id="ab" href="#ab-co"></a>
-
             <p>Create a typed array (ArrayBuffer) of unsigned, 8-bit integers
 
           <li>
             <a class="co" id="bytes" href="#bytes-co"></a>
-
             <p>Upload chunk of bytes to the server
         </ol>
       </div>
@@ -671,31 +646,25 @@ while(start &lt; SIZE) { <a class="counter" id="iterate-co" href=
   end = start + BYTES_PER_CHUNK;
 }
 </pre>
-
         <ol class="notation">
           <li>
             <a class="co" id="file" href="#file-co"></a>
-
             <p>An arbitrary blob of data (binary or text)
 
           <li>
             <a class="co" id="mb" href="#mb-co"></a>
-
             <p>Set chunk size to 1 MB
 
           <li>
             <a class="co" id="iterate" href="#iterate-co"></a>
-
             <p>Iterate over provided data in 1MB increments
 
           <li>
             <a class="co" id="range" href="#range-co"></a>
-
             <p>Advertise the uploaded range of data (start-end/total)
 
           <li>
             <a class="co" id="slice" href="#slice-co"></a>
-
             <p>Upload 1 MB slice of data via XHR
         </ol>
       </div>
@@ -733,52 +702,38 @@ while(start &lt; SIZE) { <a class="counter" id="iterate-co" href=
           <thead>
             <tr>
               <th>Event type
-
               <th>Description
-
               <th>Times fired
 
           <tbody>
             <tr>
               <td>loadstart
-
               <td>Transfer has begun
-
               <td>once
 
             <tr>
               <td>progress
-
               <td>Transfer is in progress
-
               <td>zero or more
 
             <tr>
               <td>error
-
               <td>Transfer has failed
-
               <td>zero or once
 
             <tr>
               <td>abort
-
               <td>Transfer is terminated
-
               <td>zero or once
 
             <tr>
               <td>load
-
               <td>Transfer is successful
-
               <td>zero or once
 
             <tr>
               <td>loadend
-
               <td>Transfer has finished
-
               <td>once
         </table>
 
@@ -818,36 +773,29 @@ xhr.addEventListener('progress', onProgressHandler); <a class="counter" id=
 "download-co" href="#download"></a>
 xhr.send();
 </pre>
-
         <ol class="notation">
           <li>
             <a class="co" id="timeout" href="#timeout-co"></a>
-
             <p>Set request timeout to 5,000 ms (default: no timeout)
 
           <li>
             <a class="co" id="onload" href="#onload-co"></a>
-
             <p>Register callback for successful request
 
           <li>
             <a class="co" id="onerror" href="#onerror-co"></a>
-
             <p>Register callback for failed request
 
           <li>
             <a class="co" id="computable" href="#computable-co"></a>
-
             <p>Compute transfer progress
 
           <li>
             <a class="co" id="upload" href="#upload-co"></a>
-
             <p>Register callback for upload progress events
 
           <li>
             <a class="co" id="download" href="#download-co"></a>
-
             <p>Register callback for download progress events
         </ol>
       </div>
@@ -939,21 +887,17 @@ href="#offset"></a>
 
 xhr.send();
 </pre>
-
         <ol class="notation">
           <li>
             <a class="co" id="subscribe" href="#subscribe-co"></a>
-
             <p>Subscribe to state and progress notifications
 
           <li>
             <a class="co" id="strchunk" href="#strchunk-co"></a>
-
             <p>Extract new data from partial response
 
           <li>
             <a class="co" id="offset" href="#offset-co"></a>
-
             <p>Update processed byte offset
         </ol>
       </div>
@@ -1090,16 +1034,13 @@ function checkUpdates(url) {
 setInterval(function() { checkUpdates('/updates') }, 60000); <a class="counter"
 id="xhrpoll-co" href="#xhrpoll"></a>
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="xhrcheck" href="#xhrcheck-co"></a>
-
               <p>Process received updates from server
 
             <li>
               <a class="co" id="xhrpoll" href="#xhrpoll-co"></a>
-
               <p>Issue an XHR request every 60 seconds
           </ol>
         </div>
@@ -1222,7 +1163,6 @@ id="xhrpoll-co" href="#xhrpoll"></a>
         <figure id="polling-longpolling">
           <img src="/assets/diagrams/4ee6145071a2992920f9681c069824a4.svg" alt=
           "Figure 15-1. Polling (left) vs. long-polling (right) latency">
-
           <figcaption>
             <span class="label">Figure 15-1.</span> Polling (left) vs.
             long-polling (right) latency
@@ -1262,21 +1202,17 @@ function checkUpdates(url) {
 checkUpdates('/updates'); <a class="counter" id="xhrlpoll-co" href=
 "#xhrlpoll"></a>
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="xhrlpollfn" href="#xhrlpollfn-co"></a>
-
               <p>Process received updates and open new long-poll XHR
 
             <li>
               <a class="co" id="xhrnext" href="#xhrnext-co"></a>
-
               <p>Issue long-poll request for next update (and loop forever)
 
             <li>
               <a class="co" id="xhrlpoll" href="#xhrlpoll-co"></a>
-
               <p>Issue initial long-poll XHR request
           </ol>
         </div>

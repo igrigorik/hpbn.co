@@ -1,10 +1,7 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Browser APIs and Protocols: WebSocket - High Performance Browser
 Networking (O'Reilly)</title>
 <meta name="description" content=
@@ -38,7 +35,7 @@ rel="stylesheet">
 <meta property="og:site_name" content="High Performance Browser Networking">
 <meta property="fb:admins" content="688996186">
 <script type="application/ld+json">
-{"@context":"http://schema.org/","@type":"Article","headline":"Browser APIs and Protocols: WebSocket - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2015-11-30T20:06:25Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
+{"@context":"http://schema.org/","@type":"Article","headline":"Browser APIs and Protocols: WebSocket - High Performance Browser Networking (O'Reilly)","mainEntityOfPage":{"@type":"WebPage","@id":"https://google.com/article"},"image":{"@type":"ImageObject","url":"https://hpbn.co/assets/share.jpg","height":261,"width":696},"author":{"@type":"Person","url":"https://www.igvita.com/","name":"Ilya Grigorik"},"datePublished":"2013-10-15T13:00:00Z","dateModified":"2015-11-30T23:06:25Z","publisher":{"@type":"Organization","name":"O'Reilly","logo":{"@type":"ImageObject","url":"http://cdn.oreillystatic.com/images/sitewide-headers/ml-header-about.png","width":600,"height":60}}}
 </script>
 
 <body data-type="book">
@@ -48,11 +45,9 @@ rel="stylesheet">
         <input type="checkbox" class="check" id="check"> <label for="check"
         class="icon"><svg viewbox="0 0 18 18">
         <title>Menu</title>
-
         <path fill="white" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z">
         </path></svg></label> <a href="/">High Performance Browser
         Networking</a> <span>&nbsp;|&nbsp; O'Reilly</span>
-
         <div class="drawer menu">
           <div class="title">
             WebSocket
@@ -168,42 +163,34 @@ ws.onmessage = function(msg) { <a class="counter" id="wsmsg-co" href=
   }
 }
 </pre>
-
         <ol class="notation">
           <li>
             <a class="co" id="ws" href="#ws-co"></a>
-
             <p>Open a new secure WebSocket connection (wss)
 
           <li>
             <a class="co" id="wserror" href="#wserror-co"></a>
-
             <p>Optional callback, invoked if a connection error has occurred
 
           <li>
             <a class="co" id="wsclose" href="#wsclose-co"></a>
-
             <p>Optional callback, invoked when the connection is terminated
 
           <li>
             <a class="co" id="wsopen" href="#wsopen-co"></a>
-
             <p>Optional callback, invoked when a WebSocket connection is
             established
 
           <li>
             <a class="co" id="wssend" href="#wssend-co"></a>
-
             <p>Client-initiated message to the server
 
           <li>
             <a class="co" id="wsmsg" href="#wsmsg-co"></a>
-
             <p>A callback function invoked for each new message from the server
 
           <li>
             <a class="co" id="wstype" href="#wstype-co"></a>
-
             <p>Invoke binary or text processing logic for the received message
         </ol>
       </div>
@@ -317,11 +304,9 @@ ws.onmessage = function(msg) {
   }
 }
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="wsab" href="#wsab-co"></a>
-
               <p>Force an ArrayBuffer conversion when a binary message is
               received
           </ol>
@@ -369,7 +354,6 @@ ws.onmessage = function(msg) {
   <code class="kt">float</code> <code class="n">scores</code><code class=
 "p">[</code><code class="mi">32</code><code class="p">];</code>
 <code class="p">};</code></pre>
-
           <p>Given an ArrayBuffer object of this type, we can create multiple
           views into the same buffer, each with its own offset and data type:
 
@@ -415,7 +399,6 @@ ws.onmessage = function(msg) {
 "p">.</code><code class="nx">log</code><code class="p">(</code><code class=
 "nx">scoresView</code><code class="p">[</code><code class=
 "nx">j</code><code class="p">])</code> <code class="p">}</code></pre>
-
           <p>Each view takes the parent buffer, starting byte offset, and
           number of elements to process—the offset is calculated based on the
           size of the preceding fields. As a result, ArrayBuffer and WebSocket
@@ -455,31 +438,25 @@ ws.onopen = function () {
   socket.send(blob); <a class="counter" id="wsblob-co" href="#wsblob"></a>
 }
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="wstext" href="#wstext-co"></a>
-
               <p>Send a UTF-8 encoded text message
 
             <li>
               <a class="co" id="json" href="#json-co"></a>
-
               <p>Send a UTF-8 encoded JSON payload
 
             <li>
               <a class="co" id="arraybuffer" href="#arraybuffer-co"></a>
-
               <p>Send the ArrayBuffer contents as binary payload
 
             <li>
               <a class="co" id="aview" href="#aview-co"></a>
-
               <p>Send the ArrayBufferView contents as binary payload
 
             <li>
               <a class="co" id="wsblob" href="#wsblob-co"></a>
-
               <p>Send the Blob contents as binary payload
           </ol>
         </div>
@@ -513,21 +490,17 @@ ws.onopen = function () {
   });
 };
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="appupdate" href="#appupdate-co"></a>
-
               <p>Subscribe to application updates (e.g., game state changes)
 
             <li>
               <a class="co" id="buffer" href="#buffer-co"></a>
-
               <p>Check the amount of buffered data on the client
 
             <li>
               <a class="co" id="send" href="#send-co"></a>
-
               <p>Send the next update if the buffer is empty
           </ol>
         </div>
@@ -619,16 +592,13 @@ ws.onopen = function () {
   }
 }
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="subproto" href="#subproto-co"></a>
-
               <p>Array of subprotocols to advertise during WebSocket handshake
 
             <li>
               <a class="co" id="proto" href="#proto-co"></a>
-
               <p>Check the subprotocol chosen by the server
           </ol>
         </div>
@@ -700,7 +670,6 @@ ws.onopen = function () {
         <figure id="websocket-frame">
           <img src="/assets/diagrams/efb151be6600eb5555127c8652488f1f.svg" alt=
           "Figure 17-1. WebSocket frame: 2–14 bytes + payload">
-
           <figcaption>
             <span class="label">Figure 17-1.</span> WebSocket frame: 2–14 bytes
             + payload
@@ -1000,31 +969,25 @@ Sec-WebSocket-Protocol: appProtocol, appProtocol-v2 <a class="counter" id=
 Sec-WebSocket-Extensions: x-webkit-deflate-message, x-custom-extension <a class="counter"
 id="wsextensions-co" href="#wsextensions"></a>
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="wsupgrade" href="#wsupgrade-co"></a>
-
               <p>Request to perform an upgrade to the WebSocket protocol
 
             <li>
               <a class="co" id="wsversion" href="#wsversion-co"></a>
-
               <p>WebSocket protocol version used by the client
 
             <li>
               <a class="co" id="wskey" href="#wskey-co"></a>
-
               <p>Auto-generated key to verify server protocol support
 
             <li>
               <a class="co" id="subprotocol" href="#subprotocol-co"></a>
-
               <p>Optional list of subprotocols specified by the application
 
             <li>
               <a class="co" id="wsextensions" href="#wsextensions-co"></a>
-
               <p>Optional list of protocol extensions supported by the client
           </ol>
         </div>
@@ -1054,31 +1017,25 @@ Sec-WebSocket-Protocol: appProtocol-v2 <a class="counter" id="wssp-co" href=
 Sec-WebSocket-Extensions: x-custom-extension <a class="counter" id=
 "wsextensionsc-co" href="#wsextensionsc"></a>
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="upgraded" href="#upgraded-co"></a>
-
               <p>101 response code confirming WebSocket upgrade
 
             <li>
               <a class="co" id="wsorigin" href="#wsorigin-co"></a>
-
               <p>CORS header indicating opt-in for cross-origin connection
 
             <li>
               <a class="co" id="wsaccept" href="#wsaccept-co"></a>
-
               <p>Signed Key value proving protocol support
 
             <li>
               <a class="co" id="wssp" href="#wssp-co"></a>
-
               <p>Application subprotocol selected by the server
 
             <li>
               <a class="co" id="wsextensionsc" href="#wsextensionsc-co"></a>
-
               <p>List of WebSocket extensions selected by the server
           </ol>
         </div>
@@ -1215,7 +1172,6 @@ Sec-WebSocket-Extensions: x-custom-extension <a class="counter" id=
         <figure id="transport-flow">
           <img src="/assets/diagrams/1a8db2948eb2aad0dd47470c6c011a42.svg" alt=
           "Figure 17-2. Communication flow of XHR, SSE, and WebSocket">
-
           <figcaption>
             <span class="label">Figure 17-2.</span> Communication flow of XHR,
             SSE, and WebSocket
@@ -1461,16 +1417,13 @@ location /websocket {
 "#stimeout"></a>
 }
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="rtimeout" href="#rtimeout-co"></a>
-
               <p>Set 60-minute timeout between reads
 
             <li>
               <a class="co" id="stimeout" href="#stimeout-co"></a>
-
               <p>Set 60-minute timeout between writes
           </ol>
         </div>
@@ -1488,11 +1441,9 @@ defaults http
   timeout server  30s
   timeout tunnel  1h  <a class="counter" id="tunnel-co" href="#tunnel"></a>
 </pre>
-
           <ol class="notation">
             <li>
               <a class="co" id="tunnel" href="#tunnel-co"></a>
-
               <p>60-minute inactivity timeout for tunnels
           </ol>
         </div>
